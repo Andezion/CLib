@@ -45,6 +45,106 @@ int create_array_2d(size_t ***ptr, const size_t width, const size_t height)
     return 0;
 }
 
+int create_array_2d_init(size_t ***ptr, const size_t width, const size_t height, const size_t value)
+{
+    if(width == 0 || height == 0 || ptr == NULL)
+    {
+        return 1;
+    }
+
+    size_t **array = malloc(sizeof(size_t *) * height);
+    if(array == NULL)
+    {
+        return 2;
+    }
+
+    for(size_t i = 0; i < height; i++)
+    {
+        *(array + i) = malloc(sizeof(size_t) * width);
+        if(*(array + i) == NULL)
+        {
+            destroy_array_2d(&array, i);
+            return 2;
+        }
+    }
+
+    for (size_t i = 0; i < width; i++)
+    {
+        for (size_t j = 0; j < height; j++)
+        {
+            *(*(array + 1) + j) = value;
+        }
+    }
+
+    *ptr = array;
+
+    return 0;
+}
+
+int create_array_2d(size_t ***ptr, const size_t size)
+{
+    if(size == 0 || ptr == NULL)
+    {
+        return 1;
+    }
+
+    size_t **array = malloc(sizeof(size_t *) * size);
+    if (array == NULL)
+    {
+        return 2;
+    }
+
+    for(size_t i = 0; i < size; i++)
+    {
+        *(array + i) = malloc(sizeof(size_t) * size);
+        if (*(array + i) == NULL)
+        {
+            destroy_array_2d(&array, i);
+            return 2;
+        }
+    }
+
+    *ptr = array;
+
+    return 0;
+}
+
+int create_array_2d_init(size_t ***ptr, const size_t size, const size_t value)
+{
+    if(size == 0 || ptr == NULL)
+    {
+        return 1;
+    }
+
+    size_t **array = malloc(sizeof(size_t *) * size);
+    if (array == NULL)
+    {
+        return 2;
+    }
+
+    for(size_t i = 0; i < size; i++)
+    {
+        *(array + i) = malloc(sizeof(size_t) * size);
+        if (*(array + i) == NULL)
+        {
+            destroy_array_2d(&array, i);
+            return 2;
+        }
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            *(*(array + 1) + j) = value;
+        }
+    }
+
+    *ptr = array;
+
+    return 0;
+}
+
 void display_array_2d(size_t **ptr, const size_t width, const size_t height)
 {
     if (ptr == NULL || width == 0 || height == 0)
