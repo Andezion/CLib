@@ -1,13 +1,13 @@
 #include "array_2d.h"
 
-void destroy_array_2d(signed long long int ***ptr, const size_t height)
+void destroy_array_2d(int64_t ***ptr, const size_t height)
 {
     if (ptr == NULL || height == 0)
     {
         return;
     }
 
-    signed long long int **temp = *ptr;
+    int64_t **temp = *ptr;
     for (size_t i = 0; i < height; i++)
     {
         free(*(temp + i));
@@ -17,14 +17,14 @@ void destroy_array_2d(signed long long int ***ptr, const size_t height)
     *ptr = NULL;
 }
 
-int create_array_2d(signed long long int ***ptr, const size_t width, const size_t height)
+int create_array_2d(int64_t ***ptr, const size_t width, const size_t height)
 {
     if(width == 0 || height == 0 || ptr == NULL)
     {
         return 1;
     }
 
-    signed long long int **array = malloc(sizeof(signed long long int *) * height);
+    int64_t **array = malloc(sizeof(int64_t *) * height);
     if(array == NULL)
     {
         return 2;
@@ -32,7 +32,7 @@ int create_array_2d(signed long long int ***ptr, const size_t width, const size_
 
     for(size_t i = 0; i < height; i++)
     {
-        *(array + i) = malloc(sizeof(signed long long int) * width);
+        *(array + i) = malloc(sizeof(int64_t) * width);
         if(*(array + i) == NULL)
         {
             destroy_array_2d(&array, i);
@@ -45,22 +45,22 @@ int create_array_2d(signed long long int ***ptr, const size_t width, const size_
     return 0;
 }
 
-int create_array_2d_init(signed long long int ***ptr, const size_t width, const size_t height, const signed long long int value)
+int create_array_2d_init(int64_t ***ptr, const size_t width, const size_t height, const int64_t value)
 {
     if(width == 0 || height == 0 || ptr == NULL)
     {
         return 1;
     }
 
-    signed long long int **array = malloc(sizeof(signed long long int *) * height);
+    int64_t **array = malloc(sizeof(int64_t *) * height);
     if(array == NULL)
     {
         return 2;
     }
 
-    for(signed long long int i = 0; i < height; i++)
+    for(size_t i = 0; i < height; i++)
     {
-        *(array + i) = malloc(sizeof(signed long long int) * width);
+        *(array + i) = malloc(sizeof(int64_t) * width);
         if(*(array + i) == NULL)
         {
             destroy_array_2d(&array, i);
@@ -81,14 +81,14 @@ int create_array_2d_init(signed long long int ***ptr, const size_t width, const 
     return 0;
 }
 
-int create_array_2d(signed long long int ***ptr, const size_t size)
+int create_array_2d(int64_t ***ptr, const size_t size)
 {
     if(size == 0 || ptr == NULL)
     {
         return 1;
     }
 
-    signed long long int **array = malloc(sizeof(signed long long int *) * size);
+    int64_t **array = malloc(sizeof(int64_t *) * size);
     if (array == NULL)
     {
         return 2;
@@ -96,7 +96,7 @@ int create_array_2d(signed long long int ***ptr, const size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        *(array + i) = malloc(sizeof(signed long long int) * size);
+        *(array + i) = malloc(sizeof(int64_t) * size);
         if (*(array + i) == NULL)
         {
             destroy_array_2d(&array, i);
@@ -109,14 +109,14 @@ int create_array_2d(signed long long int ***ptr, const size_t size)
     return 0;
 }
 
-int create_array_2d_init(signed long long int ***ptr, const size_t size, const signed long long int value)
+int create_array_2d_init(int64_t ***ptr, const size_t size, const int64_t value)
 {
     if(size == 0 || ptr == NULL)
     {
         return 1;
     }
 
-    signed long long int **array = malloc(sizeof(signed long long int *) * size);
+    int64_t **array = malloc(sizeof(int64_t *) * size);
     if (array == NULL)
     {
         return 2;
@@ -124,7 +124,7 @@ int create_array_2d_init(signed long long int ***ptr, const size_t size, const s
 
     for(size_t i = 0; i < size; i++)
     {
-        *(array + i) = malloc(sizeof(signed long long int) * size);
+        *(array + i) = malloc(sizeof(int64_t) * size);
         if (*(array + i) == NULL)
         {
             destroy_array_2d(&array, i);
@@ -136,7 +136,7 @@ int create_array_2d_init(signed long long int ***ptr, const size_t size, const s
     {
         for (size_t j = 0; j < size; j++)
         {
-            *(*(array + 1) + j) = value;
+            *(*(array + i) + j) = value;
         }
     }
 
@@ -145,7 +145,7 @@ int create_array_2d_init(signed long long int ***ptr, const size_t size, const s
     return 0;
 }
 
-void display_array_2d(signed long long int **ptr, const size_t width, const size_t height)
+void display_array_2d(int64_t **ptr, const size_t width, const size_t height)
 {
     if (ptr == NULL || width == 0 || height == 0)
     {
@@ -156,7 +156,7 @@ void display_array_2d(signed long long int **ptr, const size_t width, const size
     {
         for (size_t j = 0; j < width; j++)
         {
-            printf("%zu ", *(*(ptr + i) + j));
+            printf("%" PRId64 " ", *(*(ptr + i) + j));
         }
         printf("\n");
     }
