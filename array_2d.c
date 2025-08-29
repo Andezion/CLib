@@ -83,11 +83,11 @@ int create_array_i_2d_init_rect(int64_t ***ptr, const size_t width, const size_t
         }
     }
 
-    for (size_t i = 0; i < width; i++)
+    for (size_t i = 0; i < height; i++)
     {
-        for (size_t j = 0; j < height; j++)
+        for (size_t j = 0; j < width; j++)
         {
-            *(*(array + 1) + j) = value;
+            *(*(array + i) + j) = value;
         }
     }
 
@@ -191,11 +191,11 @@ void display_array_i_2d(int64_t **ptr, const size_t width, const size_t height)
         return;
     }
 
-    for (size_t i = 0; i < width; i++)
+    for (size_t i = 0; i < height; i++)
     {
-        for (size_t j = 0; j < height; j++)
+        for (size_t j = 0; j < width; j++)
         {
-            printf("%" PRId64 " ", *(*(ptr + i) + j));
+            printf("%" PRId64 "  ", *(*(ptr + i) + j));
         }
         printf("\n");
     }

@@ -8,5 +8,6 @@ int main(void)
 
     display_array_i_2d(array,5, 6);
 
+    destroy_array_i_2d(&array, 6);
     return 0;
 }
