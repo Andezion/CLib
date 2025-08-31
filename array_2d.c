@@ -267,3 +267,75 @@ void display_array_f_2d(float64_t **ptr, const size_t width, const size_t height
         printf("\n");
     }
 }
+
+int64_t sum_array_i_2d_square(const int64_t **ptr, const size_t size)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return 1;
+    }
+
+    int64_t sum = 0;
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
+
+int64_t sum_array_i_2d_rect(const int64_t **ptr, const size_t width, const size_t height)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return 1;
+    }
+
+    int64_t sum = 0;
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
+
+float64_t sum_array_f_2d_square(const float64_t **ptr, const size_t size)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return 1;
+    }
+
+    float64_t sum = 0;
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
+
+float64_t sum_array_f_2d_rect(const float64_t **ptr, const size_t width, const size_t height)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return 1;
+    }
+
+    float64_t sum = 0;
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
