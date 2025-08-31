@@ -37,7 +37,6 @@ int create_array_i_1d(int64_t **ptr, const size_t size)
 
     return 0;
 }
-
 int create_array_i_1d_init(int64_t **ptr, const size_t size, const int64_t value)
 {
     if (ptr == NULL || size == 0)
@@ -59,7 +58,6 @@ int create_array_i_1d_init(int64_t **ptr, const size_t size, const int64_t value
 
     return 0;
 }
-
 int create_array_f_1d(float64_t **ptr, const size_t size)
 {
     if (ptr == NULL || size == 0)
@@ -76,7 +74,6 @@ int create_array_f_1d(float64_t **ptr, const size_t size)
 
     return 0;
 }
-
 int create_array_f_1d_init(float64_t **ptr, const size_t size, const float64_t value)
 {
     if (ptr == NULL || size == 0)
@@ -124,3 +121,32 @@ void display_array_f_1d(const float64_t *ptr, const size_t size)
     printf("\n");
 }
 
+int64_t sum_array_i_1d(const int64_t *ptr, const size_t size)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return 1;
+    }
+
+    int64_t sum = 0;
+    for (size_t i = 0; i < size; i++)
+    {
+        sum += *(ptr + i);
+    }
+    return sum;
+}
+
+float64_t sum_array_f_1d(const float64_t *ptr, const size_t size)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return 1;
+    }
+
+    float64_t sum = 0;
+    for (size_t i = 0; i < size; i++)
+    {
+        sum += *(ptr + i);
+    }
+    return sum;
+}
