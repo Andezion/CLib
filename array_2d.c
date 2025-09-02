@@ -342,7 +342,7 @@ float64_t sum_array_f_2d_rect(const float64_t **ptr, const size_t width, const s
 
 void add_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    if (ptr == NULL || size == 0)
     {
         return;
     }
@@ -355,9 +355,9 @@ void add_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t
     }
 }
 
-void add_to_matrix_i_2d_i_rect(int64_t ***ptr, const size_t width, const size_t height, const int64_t value)
+void add_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    if (ptr == NULL || width == 0 || height == 0)
     {
         return;
     }
@@ -372,7 +372,7 @@ void add_to_matrix_i_2d_i_rect(int64_t ***ptr, const size_t width, const size_t 
 
 void add_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    if (ptr == NULL || size == 0)
     {
         return;
     }
@@ -387,7 +387,7 @@ void add_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64
 
 void add_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    if (ptr == NULL || width == 0 || height == 0)
     {
         return;
     }
@@ -402,7 +402,7 @@ void add_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t h
 
 void add_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    if (ptr == NULL || size == 0)
     {
         return;
     }
@@ -417,7 +417,7 @@ void add_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64
 
 void add_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    if (ptr == NULL || width == 0 || height == 0)
     {
         return;
     }
@@ -432,7 +432,7 @@ void add_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t
 
 void add_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    if (ptr == NULL || size == 0)
     {
         return;
     }
@@ -447,7 +447,7 @@ void add_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float
 
 void add_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    if (ptr == NULL || width == 0 || height == 0)
     {
         return;
     }
@@ -456,6 +456,127 @@ void add_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t
         for (size_t j = 0; j < width; j++)
         {
             *(*(ptr + i) + j) = *(*(ptr + i) + j) + value;
+        }
+    }
+}
+
+void mul_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
+{
+    if (ptr == NULL || size == 0 || value == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            *(*(ptr + i) + j) *= value;
+        }
+    }
+}
+
+void mul_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            *(*(ptr + i) + j) *= value;
+        }
+    }
+}
+
+void mul_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            *(*(ptr + i) + j) *= (int64_t) value;
+        }
+    }
+}
+
+void mul_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            *(*(ptr + i) + j) *= (int64_t) value;
+        }
+    }
+}
+
+void mul_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            *(*(ptr + i) + j) *= (float64_t) value;
+        }
+    }
+}
+
+void mul_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            *(*(ptr + i) + j) *= (float64_t) value;
+        }
+    }
+}
+
+void mul_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
+{
+    if (ptr == NULL || size == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            *(*(ptr + i) + j) *= value;
+        }
+    }
+}
+
+void mul_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
+{
+    if (ptr == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
+    for (size_t i = 0; i < height; i++)
+    {
+        for (size_t j = 0; j < width; j++)
+        {
+            *(*(ptr + i) + j) *= value;
         }
     }
 }
