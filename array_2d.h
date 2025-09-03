@@ -27,10 +27,19 @@ float64_t sum_array_f_2d_square(const float64_t **ptr, size_t size);
 float64_t sum_array_f_2d_rect(const float64_t **ptr, size_t width, size_t height);
 
 void add_to_matrix_i_2d_i_square(int64_t **ptr, size_t size, int64_t value);
-void add_to_matrix_i_2d_i_rect(int64_t ***ptr, size_t width, size_t height, int64_t value);
+void add_to_matrix_i_2d_i_rect(int64_t **ptr, size_t width, size_t height, int64_t value);
 void add_to_matrix_i_2d_f_square(int64_t **ptr, size_t size, float64_t value);
 void add_to_matrix_i_2d_f_rect(int64_t **ptr, size_t width, size_t height, float64_t value);
 void add_to_matrix_f_2d_i_square(float64_t **ptr, size_t size, int64_t value);
 void add_to_matrix_f_2d_i_rect(float64_t **ptr, size_t width, size_t height, int64_t value);
 void add_to_matrix_f_2d_f_square(float64_t **ptr, size_t size, float64_t value);
 void add_to_matrix_f_2d_f_rect(float64_t **ptr, size_t width, size_t height, float64_t value);
+
+void mul_to_matrix_i_2d_i_square(int64_t **ptr, size_t size, int64_t value);
+void mul_to_matrix_i_2d_i_rect(int64_t **ptr, size_t width, size_t height, int64_t value);
+void mul_to_matrix_i_2d_f_square(int64_t **ptr, size_t size, float64_t value);
+void mul_to_matrix_i_2d_f_rect(int64_t **ptr, size_t width, size_t height, float64_t value);
+void mul_to_matrix_f_2d_i_square(float64_t **ptr, size_t size, int64_t value);
+void mul_to_matrix_f_2d_i_rect(float64_t **ptr, size_t width, size_t height, int64_t value);
+void mul_to_matrix_f_2d_f_square(float64_t **ptr, size_t size, float64_t value);
+void mul_to_matrix_f_2d_f_rect(float64_t **ptr, size_t width, size_t height, float64_t value);
