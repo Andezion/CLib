@@ -1,4 +1,5 @@
 #include "array_2d.h"
+#include <stdio.h>
 
 void destroy_array_i_2d(int64_t ***ptr, const size_t height)
 {

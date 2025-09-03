@@ -1,4 +1,6 @@
 #include "array_1d.h"
+#include <inttypes.h>
+#include <stdio.h>
 
 void destroy_array_i_1d(int64_t **ptr, const size_t size)
 {
