@@ -34,3 +34,8 @@ void sub_to_array_i_1d_i(int64_t *ptr, size_t size, int64_t value);
 void sub_to_array_i_1d_f(int64_t *ptr, size_t size, float64_t value);
 void sub_to_array_f_1d_i(float64_t *ptr, size_t size, int64_t value);
 void sub_to_array_f_1d_f(float64_t *ptr, size_t size, float64_t value);
+
+void div_to_array_i_1d_i(int64_t *ptr, size_t size, int64_t value);
+void div_to_array_i_1d_f(int64_t *ptr, size_t size, float64_t value);
+void div_to_array_f_1d_i(float64_t *ptr, size_t size, int64_t value);
+void div_to_array_f_1d_f(float64_t *ptr, size_t size, float64_t value);
