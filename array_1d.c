@@ -309,3 +309,55 @@ void sub_to_array_f_1d_f(float64_t *ptr, const size_t size, const float64_t valu
     }
 }
 
+void div_to_array_i_1d_i(int64_t *ptr, const size_t size, const int64_t value)
+{
+    if (ptr == NULL || size == 0 || value == 0)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        *(ptr + i) = *(ptr + i) / value;
+    }
+}
+
+void div_to_array_i_1d_f(int64_t *ptr, const size_t size, const float64_t value)
+{
+    if (ptr == NULL || size == 0 || value == 0.0)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        *(ptr + i) = *(ptr + i) / (int64_t) value;
+    }
+}
+
+void div_to_array_f_1d_i(float64_t *ptr, const size_t size, const int64_t value)
+{
+    if (ptr == NULL || size == 0 || value == 0)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        *(ptr + i) = *(ptr + i) / (float64_t) value;
+    }
+}
+
+void div_to_array_f_1d_f(float64_t *ptr, const size_t size, const float64_t value)
+{
+    if (ptr == NULL || size == 0 || value == 0.0)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        *(ptr + i) = *(ptr + i) / value;
+    }
+}
+
