@@ -1,8 +1,10 @@
-//
-// Created by vdoro on 10.09.2025.
-//
+#pragma once
 
-#ifndef MATH_ARRAYS_H
-#define MATH_ARRAYS_H
+#include <stdint.h>
 
-#endif //MATH_ARRAYS_H
+typedef double float64_t;
+
+void * add_arrays_i_i(int64_t *array1, const int64_t *array2);
+void * add_arrays_i_f(int64_t *array1, float64_t *array2);
+void * add_arrays_f_i(float64_t *array1, int64_t *array2);
+void * add_arrays_f_f(float64_t *array1, float64_t *array2);
