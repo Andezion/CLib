@@ -5,6 +5,31 @@
 
 typedef double float64_t;
 
+struct float_array
+{
+    float64_t *data;
+    size_t size;
+};
+
+inline struct float_array *create_matrix(const size_t size)
+{
+    struct float_array *arr = malloc(sizeof(struct float_array));
+    if (arr == NULL)
+    {
+        return NULL;
+    }
+
+    arr->size = size;
+    arr->data = (float64_t *) malloc(size * sizeof(float64_t));
+    if (arr->data == NULL)
+    {
+        free(arr);
+    }
+
+    return arr;
+}
+
+
 void destroy_array_i_1d(int64_t **ptr, size_t size);
 void destroy_array_f_1d(float64_t **ptr, size_t size);
 

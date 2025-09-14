@@ -10,4 +10,6 @@ add_executable(CLib
         array_1d.c
         array_1d.h
         array_2d.c
-        array_2d.h)
+        array_2d.h
+
+        errors.h)

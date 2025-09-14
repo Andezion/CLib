@@ -1,0 +1,9 @@
+#pragma once
+
+typedef enum ERRORS
+{
+    INCORRECT_PARAMETERS,
+    INCORRECT_ALLOCATION,
+    INCORRECT_TYPE,
+    CORRECT,
+};

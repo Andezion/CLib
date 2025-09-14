@@ -1,8 +1,95 @@
 #pragma once
 #include <stdlib.h>
 #include <inttypes.h>
+#include "errors.h"
 
 typedef double float64_t;
+
+struct float_matrix
+{
+    float64_t **data;
+    size_t rows;
+    size_t cols;
+};
+
+struct int_matrix
+{
+    int32_t **data;
+    size_t rows;
+    size_t cols;
+};
+
+inline struct int_matrix *create_int_matrix(const size_t rows, const size_t cols)
+{
+    struct int_matrix *matrix = malloc(sizeof(struct int_matrix));
+    if (matrix == NULL)
+    {
+        return NULL;
+    }
+
+    matrix->data = calloc(rows, sizeof(int32_t *));
+    if (matrix->data == NULL)
+    {
+        free(matrix);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        matrix->data[i] = calloc(cols, sizeof(int32_t));
+        if (matrix->data[i] == NULL)
+        {
+            for (size_t j = 0; j < i; j++)
+            {
+                free(matrix->data[j]);
+            }
+            free(matrix->data);
+            free(matrix);
+            return NULL;
+        }
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+
+    return matrix;
+}
+
+inline struct float_matrix *create_float_matrix(const size_t rows, const size_t cols)
+{
+    struct float_matrix *matrix = malloc(sizeof(struct float_matrix));
+    if (matrix == NULL)
+    {
+        return NULL;
+    }
+
+    matrix->data = calloc(rows, sizeof(float64_t *));
+    if (matrix->data == NULL)
+    {
+        free(matrix);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        matrix->data[i] = calloc(cols, sizeof(float64_t));
+        if (matrix->data[i] == NULL)
+        {
+            for (size_t j = 0; j < i; j++)
+            {
+                free(matrix->data[j]);
+            }
+            free(matrix->data);
+            free(matrix);
+            return NULL;
+        }
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+
+    return matrix;
+}
 
 void destroy_array_i_2d(int64_t ***ptr, size_t height);
 void destroy_array_f_2d(float64_t ***ptr, size_t height);
