@@ -11,7 +11,32 @@ struct float_array
     size_t size;
 };
 
-inline struct float_array *create_matrix(const size_t size)
+struct int_array
+{
+    int32_t *data;
+    size_t size;
+};
+
+inline struct int_array *create_int_array(const size_t size)
+{
+    struct int_array *arr = malloc(sizeof(struct int_array));
+    if (arr == NULL)
+    {
+        return NULL;
+    }
+
+    arr->size = size;
+    arr->data = malloc(sizeof(int64_t) * size);
+    if (arr->data == NULL)
+    {
+        free(arr);
+        return NULL;
+    }
+
+    return arr;
+}
+
+inline struct float_array *create_float_array(const size_t size)
 {
     struct float_array *arr = malloc(sizeof(struct float_array));
     if (arr == NULL)
@@ -20,10 +45,11 @@ inline struct float_array *create_matrix(const size_t size)
     }
 
     arr->size = size;
-    arr->data = (float64_t *) malloc(size * sizeof(float64_t));
+    malloc(size * sizeof(float64_t));
     if (arr->data == NULL)
     {
         free(arr);
+        return NULL;
     }
 
     return arr;
