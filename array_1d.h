@@ -55,6 +55,33 @@ inline struct float_array *create_float_array(const size_t size)
     return arr;
 }
 
+inline int initialization_int_array(const struct int_array *arr, const int64_t value)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = value;
+    }
+    return 0;
+}
+
+inline int initialization_float_array(const struct int_array *arr, const float64_t value)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = value;
+    }
+    return 0;
+}
 
 void destroy_array_i_1d(int64_t **ptr, size_t size);
 void destroy_array_f_1d(float64_t **ptr, size_t size);
