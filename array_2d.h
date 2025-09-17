@@ -91,6 +91,23 @@ inline struct float_matrix *create_float_matrix(const size_t rows, const size_t 
     return matrix;
 }
 
+inline int initialization_int_matrix(const struct int_matrix *matrix, const int64_t value)
+{
+    if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < matrix->rows; i++)
+    {
+        for (size_t j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = value;
+        }
+    }
+    return 0;
+}
+
 void destroy_array_i_2d(int64_t ***ptr, size_t height);
 void destroy_array_f_2d(float64_t ***ptr, size_t height);
 
