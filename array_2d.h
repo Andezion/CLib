@@ -22,7 +22,9 @@ struct int_matrix
 inline void free_int_matrix(struct int_matrix **matrix_to_delete)
 {
     if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
+    {
         return;
+    }
 
     struct int_matrix *matrix = *matrix_to_delete;
 
@@ -38,7 +40,27 @@ inline void free_int_matrix(struct int_matrix **matrix_to_delete)
     free(matrix);
     *matrix_to_delete = NULL;
 }
+inline void free_float_matrix(struct float_matrix **matrix_to_delete)
+{
+    if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
+    {
+        return;
+    }
 
+    struct float_matrix *matrix = *matrix_to_delete;
+
+    if (matrix->data != NULL)
+    {
+        for (size_t i = 0; i < matrix->rows; i++)
+        {
+            free(matrix->data[i]);
+        }
+        free(matrix->data);
+    }
+
+    free(matrix);
+    *matrix_to_delete = NULL;
+}
 
 
 inline struct int_matrix *create_int_matrix(const size_t rows, const size_t cols)
@@ -76,7 +98,6 @@ inline struct int_matrix *create_int_matrix(const size_t rows, const size_t cols
 
     return matrix;
 }
-
 inline struct float_matrix *create_float_matrix(const size_t rows, const size_t cols)
 {
     struct float_matrix *matrix = malloc(sizeof(struct float_matrix));
@@ -129,7 +150,6 @@ inline int initialization_int_matrix(const struct int_matrix *matrix, const int6
     }
     return 0;
 }
-
 inline int initialization_float_matrix(const struct float_matrix *matrix, const float value)
 {
     if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
@@ -181,8 +201,6 @@ inline struct int_matrix *add_int_matrices(const size_t n, const size_t rows, co
     va_end(args);
     return matrix;
 }
-
-
 inline struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;
@@ -217,6 +235,75 @@ inline struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, co
     va_end(args);
     return matrix;
 }
+inline struct float_matrix *add_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+{
+    va_list args;
+    va_start(args, cols);
+
+    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    if (matrix == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct float_matrix *arg = va_arg(args, struct float_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
+        {
+            free_float_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] += arg->data[i][j];
+            }
+        }
+    }
+
+    va_end(args);
+    return matrix;
+}
+inline struct float_matrix *sub_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+{
+    va_list args;
+    va_start(args, cols);
+
+    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    if (matrix == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct float_matrix *arg = va_arg(args, struct float_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
+        {
+            free_float_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] -= arg->data[i][j];
+            }
+        }
+    }
+
+    va_end(args);
+    return matrix;
+}
+
 
 void destroy_array_i_2d(int64_t ***ptr, size_t height);
 void destroy_array_f_2d(float64_t ***ptr, size_t height);
