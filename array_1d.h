@@ -5,6 +5,8 @@
 
 typedef double float64_t;
 
+
+
 void destroy_array_i_1d(int64_t **ptr, size_t size);
 void destroy_array_f_1d(float64_t **ptr, size_t size);
 
