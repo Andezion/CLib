@@ -5,6 +5,84 @@
 
 typedef double float64_t;
 
+struct float_array
+{
+    float64_t *data;
+    size_t size;
+};
+
+struct int_array
+{
+    int32_t *data;
+    size_t size;
+};
+
+inline struct int_array *create_int_array(const size_t size)
+{
+    struct int_array *arr = malloc(sizeof(struct int_array));
+    if (arr == NULL)
+    {
+        return NULL;
+    }
+
+    arr->size = size;
+    arr->data = malloc(sizeof(int64_t) * size);
+    if (arr->data == NULL)
+    {
+        free(arr);
+        return NULL;
+    }
+
+    return arr;
+}
+
+inline struct float_array *create_float_array(const size_t size)
+{
+    struct float_array *arr = malloc(sizeof(struct float_array));
+    if (arr == NULL)
+    {
+        return NULL;
+    }
+
+    arr->size = size;
+    malloc(size * sizeof(float64_t));
+    if (arr->data == NULL)
+    {
+        free(arr);
+        return NULL;
+    }
+
+    return arr;
+}
+
+inline int initialization_int_array(const struct int_array *arr, const int64_t value)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = value;
+    }
+    return 0;
+}
+
+inline int initialization_float_array(const struct int_array *arr, const float64_t value)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = value;
+    }
+    return 0;
+}
+
 void destroy_array_i_1d(int64_t **ptr, size_t size);
 void destroy_array_f_1d(float64_t **ptr, size_t size);
 
