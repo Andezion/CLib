@@ -1,7 +1,10 @@
 #pragma once
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+#include "array_2d.h"
 
 typedef double float64_t;
 
@@ -34,6 +37,72 @@ inline struct int_array *create_int_array(const size_t size)
     }
 
     return arr;
+}
+
+inline struct int_array *add_int_arrays(const size_t n, const size_t size, ...)
+{
+    va_list args;
+    va_start(args, size);
+
+    struct int_array *array = create_int_array(size);
+    if (array == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct int_array *arr = va_arg(args, struct int_array *);
+        if (arr == NULL || arr->data == NULL || arr->size != size)
+        {
+            free(array);
+
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t i = 0; i < size; i++)
+        {
+            array->data[i] = array->data[i] + arr->data[i];
+        }
+    }
+
+    va_end(args);
+    return array;
+}
+
+inline struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
+{
+    va_list args;
+    va_start(args, size);
+
+    struct int_array *array = create_int_array(size);
+    if (array == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct int_array *arr = va_arg(args, struct int_array *);
+        if (arr == NULL || arr->data == NULL || arr->size != size)
+        {
+            free(array);
+
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t i = 0; i < size; i++)
+        {
+            array->data[i] = array->data[i] - arr->data[i];
+        }
+    }
+
+    va_end(args);
+    return array;
 }
 
 inline struct float_array *create_float_array(const size_t size)
