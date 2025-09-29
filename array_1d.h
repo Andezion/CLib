@@ -218,6 +218,7 @@ inline int initialization_float_array(const struct int_array *arr, const float64
     return 0;
 }
 
+
 void destroy_array_i_1d(int64_t **ptr, size_t size);
 void destroy_array_f_1d(float64_t **ptr, size_t size);
 
