@@ -124,6 +124,72 @@ inline struct float_array *create_float_array(const size_t size)
     return arr;
 }
 
+inline struct float_array *add_float_arrays(const size_t n, const size_t size, ...)
+{
+    va_list args;
+    va_start(args, size);
+
+    struct float_array *array = create_float_array(size);
+    if (array == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct float_array *arr = va_arg(args, struct float_array *);
+        if (arr == NULL || arr->data == NULL || arr->size != size)
+        {
+            free(array);
+
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t i = 0; i < size; i++)
+        {
+            array->data[i] = array->data[i] + arr->data[i];
+        }
+    }
+
+    va_end(args);
+    return array;
+}
+
+inline struct float_array *sub_float_arrays(const size_t n, const size_t size, ...)
+{
+    va_list args;
+    va_start(args, size);
+
+    struct float_array *array = create_float_array(size);
+    if (array == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct float_array *arr = va_arg(args, struct float_array *);
+        if (arr == NULL || arr->data == NULL || arr->size != size)
+        {
+            free(array);
+
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t i = 0; i < size; i++)
+        {
+            array->data[i] = array->data[i] - arr->data[i];
+        }
+    }
+
+    va_end(args);
+    return array;
+}
+
 inline int initialization_int_array(const struct int_array *arr, const int64_t value)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
