@@ -1,267 +1,32 @@
 #include "array_2d.h"
 #include <stdio.h>
 
-void destroy_array_i_2d(int64_t ***ptr, const size_t height)
+void display_int_matrix(int64_t **ptr, const size_t row, const size_t col)
 {
-    if (ptr == NULL || height == 0)
+    if (ptr == NULL || row == 0 || col == 0)
     {
         return;
     }
 
-    int64_t **temp = *ptr;
-    for (size_t i = 0; i < height; i++)
+    for (size_t i = 0; i < col; i++)
     {
-        free(*(temp + i));
-    }
-    free(temp);
-
-    *ptr = NULL;
-}
-void destroy_array_f_2d(float64_t ***ptr, const size_t height)
-{
-    if (ptr == NULL || height == 0)
-    {
-        return;
-    }
-
-    float64_t **temp = *ptr;
-    for (size_t i = 0; i < height; i++)
-    {
-        free(*(temp + i));
-    }
-    free(temp);
-
-    *ptr = NULL;
-}
-
-int create_array_i_2d_rect(int64_t ***ptr, const size_t width, const size_t height)
-{
-    if(width == 0 || height == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    int64_t **array = malloc(sizeof(int64_t *) * height);
-    if(array == NULL)
-    {
-        return 2;
-    }
-
-    for(size_t i = 0; i < height; i++)
-    {
-        *(array + i) = malloc(sizeof(int64_t) * width);
-        if(*(array + i) == NULL)
-        {
-            destroy_array_i_2d(&array, i);
-            return 2;
-        }
-    }
-
-    *ptr = array;
-
-    return 0;
-}
-int create_array_i_2d_init_rect(int64_t ***ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if(width == 0 || height == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    const int error = create_array_i_2d_rect(ptr, width, height);
-    if (error != 0)
-    {
-        return error;
-    }
-
-    int64_t **array = *ptr;
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(array + i) + j) = value;
-        }
-    }
-
-    return 0;
-}
-int create_array_i_2d_square(int64_t ***ptr, const size_t size)
-{
-    if(size == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    int64_t **array = malloc(sizeof(int64_t *) * size);
-    if (array == NULL)
-    {
-        return 2;
-    }
-
-    for(size_t i = 0; i < size; i++)
-    {
-        *(array + i) = malloc(sizeof(int64_t) * size);
-        if (*(array + i) == NULL)
-        {
-            destroy_array_i_2d(&array, i);
-            return 2;
-        }
-    }
-
-    *ptr = array;
-
-    return 0;
-}
-int create_array_i_2d_init_square(int64_t ***ptr, const size_t size, const int64_t value)
-{
-    if(size == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    const int error = create_array_i_2d_square(ptr, size);
-    if (error != 0)
-    {
-        return error;
-    }
-
-    int64_t **array = *ptr;
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(array + i) + j) = value;
-        }
-    }
-
-    return 0;
-}
-
-int create_array_f_2d_rect(float64_t ***ptr, const size_t width, const size_t height)
-{
-    if(width == 0 || height == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    float64_t **array = malloc(sizeof(float64_t *) * height);
-    if (array == NULL)
-    {
-        return 2;
-    }
-
-    for(size_t i = 0; i < height; i++)
-    {
-        *(array + i) = malloc(sizeof(float64_t) * width);
-        if (*(array + i) == NULL)
-        {
-            destroy_array_f_2d(&array, i);
-            return 2;
-        }
-    }
-    *ptr = array;
-    return 0;
-}
-int create_array_f_2d_init_rect(float64_t ***ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if(width == 0 || height == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-    const int error = create_array_f_2d_rect(ptr, width, height);
-    if (error != 0)
-    {
-        return error;
-    }
-
-    float64_t **array = *ptr;
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(array + i) + j) = value;
-        }
-    }
-
-    return 0;
-}
-int create_array_f_2d_square(float64_t ***ptr, const size_t size)
-{
-    if(size == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-
-    float64_t **array = malloc(sizeof(float64_t *) * size);
-    if (array == NULL)
-    {
-        return 2;
-    }
-
-    for(size_t i = 0; i < size; i++)
-    {
-        *(array + i) = malloc(sizeof(float64_t) * size);
-        if (*(array + i) == NULL)
-        {
-            destroy_array_f_2d(&array, i);
-            return 2;
-        }
-    }
-
-    *ptr = array;
-
-    return 0;
-}
-int create_array_f_2d_init_square(float64_t ***ptr, const size_t size, const float64_t value)
-{
-    if(size == 0 || ptr == NULL)
-    {
-        return 1;
-    }
-    const int error = create_array_f_2d_square(ptr, size);
-    if (error != 0)
-    {
-        return error;
-    }
-
-    float64_t **array = *ptr;
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(array + i) + j) = value;
-        }
-    }
-
-    return 0;
-}
-
-void display_array_i_2d(int64_t **ptr, const size_t width, const size_t height)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
+        for (size_t j = 0; j < row; j++)
         {
             printf("%" PRId64 "  ", *(*(ptr + i) + j));
         }
         printf("\n");
     }
 }
-void display_array_f_2d(float64_t **ptr, const size_t width, const size_t height)
+void display_float_matrix(float64_t **ptr, const size_t row, const size_t col)
 {
-    if (ptr == NULL || width == 0 || height == 0)
+    if (ptr == NULL || row == 0 || col == 0)
     {
         return;
     }
 
-    for (size_t i = 0; i < height; i++)
+    for (size_t i = 0; i < col; i++)
     {
-        for (size_t j = 0; j < width; j++)
+        for (size_t j = 0; j < row; j++)
         {
             printf("%f ", *(*(ptr + i) + j));
         }
@@ -269,17 +34,17 @@ void display_array_f_2d(float64_t **ptr, const size_t width, const size_t height
     }
 }
 
-int64_t sum_array_i_2d_square(const int64_t **ptr, const size_t size)
+int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
 {
-    if (ptr == NULL || size == 0)
+    if (ptr == NULL || row == 0 || col == 0)
     {
         return 1;
     }
 
     int64_t sum = 0;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < col; i++)
     {
-        for (size_t j = 0; j < size; j++)
+        for (size_t j = 0; j < row; j++)
         {
             sum += *(*(ptr + i) + j);
         }
@@ -287,35 +52,17 @@ int64_t sum_array_i_2d_square(const int64_t **ptr, const size_t size)
     return sum;
 }
 
-int64_t sum_array_i_2d_rect(const int64_t **ptr, const size_t width, const size_t height)
+float64_t sum_float_matrix(const float64_t **ptr, const size_t row, const size_t col)
 {
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return 1;
-    }
-
-    int64_t sum = 0;
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            sum += *(*(ptr + i) + j);
-        }
-    }
-    return sum;
-}
-
-float64_t sum_array_f_2d_square(const float64_t **ptr, const size_t size)
-{
-    if (ptr == NULL || size == 0)
+    if (ptr == NULL || row == 0 || col == 0)
     {
         return 1;
     }
 
     float64_t sum = 0;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < col; i++)
     {
-        for (size_t j = 0; j < size; j++)
+        for (size_t j = 0; j < row; j++)
         {
             sum += *(*(ptr + i) + j);
         }
@@ -323,496 +70,287 @@ float64_t sum_array_f_2d_square(const float64_t **ptr, const size_t size)
     return sum;
 }
 
-float64_t sum_array_f_2d_rect(const float64_t **ptr, const size_t width, const size_t height)
+inline void free_int_matrix(struct int_matrix **matrix_to_delete)
 {
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return 1;
-    }
-
-    float64_t sum = 0;
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            sum += *(*(ptr + i) + j);
-        }
-    }
-    return sum;
-}
-
-void add_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + value;
-        }
-    }
-}
-
-void add_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + value;
-        }
-    }
-}
-
-void add_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + (int64_t) value;
-        }
-    }
-}
-
-void add_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + (int64_t) value;
-        }
-    }
-}
-
-void add_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + (float64_t) value;
-        }
-    }
-}
-
-void add_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + (float64_t) value;
-        }
-    }
-}
-
-void add_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + value;
-        }
-    }
-}
-
-void add_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) = *(*(ptr + i) + j) + value;
-        }
-    }
-}
-
-void mul_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0 || value == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) *= value;
-        }
-    }
-}
-void mul_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
+    if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
     {
         return;
     }
 
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) *= value;
-        }
-    }
-}
-void mul_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) *= (int64_t) value;
-        }
-    }
-}
-void mul_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) *= (int64_t) value;
-        }
-    }
-}
-void mul_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) *= (float64_t) value;
-        }
-    }
-}
-void mul_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) *= (float64_t) value;
-        }
-    }
-}
-void mul_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) *= value;
-        }
-    }
-}
-void mul_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) *= value;
-        }
-    }
-}
+    struct int_matrix *matrix = *matrix_to_delete;
 
-void sub_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0 || value == 0)
+    if (matrix->data != NULL)
     {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
+        for (size_t i = 0; i < matrix->rows; i++)
         {
-            *(*(ptr + i) + j) -= value;
+            free(matrix->data[i]);
         }
+        free(matrix->data);
     }
+
+    free(matrix);
+    *matrix_to_delete = NULL;
 }
-void sub_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
+inline void free_float_matrix(struct float_matrix **matrix_to_delete)
 {
-    if (ptr == NULL || width == 0 || height == 0)
+    if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
     {
         return;
     }
 
-    for (size_t i = 0; i < height; i++)
+    struct float_matrix *matrix = *matrix_to_delete;
+
+    if (matrix->data != NULL)
     {
-        for (size_t j = 0; j < width; j++)
+        for (size_t i = 0; i < matrix->rows; i++)
         {
-            *(*(ptr + i) + j) -= value;
+            free(matrix->data[i]);
         }
+        free(matrix->data);
     }
-}
-void sub_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) -= (int64_t) value;
-        }
-    }
-}
-void sub_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) -= (int64_t) value;
-        }
-    }
-}
-void sub_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) -= (float64_t) value;
-        }
-    }
-}
-void sub_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) -= (float64_t) value;
-        }
-    }
-}
-void sub_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) -= value;
-        }
-    }
-}
-void sub_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0)
-    {
-        return;
-    }
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) -= value;
-        }
-    }
+
+    free(matrix);
+    *matrix_to_delete = NULL;
 }
 
-void div_to_matrix_i_2d_i_square(int64_t **ptr, const size_t size, const int64_t value)
+inline struct int_matrix *create_int_matrix(const size_t rows, const size_t cols)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    struct int_matrix *matrix = malloc(sizeof(struct int_matrix));
+    if (matrix == NULL)
     {
-        return;
+        return NULL;
     }
 
-    for (size_t i = 0; i < size; i++)
+    matrix->data = calloc(rows, sizeof(int32_t *));
+    if (matrix->data == NULL)
     {
-        for (size_t j = 0; j < size; j++)
+        free(matrix);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        matrix->data[i] = calloc(cols, sizeof(int32_t));
+        if (matrix->data[i] == NULL)
         {
-            *(*(ptr + i) + j) /= value;
+            for (size_t j = 0; j < i; j++)
+            {
+                free(matrix->data[j]);
+            }
+            free(matrix->data);
+            free(matrix);
+            return NULL;
         }
     }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+
+    return matrix;
+}
+inline struct float_matrix *create_float_matrix(const size_t rows, const size_t cols)
+{
+    struct float_matrix *matrix = malloc(sizeof(struct float_matrix));
+    if (matrix == NULL)
+    {
+        return NULL;
+    }
+
+    matrix->data = calloc(rows, sizeof(float64_t *));
+    if (matrix->data == NULL)
+    {
+        free(matrix);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        matrix->data[i] = calloc(cols, sizeof(float64_t));
+        if (matrix->data[i] == NULL)
+        {
+            for (size_t j = 0; j < i; j++)
+            {
+                free(matrix->data[j]);
+            }
+            free(matrix->data);
+            free(matrix);
+            return NULL;
+        }
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+
+    return matrix;
 }
 
-void div_to_matrix_i_2d_i_rect(int64_t **ptr, const size_t width, const size_t height, const int64_t value)
+inline int initialization_int_matrix(const struct int_matrix *matrix, const int64_t value)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
     {
-        return;
+        return -1;
     }
 
-    for (size_t i = 0; i < height; i++)
+    for (size_t i = 0; i < matrix->rows; i++)
     {
-        for (size_t j = 0; j < width; j++)
+        for (size_t j = 0; j < matrix->cols; j++)
         {
-            *(*(ptr + i) + j) /= value;
+            matrix->data[i][j] = value;
         }
     }
+    return 0;
+}
+inline int initialization_float_matrix(const struct float_matrix *matrix, const float64_t value)
+{
+    if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < matrix->rows; i++)
+    {
+        for (size_t j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = value;
+        }
+    }
+    return 0;
 }
 
-void div_to_matrix_i_2d_f_square(int64_t **ptr, const size_t size, const float64_t value)
+inline struct int_matrix *add_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
-    if (ptr == NULL || size == 0 || value == 0.0)
+    va_list args;
+    va_start(args, cols);
+
+    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    if (matrix == NULL)
     {
-        return;
+        va_end(args);
+        return NULL;
     }
 
-    for (size_t i = 0; i < size; i++)
+    for (size_t k = 0; k < n; k++)
     {
-        for (size_t j = 0; j < size; j++)
+        const struct int_matrix *arg = va_arg(args, struct int_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
         {
-            *(*(ptr + i) + j) /= (int64_t) value;
+            free_int_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] += arg->data[i][j];
+            }
         }
     }
+
+    va_end(args);
+    return matrix;
+}
+inline struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+{
+    va_list args;
+    va_start(args, cols);
+
+    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    if (matrix == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct int_matrix *arg = va_arg(args, struct int_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
+        {
+            free_int_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] -= arg->data[i][j];
+            }
+        }
+    }
+
+    va_end(args);
+    return matrix;
 }
 
-void div_to_matrix_i_2d_f_rect(int64_t **ptr, const size_t width, const size_t height, const float64_t value)
+inline struct float_matrix *add_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
+    va_list args;
+    va_start(args, cols);
+
+    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    if (matrix == NULL)
     {
-        return;
+        va_end(args);
+        return NULL;
     }
 
-    for (size_t i = 0; i < height; i++)
+    for (size_t k = 0; k < n; k++)
     {
-        for (size_t j = 0; j < width; j++)
+        const struct float_matrix *arg = va_arg(args, struct float_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
         {
-            *(*(ptr + i) + j) /= (int64_t) value;
+            free_float_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] += arg->data[i][j];
+            }
         }
     }
+
+    va_end(args);
+    return matrix;
 }
-
-void div_to_matrix_f_2d_i_square(float64_t **ptr, const size_t size, const int64_t value)
+inline struct float_matrix *sub_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
-    if (ptr == NULL || size == 0 || value == 0)
+    va_list args;
+    va_start(args, cols);
+
+    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    if (matrix == NULL)
     {
-        return;
+        va_end(args);
+        return NULL;
     }
 
-    for (size_t i = 0; i < size; i++)
+    for (size_t k = 0; k < n; k++)
     {
-        for (size_t j = 0; j < size; j++)
+        const struct float_matrix *arg = va_arg(args, struct float_matrix *);
+        if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
         {
-            *(*(ptr + i) + j) /= (float64_t) value;
+            free_float_matrix(&matrix);
+
+            va_end(args);
+            return NULL;
+        }
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < cols; j++)
+            {
+                matrix->data[i][j] -= arg->data[i][j];
+            }
         }
     }
-}
 
-void div_to_matrix_f_2d_i_rect(float64_t **ptr, const size_t width, const size_t height, const int64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0 || value == 0)
-    {
-        return;
-    }
-
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) /= (float64_t) value;
-        }
-    }
-}
-
-void div_to_matrix_f_2d_f_square(float64_t **ptr, const size_t size, const float64_t value)
-{
-    if (ptr == NULL || size == 0 || value == 0.0)
-    {
-        return;
-    }
-
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            *(*(ptr + i) + j) /= value;
-        }
-    }
-}
-
-void div_to_matrix_f_2d_f_rect(float64_t **ptr, const size_t width, const size_t height, const float64_t value)
-{
-    if (ptr == NULL || width == 0 || height == 0 || value == 0.0)
-    {
-        return;
-    }
-
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            *(*(ptr + i) + j) /= value;
-        }
-    }
+    va_end(args);
+    return matrix;
 }
