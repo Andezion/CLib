@@ -7,9 +7,14 @@ include_directories(.)
 
 add_executable(CLib
         main.c
-        array_1d.c
-        array_1d.h
-        array_2d.c
-        array_2d.h
+
+        array.c
+        array.h
+
+        matrix.c
+        matrix.h
+
+        matrix_math.c
+        matrix_math.h
 
         errors.h)
