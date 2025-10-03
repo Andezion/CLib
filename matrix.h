@@ -1,7 +1,6 @@
 #pragma once
 #include <stdlib.h>
 #include <inttypes.h>
-#include <stdarg.h>
 
 typedef double float64_t;
 
