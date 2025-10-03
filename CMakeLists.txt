@@ -17,4 +17,6 @@ add_executable(CLib
         matrix_math.c
         matrix_math.h
 
-        errors.h)
+        errors.h
+        array_math.c
+        array_math.h)

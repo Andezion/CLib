@@ -30,6 +30,3 @@ inline int initialization_float_matrix(const struct float_matrix *matrix, float6
 
 void display_int_matrix(int64_t **ptr, size_t row, size_t col);
 void display_float_matrix(float64_t **ptr, size_t row, size_t col);
-
-int64_t sum_int_matrix(const int64_t **ptr, size_t row, size_t col);
-float64_t sum_float_matrix(const float64_t **ptr, size_t row, size_t col);

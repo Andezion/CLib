@@ -2,6 +2,41 @@
 #include "matrix.h"
 #include <stdarg.h>
 
+int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
+{
+    if (ptr == NULL || row == 0 || col == 0)
+    {
+        return 1;
+    }
+
+    int64_t sum = 0;
+    for (size_t i = 0; i < col; i++)
+    {
+        for (size_t j = 0; j < row; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
+float64_t sum_float_matrix(const float64_t **ptr, const size_t row, const size_t col)
+{
+    if (ptr == NULL || row == 0 || col == 0)
+    {
+        return 1;
+    }
+
+    float64_t sum = 0;
+    for (size_t i = 0; i < col; i++)
+    {
+        for (size_t j = 0; j < row; j++)
+        {
+            sum += *(*(ptr + i) + j);
+        }
+    }
+    return sum;
+}
+
 inline struct int_matrix *add_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;

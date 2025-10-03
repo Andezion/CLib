@@ -34,42 +34,6 @@ void display_float_matrix(float64_t **ptr, const size_t row, const size_t col)
     }
 }
 
-int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
-{
-    if (ptr == NULL || row == 0 || col == 0)
-    {
-        return 1;
-    }
-
-    int64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
-    {
-        for (size_t j = 0; j < row; j++)
-        {
-            sum += *(*(ptr + i) + j);
-        }
-    }
-    return sum;
-}
-
-float64_t sum_float_matrix(const float64_t **ptr, const size_t row, const size_t col)
-{
-    if (ptr == NULL || row == 0 || col == 0)
-    {
-        return 1;
-    }
-
-    float64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
-    {
-        for (size_t j = 0; j < row; j++)
-        {
-            sum += *(*(ptr + i) + j);
-        }
-    }
-    return sum;
-}
-
 inline void free_int_matrix(struct int_matrix **matrix_to_delete)
 {
     if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
