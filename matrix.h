@@ -28,12 +28,6 @@ inline struct float_matrix *create_float_matrix(size_t rows, size_t cols);
 inline int initialization_int_matrix(const struct int_matrix *matrix, int64_t value);
 inline int initialization_float_matrix(const struct float_matrix *matrix, float64_t value);
 
-inline struct int_matrix *add_int_matrices(size_t n, size_t rows, size_t cols, ...);
-inline struct int_matrix *sub_int_matrices(size_t n, size_t rows, size_t cols, ...);
-
-inline struct float_matrix *add_float_matrices(size_t n, size_t rows, size_t cols, ...);
-inline struct float_matrix *sub_float_matrices(size_t n, size_t rows, size_t cols, ...);
-
 void display_int_matrix(int64_t **ptr, size_t row, size_t col);
 void display_float_matrix(float64_t **ptr, size_t row, size_t col);
 

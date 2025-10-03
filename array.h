@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "array_2d.h"
+#include "matrix.h"
 
 typedef double float64_t;
 
