@@ -3,20 +3,20 @@ project(CLib C)
 
 set(CMAKE_C_STANDARD 11)
 
-include_directories(.)
+include_directories(. array matrix)
 
 add_executable(CLib
         main.c
 
-        array.c
-        array.h
+        array/array.c
+        array/array.h
 
-        matrix.c
-        matrix.h
+        matrix/matrix.c
+        matrix/matrix.h
 
-        matrix_math.c
-        matrix_math.h
+        matrix/matrix_math.c
+        matrix/matrix_math.h
 
         errors.h
-        array_math.c
-        array_math.h)
+        array/array_math.c
+        array/array_math.h)
