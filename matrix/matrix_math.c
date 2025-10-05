@@ -2,6 +2,65 @@
 #include "matrix.h"
 #include <stdarg.h>
 
+struct int_matrix *mul_int_matrices(const size_t n, ...)
+{
+    va_list args;
+    va_start(args, n);
+
+    struct int_matrix *result = va_arg(args, struct int_matrix *);
+    if (!result || !result->data)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct int_matrix *current = copy_int_matrix(result);
+    if (!current)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t i = 1; i < n; i++)
+    {
+        const struct int_matrix *next = va_arg(args, const struct int_matrix *);
+        if (!next || !next->data || current->cols != next->rows)
+        {
+            free_int_matrix(&current);
+            va_end(args);
+            return NULL;
+        }
+
+        struct int_matrix *temp = create_int_matrix(current->rows, next->cols);
+        if (!temp)
+        {
+            free_int_matrix(&current);
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t r = 0; r < current->rows; r++)
+        {
+            for (size_t c = 0; c < next->cols; c++)
+            {
+                int64_t sum = 0;
+                for (size_t k = 0; k < current->cols; k++)
+                {
+                    sum += current->data[r][k] * next->data[k][c];
+                }
+                temp->data[r][c] = sum;
+            }
+        }
+
+        free_int_matrix(&current);
+        current = temp;
+    }
+
+    va_end(args);
+    return current;
+}
+
+
 int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
 {
     if (ptr == NULL || row == 0 || col == 0)

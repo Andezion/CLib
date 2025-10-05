@@ -34,6 +34,53 @@ void display_float_matrix(float64_t **ptr, const size_t row, const size_t col)
     }
 }
 
+struct int_matrix * copy_int_matrix(const struct int_matrix *matrix)
+{
+    if (matrix == NULL || matrix->data == NULL ||
+        matrix->rows == 0 || matrix->cols == 0)
+    {
+        return NULL;
+    }
+
+    struct int_matrix *new_matrix = malloc(sizeof(struct int_matrix));
+    if (new_matrix == NULL)
+    {
+        return NULL;
+    }
+
+    new_matrix->rows = matrix->rows;
+    new_matrix->cols = matrix->cols;
+
+    new_matrix->data = malloc(new_matrix->rows * sizeof(int *));
+    if (new_matrix->data == NULL)
+    {
+        free(new_matrix);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < new_matrix->rows; i++)
+    {
+        new_matrix->data[i] = malloc(new_matrix->cols * sizeof(int));
+        if (new_matrix->data[i] == NULL)
+        {
+            for (size_t j = 0; j < i; j++)
+            {
+                free(new_matrix->data[j]);
+            }
+            free(new_matrix->data);
+            free(new_matrix);
+            return NULL;
+        }
+
+        for (size_t j = 0; j < new_matrix->cols; j++)
+        {
+            new_matrix->data[i][j] = matrix->data[i][j];
+        }
+    }
+
+    return new_matrix;
+}
+
 inline void free_int_matrix(struct int_matrix **matrix_to_delete)
 {
     if (matrix_to_delete == NULL || *matrix_to_delete == NULL)
