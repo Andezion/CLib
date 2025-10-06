@@ -61,6 +61,64 @@ struct int_matrix *mul_int_matrices(const size_t n, ...)
 }
 
 
+struct float_matrix * mul_float_matrices(const size_t n, ...)
+{
+    va_list args;
+    va_start(args, n);
+
+    struct float_matrix *result = va_arg(args, struct float_matrix *);
+    if (!result || !result->data)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct float_matrix *current = copy_float_matrix(result);
+    if (!current)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t i = 1; i < n; i++)
+    {
+        const struct float_matrix *next = va_arg(args, const struct float_matrix *);
+        if (!next || !next->data || current->cols != next->rows)
+        {
+            free_float_matrix(&current);
+            va_end(args);
+            return NULL;
+        }
+
+        struct float_matrix *temp = create_float_matrix(current->rows, next->cols);
+        if (!temp)
+        {
+            free_int_matrix(&current);
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t r = 0; r < current->rows; r++)
+        {
+            for (size_t c = 0; c < next->cols; c++)
+            {
+                float64_t sum = 0;
+                for (size_t k = 0; k < current->cols; k++)
+                {
+                    sum += current->data[r][k] * next->data[k][c];
+                }
+                temp->data[r][c] = sum;
+            }
+        }
+
+        free_int_matrix(&current);
+        current = temp;
+    }
+
+    va_end(args);
+    return current;
+}
+
 int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
 {
     if (ptr == NULL || row == 0 || col == 0)
