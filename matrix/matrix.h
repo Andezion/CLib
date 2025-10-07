@@ -32,3 +32,5 @@ void display_float_matrix(float64_t **ptr, size_t row, size_t col);
 
 inline struct int_matrix *copy_int_matrix(const struct int_matrix *matrix);
 inline struct float_matrix *copy_float_matrix(const struct float_matrix *matrix);
+
+int popa();
