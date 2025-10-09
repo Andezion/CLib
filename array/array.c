@@ -48,7 +48,7 @@ void display_float_array(const float64_t *ptr, const size_t size)
     printf("\n");
 }
 
-inline struct float_array *create_float_array(const size_t size)
+struct float_array *create_float_array(const size_t size)
 {
     struct float_array *arr = malloc(sizeof(struct float_array));
     if (arr == NULL)
@@ -57,7 +57,7 @@ inline struct float_array *create_float_array(const size_t size)
     }
 
     arr->size = size;
-    malloc(size * sizeof(float64_t));
+    arr->data = malloc(size * sizeof(float64_t));
     if (arr->data == NULL)
     {
         free(arr);
@@ -66,7 +66,7 @@ inline struct float_array *create_float_array(const size_t size)
 
     return arr;
 }
-inline struct int_array *create_int_array(const size_t size)
+struct int_array *create_int_array(const size_t size)
 {
     struct int_array *arr = malloc(sizeof(struct int_array));
     if (arr == NULL)
@@ -85,7 +85,7 @@ inline struct int_array *create_int_array(const size_t size)
     return arr;
 }
 
-inline int initialization_float_array(const struct float_array *arr, const float64_t value)
+int initialization_float_array(const struct float_array *arr, const float64_t value)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
     {
@@ -98,7 +98,7 @@ inline int initialization_float_array(const struct float_array *arr, const float
     }
     return 0;
 }
-inline int initialization_int_array(const struct int_array *arr, const int64_t value)
+int initialization_int_array(const struct int_array *arr, const int64_t value)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
     {

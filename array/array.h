@@ -20,11 +20,11 @@ struct int_array
     size_t size;
 };
 
-inline struct int_array *create_int_array(size_t size);
-inline struct float_array *create_float_array(size_t size);
+struct int_array *create_int_array(size_t size);
+struct float_array *create_float_array(size_t size);
 
-inline int initialization_int_array(const struct int_array *arr, int64_t value);
-inline int initialization_float_array(const struct float_array *arr, float64_t value);
+int initialization_int_array(const struct int_array *arr, int64_t value);
+int initialization_float_array(const struct float_array *arr, float64_t value);
 
 void destroy_int_array(int64_t **ptr, size_t size);
 void destroy_float_array(float64_t **ptr, size_t size);
