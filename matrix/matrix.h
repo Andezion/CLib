@@ -36,4 +36,4 @@ inline struct int_matrix *copy_int_matrix(const struct int_matrix *matrix);
 inline struct float_matrix *copy_float_matrix(const struct float_matrix *matrix);
 
 inline int initialization_random_int_matrix(struct int_matrix *matrix, int64_t min, int64_t max);
-inline int initialization_random_float_matrix(struct int_matrix *matrix, int64_t min, int64_t max);
+inline int initialization_random_float_matrix(struct float_matrix *matrix, float64_t min, float64_t max);
