@@ -1,5 +1,6 @@
 #include "matrix.h"
-#include <stdio.h>
+
+#include <math.h>
 
 void display_int_matrix(int64_t **ptr, const size_t row, const size_t col)
 {
@@ -32,6 +33,42 @@ void display_float_matrix(float64_t **ptr, const size_t row, const size_t col)
         }
         printf("\n");
     }
+}
+
+int initialization_random_int_matrix(struct int_matrix *matrix, const int64_t min, const int64_t max)
+{
+    if (matrix == NULL || min > max || matrix->data == NULL)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < matrix->rows; i++)
+    {
+        for (size_t j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = min + rand() % (max - min + 1);
+        }
+    }
+
+    return 1;
+}
+
+int initialization_random_float_matrix(struct float_matrix *matrix, const float64_t min, const float64_t max)
+{
+    if (matrix == NULL || min > max || matrix->data == NULL)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < matrix->rows; i++)
+    {
+        for (size_t j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = min + (max - min) * ((double)rand() / RAND_MAX);
+        }
+    }
+
+    return 1;
 }
 
 struct float_matrix * copy_float_matrix(const struct float_matrix *matrix)
@@ -242,7 +279,7 @@ inline struct float_matrix *create_float_matrix(const size_t rows, const size_t 
     return matrix;
 }
 
-inline int initialization_int_matrix(const struct int_matrix *matrix, const int64_t value)
+inline int initialization_int_matrix(struct int_matrix *matrix, const int64_t value)
 {
     if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
     {
@@ -258,7 +295,8 @@ inline int initialization_int_matrix(const struct int_matrix *matrix, const int6
     }
     return 0;
 }
-inline int initialization_float_matrix(const struct float_matrix *matrix, const float64_t value)
+
+inline int initialization_float_matrix(struct float_matrix *matrix, const float64_t value)
 {
     if (matrix == NULL || matrix->data == NULL || matrix->cols <= 0 || matrix->rows <= 0)
     {
