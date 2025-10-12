@@ -378,36 +378,36 @@ struct float_matrix * div_float_matrices(const size_t n, ...)
     return current;
 }
 
-int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
+int64_t sum_int_matrix(const struct int_matrix *matrix)
 {
-    if (ptr == NULL || row == 0 || col == 0)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return 1;
     }
 
     int64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
+    for (size_t i = 0; i < matrix->rows; i++)
     {
-        for (size_t j = 0; j < row; j++)
+        for (size_t j = 0; j < matrix->cols; j++)
         {
-            sum += *(*(ptr + i) + j);
+            sum += *(*(matrix->data + i) + j);
         }
     }
     return sum;
 }
-float64_t sum_float_matrix(const float64_t **ptr, const size_t row, const size_t col)
+float64_t sum_float_matrix(const struct float_matrix *matrix)
 {
-    if (ptr == NULL || row == 0 || col == 0)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return 1;
     }
 
     float64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
+    for (size_t i = 0; i < matrix->rows; i++)
     {
-        for (size_t j = 0; j < row; j++)
+        for (size_t j = 0; j < matrix->cols; j++)
         {
-            sum += *(*(ptr + i) + j);
+            sum += *(*(matrix->data + i) + j);
         }
     }
     return sum;

@@ -11,5 +11,5 @@ struct float_matrix *sub_float_matrices(size_t n, size_t rows, size_t cols, ...)
 struct float_matrix *mul_float_matrices(size_t n, ...);
 struct float_matrix *div_float_matrices(size_t n, ...);
 
-int64_t sum_int_matrix(const int64_t **ptr, size_t row, size_t col);
-float64_t sum_float_matrix(const float64_t **ptr, size_t row, size_t col);
+int64_t sum_int_matrix(const struct int_matrix *matrix);
+float64_t sum_float_matrix(const struct float_matrix *matrix);
