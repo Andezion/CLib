@@ -21,5 +21,5 @@ struct int_matrix *div_value_int_matrices(size_t n, size_t rows, size_t cols, in
 
 struct float_matrix *add_value_float_matrices(size_t n, size_t rows, size_t cols, float64_t value, ...);
 struct float_matrix *sub_value_float_matrices(size_t n, size_t rows, size_t cols, float64_t value, ...);
-struct float_matrix *mul_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
-struct float_matrix *div_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
+struct float_matrix *mul_value_float_matrices(size_t n, size_t rows, size_t cols, float64_t value, ...);
+struct float_matrix *div_value_float_matrices(size_t n, size_t rows, size_t cols, float64_t value, ...);
