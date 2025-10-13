@@ -13,3 +13,13 @@ struct float_matrix *div_float_matrices(size_t n, ...);
 
 int64_t sum_int_matrix(const struct int_matrix *matrix);
 float64_t sum_float_matrix(const struct float_matrix *matrix);
+
+struct int_matrix *add_value_int_matrices(size_t n, size_t rows, size_t cols, int64_t value, ...);
+struct int_matrix *sub_value_int_matrices(size_t n, size_t rows, size_t cols, int64_t value,...);
+struct int_matrix *mul_value_int_matrices(size_t n, size_t rows, size_t cols, int64_t value,...);
+struct int_matrix *div_value_int_matrices(size_t n, size_t rows, size_t cols, int64_t value,...);
+
+struct float_matrix *add_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
+struct float_matrix *sub_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
+struct float_matrix *mul_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
+struct float_matrix *div_value_float_matrices(size_t n, size_t rows, size_t cols, ...);
