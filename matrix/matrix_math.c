@@ -452,8 +452,16 @@ struct float_matrix * mul_value_float_matrices(const size_t n, const size_t rows
         {
             for (size_t j = 0; j < cols; j++)
             {
-                matrix->data[i][j] *= arg->data[i][j] * value;
+                matrix->data[i][j] *= arg->data[i][j];
             }
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j)
+        {
+            matrix->data[i][j] *= value;
         }
     }
 
@@ -494,8 +502,16 @@ struct float_matrix * sub_value_float_matrices(const size_t n, const size_t rows
         {
             for (size_t j = 0; j < cols; j++)
             {
-                matrix->data[i][j] -= arg->data[i][j] + value;
+                matrix->data[i][j] -= arg->data[i][j];
             }
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j)
+        {
+            matrix->data[i][j] -= value;
         }
     }
 
@@ -536,8 +552,16 @@ struct float_matrix * add_value_float_matrices(const size_t n, const size_t rows
         {
             for (size_t j = 0; j < cols; j++)
             {
-                matrix->data[i][j] += arg->data[i][j] + value;
+                matrix->data[i][j] += arg->data[i][j];
             }
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j)
+        {
+            matrix->data[i][j] += value;
         }
     }
 
