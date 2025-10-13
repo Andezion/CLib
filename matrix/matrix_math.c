@@ -59,7 +59,6 @@ struct int_matrix *mul_int_matrices(const size_t n, ...)
     va_end(args);
     return current;
 }
-
 struct float_matrix * mul_float_matrices(const size_t n, ...)
 {
     va_list args;
@@ -248,8 +247,6 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
     va_end(args);
     return current;
 }
-
-
 struct float_matrix * div_float_matrices(const size_t n, ...)
 {
     va_list args;
@@ -381,42 +378,42 @@ struct float_matrix * div_float_matrices(const size_t n, ...)
     return current;
 }
 
-int64_t sum_int_matrix(const int64_t **ptr, const size_t row, const size_t col)
+int64_t sum_int_matrix(const struct int_matrix *matrix)
 {
-    if (ptr == NULL || row == 0 || col == 0)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return 1;
     }
 
     int64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
+    for (size_t i = 0; i < matrix->rows; i++)
     {
-        for (size_t j = 0; j < row; j++)
+        for (size_t j = 0; j < matrix->cols; j++)
         {
-            sum += *(*(ptr + i) + j);
+            sum += *(*(matrix->data + i) + j);
         }
     }
     return sum;
 }
-float64_t sum_float_matrix(const float64_t **ptr, const size_t row, const size_t col)
+float64_t sum_float_matrix(const struct float_matrix *matrix)
 {
-    if (ptr == NULL || row == 0 || col == 0)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return 1;
     }
 
     float64_t sum = 0;
-    for (size_t i = 0; i < col; i++)
+    for (size_t i = 0; i < matrix->rows; i++)
     {
-        for (size_t j = 0; j < row; j++)
+        for (size_t j = 0; j < matrix->cols; j++)
         {
-            sum += *(*(ptr + i) + j);
+            sum += *(*(matrix->data + i) + j);
         }
     }
     return sum;
 }
 
-inline struct int_matrix *add_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+struct int_matrix *add_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;
     va_start(args, cols);
@@ -450,7 +447,7 @@ inline struct int_matrix *add_int_matrices(const size_t n, const size_t rows, co
     va_end(args);
     return matrix;
 }
-inline struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;
     va_start(args, cols);
@@ -485,7 +482,7 @@ inline struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, co
     return matrix;
 }
 
-inline struct float_matrix *add_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+struct float_matrix *add_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;
     va_start(args, cols);
@@ -519,7 +516,7 @@ inline struct float_matrix *add_float_matrices(const size_t n, const size_t rows
     va_end(args);
     return matrix;
 }
-inline struct float_matrix *sub_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
+struct float_matrix *sub_float_matrices(const size_t n, const size_t rows, const size_t cols, ...)
 {
     va_list args;
     va_start(args, cols);
