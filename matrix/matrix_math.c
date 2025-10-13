@@ -550,7 +550,7 @@ struct int_matrix * div_value_int_matrices(size_t n, size_t rows, size_t cols, i
 
 }
 
-struct int_matrix * mul_value_int_matrices(size_t n, size_t rows, size_t cols, int64_t value, ...)
+struct int_matrix * mul_value_int_matrices(const size_t n, const size_t rows, const size_t cols, const int64_t value, ...)
 {
     va_list args;
     va_start(args, value);
@@ -584,8 +584,16 @@ struct int_matrix * mul_value_int_matrices(size_t n, size_t rows, size_t cols, i
         {
             for (size_t j = 0; j < cols; j++)
             {
-                matrix->data[i][j] *= arg->data[i][j] * value;
+                matrix->data[i][j] *= arg->data[i][j];
             }
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j)
+        {
+            matrix->data[i][j] *= value;
         }
     }
 
@@ -626,8 +634,16 @@ struct int_matrix *sub_value_int_matrices(const size_t n, const size_t rows, con
         {
             for (size_t j = 0; j < cols; j++)
             {
-                matrix->data[i][j] -= (arg->data[i][j] + value);
+                matrix->data[i][j] -= arg->data[i][j];
             }
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j)
+        {
+            matrix->data[i][j] -= value;
         }
     }
 
