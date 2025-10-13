@@ -1,6 +1,6 @@
 #include "array_math.h"
 
-inline struct int_array *add_int_arrays(const size_t n, const size_t size, ...)
+struct int_array *add_int_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
     va_start(args, size);
@@ -32,7 +32,7 @@ inline struct int_array *add_int_arrays(const size_t n, const size_t size, ...)
     va_end(args);
     return array;
 }
-inline struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
+struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
     va_start(args, size);
@@ -65,7 +65,7 @@ inline struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
     return array;
 }
 
-inline struct float_array *add_float_arrays(const size_t n, const size_t size, ...)
+struct float_array *add_float_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
     va_start(args, size);
@@ -97,7 +97,7 @@ inline struct float_array *add_float_arrays(const size_t n, const size_t size, .
     va_end(args);
     return array;
 }
-inline struct float_array *sub_float_arrays(const size_t n, const size_t size, ...)
+struct float_array *sub_float_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
     va_start(args, size);
@@ -199,7 +199,6 @@ struct int_array * hadamard_product_int_arrays(const size_t n, const size_t size
     va_end(args);
     return array;
 }
-
 int64_t dot_product_int_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
@@ -276,7 +275,6 @@ struct float_array * hadamard_product_float_arrays(const size_t n, const size_t 
     va_end(args);
     return array;
 }
-
 float64_t dot_product_float_arrays(const size_t n, const size_t size, ...)
 {
     va_list args;
