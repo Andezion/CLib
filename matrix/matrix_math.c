@@ -1032,14 +1032,14 @@ struct int_matrix *sub_int_matrices(const size_t n, const size_t rows, const siz
     va_list args;
     va_start(args, cols);
 
-    struct int_matrix *matrix = create_int_matrix(rows, cols);
-    if (matrix == NULL)
+    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
+    if (matrix == NULL || matrix->data == NULL || matrix->cols != cols || matrix->rows != rows)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);
         if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
