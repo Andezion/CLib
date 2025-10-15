@@ -657,22 +657,14 @@ struct float_matrix * add_value_float_matrices(const size_t n, const size_t rows
     va_list args;
     va_start(args, value);
 
-    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    struct float_matrix *matrix = va_arg(args, struct float_matrix *);
     if (!matrix)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            matrix->data[i][j] = 0.0;
-        }
-    }
-
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct float_matrix *arg = va_arg(args, struct float_matrix *);
         if (!arg || !arg->data || arg->cols != cols || arg->rows != rows)
@@ -713,15 +705,8 @@ struct int_matrix * div_value_int_matrices(const size_t n, const size_t rows, co
     va_list args;
     va_start(args, value);
 
-    const struct int_matrix *first = va_arg(args, const struct int_matrix *);
-    if (!first || !first->data || first->rows != rows || first->cols != cols)
-    {
-        va_end(args);
-        return NULL;
-    }
-
-    struct int_matrix *current = copy_int_matrix(first);
-    if (!current)
+    struct int_matrix *current = va_arg(args, struct int_matrix *);
+    if (!current || !current->data || current->rows != rows || current->cols != cols)
     {
         va_end(args);
         return NULL;
@@ -847,22 +832,14 @@ struct int_matrix * mul_value_int_matrices(const size_t n, const size_t rows, co
     va_list args;
     va_start(args, value);
 
-    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
     if (!matrix)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            matrix->data[i][j] = 1;
-        }
-    }
-
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);
         if (!arg || !arg->data || arg->cols != cols || arg->rows != rows)
@@ -897,22 +874,14 @@ struct int_matrix *sub_value_int_matrices(const size_t n, const size_t rows, con
     va_list args;
     va_start(args, value);
 
-    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
     if (!matrix)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            matrix->data[i][j] = 0;
-        }
-    }
-
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);
         if (!arg || !arg->data || arg->cols != cols || arg->rows != rows)
@@ -947,22 +916,14 @@ struct int_matrix *add_value_int_matrices(const size_t n, const size_t rows, con
     va_list args;
     va_start(args, value);
 
-    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
     if (!matrix)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            matrix->data[i][j] = 0;
-        }
-    }
-
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);
         if (!arg || !arg->data || arg->cols != cols || arg->rows != rows)
@@ -998,14 +959,14 @@ struct int_matrix *add_int_matrices(const size_t n, const size_t rows, const siz
     va_list args;
     va_start(args, cols);
 
-    struct int_matrix *matrix = create_int_matrix(rows, cols);
+    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
     if (matrix == NULL)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);
         if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
@@ -1066,14 +1027,14 @@ struct float_matrix *add_float_matrices(const size_t n, const size_t rows, const
     va_list args;
     va_start(args, cols);
 
-    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    struct float_matrix *matrix = va_arg(args, struct float_matrix *);
     if (matrix == NULL)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct float_matrix *arg = va_arg(args, struct float_matrix *);
         if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
@@ -1100,14 +1061,14 @@ struct float_matrix *sub_float_matrices(const size_t n, const size_t rows, const
     va_list args;
     va_start(args, cols);
 
-    struct float_matrix *matrix = create_float_matrix(rows, cols);
+    struct float_matrix *matrix = va_arg(args, struct float_matrix *);
     if (matrix == NULL)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t k = 0; k < n; k++)
+    for (size_t k = 1; k < n; k++)
     {
         const struct float_matrix *arg = va_arg(args, struct float_matrix *);
         if (arg == NULL || arg->data == NULL || arg->cols != cols || arg->rows != rows)
