@@ -887,7 +887,6 @@ struct int_matrix *add_value_int_matrices(const size_t n, const size_t rows, con
         return NULL;
     }
 
-
     for (size_t k = 1; k < n; k++)
     {
         const struct int_matrix *arg = va_arg(args, struct int_matrix *);

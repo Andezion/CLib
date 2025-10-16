@@ -4,6 +4,8 @@
 int main()
 {
     srand(time(NULL));
+    const int64_t value_to_add = 5;
+
 
     printf("===== Matrix Int One =====\n");
     struct int_matrix *matrix_int_one = create_int_matrix(5, 5);
@@ -17,9 +19,7 @@ int main()
 
     printf("\n");
 
-    const int64_t value_to_add = 5;
-
-    printf("===== Add Value to Matrix Int One =====\n");
+    printf("===== Add Value to Matrix Int =====\n");
     struct int_matrix *result_int_matrix = add_value_int_matrices(1, 5, 5, value_to_add, matrix_int_one);
     display_int_matrix(result_int_matrix);
 
@@ -37,8 +37,8 @@ int main()
 
     printf("\n");
 
-    printf("===== Add Value to Matrix Int One =====\n");
-    struct int_matrix *result_int_matrices = add_value_int_matrices(1, 5, 5, value_to_add, matrix_int_one, matrix_int_two);
+    printf("===== Add Value to Matrices =====\n");
+    struct int_matrix *result_int_matrices = add_value_int_matrices(2, 5, 5, value_to_add, matrix_int_one, matrix_int_two);
     display_int_matrix(result_int_matrices);
 
     printf("\n");
