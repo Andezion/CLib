@@ -873,12 +873,20 @@ struct int_matrix *add_value_int_matrices(const size_t n, const size_t rows, con
     va_list args;
     va_start(args, value);
 
-    struct int_matrix *matrix = va_arg(args, struct int_matrix *);
+    struct int_matrix *matrix_input = va_arg(args, struct int_matrix *);
+    if (!matrix_input)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct int_matrix *matrix = copy_int_matrix(matrix_input);
     if (!matrix)
     {
         va_end(args);
         return NULL;
     }
+
 
     for (size_t k = 1; k < n; k++)
     {
