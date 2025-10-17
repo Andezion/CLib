@@ -572,7 +572,14 @@ struct float_matrix * sub_value_float_matrices(const size_t n, const size_t rows
     va_list args;
     va_start(args, value);
 
-    struct float_matrix *matrix = va_arg(args, struct float_matrix *);
+    struct float_matrix *matrix_input = va_arg(args, struct float_matrix *);
+    if (!matrix_input)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct float_matrix *matrix = copy_float_matrix(matrix_input);
     if (!matrix)
     {
         va_end(args);
@@ -614,7 +621,14 @@ struct float_matrix * add_value_float_matrices(const size_t n, const size_t rows
     va_list args;
     va_start(args, value);
 
-    struct float_matrix *matrix = va_arg(args, struct float_matrix *);
+    struct float_matrix *matrix_input = va_arg(args, struct float_matrix *);
+    if (!matrix_input)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct float_matrix *matrix = copy_float_matrix(matrix_input);
     if (!matrix)
     {
         va_end(args);
