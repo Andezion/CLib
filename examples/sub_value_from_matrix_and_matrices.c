@@ -6,38 +6,38 @@ int main()
     srand(time(NULL));
     const int64_t value_to_add_int = 5;
 
-    printf("===== Matrix Int One =====\n");
+    printf("===== Matrix Float One =====\n");
     struct int_matrix *matrix_int_one = create_int_matrix(5, 5);
     display_int_matrix(matrix_int_one);
 
     printf("\n");
 
-    printf("===== Random Initialized Matrix Int One =====\n");
+    printf("===== Random Initialized Matrix Float One =====\n");
     initialization_random_int_matrix(matrix_int_one, 0, 9);
     display_int_matrix(matrix_int_one);
 
     printf("\n");
 
-    printf("===== Add Value to Matrix Int =====\n");
-    struct int_matrix *result_int_matrix = add_value_int_matrices(1, 5, 5, value_to_add_int, matrix_int_one);
+    printf("===== Sub Value from Matrix Float =====\n");
+    struct int_matrix *result_int_matrix = sub_value_int_matrices(1, 5, 5, value_to_add_int, matrix_int_one);
     display_int_matrix(result_int_matrix);
 
     printf("\n");
 
-    printf("===== Matrix Int Two =====\n");
+    printf("===== Matrix Float Two =====\n");
     struct int_matrix *matrix_int_two = create_int_matrix(5, 5);
     display_int_matrix(matrix_int_two);
 
     printf("\n");
 
-    printf("===== Random Initialized Matrix Int Two =====\n");
+    printf("===== Random Initialized Matrix Float Two =====\n");
     initialization_random_int_matrix(matrix_int_two, 0, 9);
     display_int_matrix(matrix_int_two);
 
     printf("\n");
 
-    printf("===== Add Value to Matrices =====\n");
-    struct int_matrix *result_int_matrices = add_value_int_matrices(2, 5, 5, value_to_add_int, matrix_int_one, matrix_int_two);
+    printf("===== Sub Value from Matrices Float =====\n");
+    struct int_matrix *result_int_matrices = sub_value_int_matrices(2, 5, 5, value_to_add_int, matrix_int_one, matrix_int_two);
     display_int_matrix(result_int_matrices);
 
     printf("\n");
@@ -63,8 +63,8 @@ int main()
 
     printf("\n");
 
-    printf("===== Add Value to Matrix Float =====\n");
-    struct float_matrix *result_float_matrix = add_value_float_matrices(1, 5, 5, value_to_add_float, matrix_float_one);
+    printf("===== Sub Value from Matrix Float =====\n");
+    struct float_matrix *result_float_matrix = sub_value_float_matrices(1, 5, 5, value_to_add_float, matrix_float_one);
     display_float_matrix(result_float_matrix);
 
     printf("\n");
@@ -81,8 +81,8 @@ int main()
 
     printf("\n");
 
-    printf("===== Add Value to Matrices Float =====\n");
-    struct float_matrix *result_float_matrices = add_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
+    printf("===== Sub Value from Matrices Float =====\n");
+    struct float_matrix *result_float_matrices = sub_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
     display_float_matrix(result_float_matrices);
 
     free_float_matrix(&matrix_float_one);
