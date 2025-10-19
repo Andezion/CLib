@@ -59,6 +59,7 @@ struct int_matrix *mul_int_matrices(const size_t n, ...)
     va_end(args);
     return current;
 }
+
 struct float_matrix * mul_float_matrices(const size_t n, ...)
 {
     va_list args;
