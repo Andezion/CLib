@@ -32,7 +32,7 @@ int main()
 
     printf("===== Result Matrix Int =====\n");
 
-    struct int_matrix *matrix_result_int = mul_int_matrices(2, 5, 5, matrix_int_one, matrix_int_two);
+    struct int_matrix *matrix_result_int = mul_int_matrices(2, matrix_int_one, matrix_int_two);
     display_int_matrix(matrix_result_int);
 
     free_int_matrix(&matrix_result_int);
@@ -67,7 +67,7 @@ int main()
 
     printf("===== Result Matrix Float =====\n");
 
-    struct float_matrix *matrix_result_float = mul_float_matrices(2, 5, 5, matrix_float_one, matrix_float_two);
+    struct float_matrix *matrix_result_float = mul_float_matrices(2, matrix_float_one, matrix_float_two);
     display_float_matrix(matrix_result_float);
 
     free_float_matrix(&matrix_result_float);
