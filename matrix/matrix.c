@@ -1,10 +1,11 @@
 #include "matrix.h"
 
+#include <ctype.h>
 #include <math.h>
 
 void display_int_matrix(const struct int_matrix *matrix)
 {
-    if (matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0 || matrix == NULL)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return;
     }
@@ -20,7 +21,7 @@ void display_int_matrix(const struct int_matrix *matrix)
 }
 void display_float_matrix(const struct float_matrix *matrix)
 {
-    if (matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0 || matrix == NULL)
+    if (matrix == NULL || matrix->data == NULL || matrix->rows == 0 || matrix->cols == 0)
     {
         return;
     }
@@ -208,6 +209,11 @@ void free_float_matrix(struct float_matrix **matrix_to_delete)
 
 struct int_matrix *create_int_matrix(const size_t rows, const size_t cols)
 {
+    if (rows <= 0 || cols <= 0)
+    {
+        return NULL;
+    }
+
     struct int_matrix *matrix = malloc(sizeof(struct int_matrix));
     if (matrix == NULL)
     {
@@ -243,6 +249,11 @@ struct int_matrix *create_int_matrix(const size_t rows, const size_t cols)
 }
 struct float_matrix *create_float_matrix(const size_t rows, const size_t cols)
 {
+    if (rows <= 0 || cols <= 0)
+    {
+        return NULL;
+    }
+
     struct float_matrix *matrix = malloc(sizeof(struct float_matrix));
     if (matrix == NULL)
     {
