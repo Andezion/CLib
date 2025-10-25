@@ -122,7 +122,14 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
     va_list args;
     va_start(args, n);
 
-    struct int_matrix *current = va_arg(args, struct int_matrix *);
+    struct int_matrix *current_input = va_arg(args, struct int_matrix *);
+    if (!current_input || !current_input->data)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct int_matrix *current = copy_int_matrix(current_input);
     if (!current || !current->data)
     {
         va_end(args);
