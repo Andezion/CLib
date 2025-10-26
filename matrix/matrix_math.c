@@ -252,7 +252,14 @@ struct float_matrix * div_float_matrices(const size_t n, ...)
     va_list args;
     va_start(args, n);
 
-    struct float_matrix *current = va_arg(args, struct float_matrix *);
+    struct float_matrix *current_input = va_arg(args, struct float_matrix *);
+    if (!current_input || !current_input->data)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    struct float_matrix *current = copy_float_matrix(current_input);
     if (!current || !current->data)
     {
         va_end(args);
