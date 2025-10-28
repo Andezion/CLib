@@ -38,6 +38,40 @@ int main()
     free_int_matrix(&matrix_int_two);
     free_int_matrix(&matrix_int_one);
 
+    printf("\n");
+
+    printf("===== Error Matrix Int One =====\n");
+    struct int_matrix *error_numbers_matrix_int_one = create_int_matrix(-1, -3);
+    display_int_matrix(error_numbers_matrix_int_one);
+
+    printf("\n");
+
+    printf("===== Initialized Error Matrix Int One =====\n");
+    initialization_int_matrix(error_numbers_matrix_int_one, 5);
+    display_int_matrix(error_numbers_matrix_int_one);
+
+    printf("\n");
+
+    printf("===== Error Matrix Int Two =====\n");
+    struct int_matrix *error_numbers_matrix_int_two = create_int_matrix(-1, -3);
+    display_int_matrix(error_numbers_matrix_int_two);
+
+    printf("\n");
+
+    printf("===== Initialized Error Matrix Int Two =====\n");
+    initialization_int_matrix(error_numbers_matrix_int_two, 5);
+    display_int_matrix(error_numbers_matrix_int_two);
+
+    printf("\n");
+
+    printf("===== Result Matrix Int =====\n");
+
+    struct int_matrix *matrix_result_int_error = add_int_matrices(2, 5, 5, error_numbers_matrix_int_one, error_numbers_matrix_int_two);
+    display_int_matrix(matrix_result_int_error);
+
+    free_int_matrix(&error_numbers_matrix_int_one);
+    free_int_matrix(&error_numbers_matrix_int_two);
+
     printf("\n\n\n");
 
     printf("===== Matrix Float One =====\n");
