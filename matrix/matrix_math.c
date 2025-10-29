@@ -1,6 +1,7 @@
 #include "matrix_math.h"
 #include "matrix.h"
 #include <stdarg.h>
+#include <tgmath.h>
 
 struct int_matrix *mul_int_matrices(const size_t n, ...)
 {
@@ -119,6 +120,11 @@ struct float_matrix * mul_float_matrices(const size_t n, ...)
 }
 struct int_matrix *div_int_matrices(const size_t n, ...)
 {
+    if (n == 0)
+    {
+        return NULL;
+    }
+
     va_list args;
     va_start(args, n);
 
@@ -142,7 +148,6 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
         if (!next || !next->data || next->rows != next->cols)
         {
             free_int_matrix(&current);
-
             va_end(args);
             return NULL;
         }
@@ -151,6 +156,7 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
 
         struct int_matrix *a = copy_int_matrix(next);
         struct int_matrix *inv = create_int_matrix(size, size);
+
         if (!a || !inv)
         {
             free_int_matrix(&current);
@@ -161,49 +167,57 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
             return NULL;
         }
 
+        double **aug = malloc(size * sizeof(double *));
         for (size_t r = 0; r < size; r++)
         {
-            inv->data[r][r] = 1;
+            aug[r] = (double *) malloc(2 * size * sizeof(double));
+            for (size_t c = 0; c < size; c++)
+            {
+                aug[r][c] = (double) a->data[r][c];
+            }
+            for (size_t c = 0; c < size; c++)
+            {
+                aug[r][size + c] = r == c ? 1.0 : 0.0;
+            }
         }
 
         for (size_t r = 0; r < size; r++)
         {
-            int64_t pivot = a->data[r][r];
-            if (pivot == 0)
+            double pivot = aug[r][r];
+            if (fabs(pivot) < 1e-9)
             {
                 size_t swap = r + 1;
-                while (swap < size && a->data[swap][r] == 0)
+                while (swap < size && fabs(aug[swap][r]) < 1e-9)
                 {
                     swap++;
                 }
 
                 if (swap == size)
                 {
-                    free_int_matrix(&current);
+                    for (size_t rr = 0; rr < size; rr++)
+                    {
+                        free(aug[rr]);
+                    }
+
+                    free(aug);
                     free_int_matrix(&a);
                     free_int_matrix(&inv);
+                    free_int_matrix(&current);
 
                     va_end(args);
                     return NULL;
                 }
 
-                int64_t *tmp = a->data[r];
+                double *tmp = aug[r];
 
-                a->data[r] = a->data[swap];
-                a->data[swap] = tmp;
-
-                tmp = inv->data[r];
-
-                inv->data[r] = inv->data[swap];
-                inv->data[swap] = tmp;
-
-                pivot = a->data[r][r];
+                aug[r] = aug[swap];
+                aug[swap] = tmp;
+                pivot = aug[r][r];
             }
 
-            for (size_t c = 0; c < size; c++)
+            for (size_t c = 0; c < 2 * size; c++)
             {
-                a->data[r][c] = a->data[r][c] * 1000 / pivot;
-                inv->data[r][c] = inv->data[r][c] * 1000 / pivot;
+                aug[r][c] /= pivot;
             }
 
             for (size_t rr = 0; rr < size; rr++)
@@ -213,15 +227,23 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
                     continue;
                 }
 
-                const int64_t factor = a->data[rr][r];
-                for (size_t cc = 0; cc < size; cc++)
+                const double factor = aug[rr][r];
+                for (size_t cc = 0; cc < 2 * size; cc++)
                 {
-                    a->data[rr][cc] -= (a->data[r][cc] * factor) / 1000;
-                    inv->data[rr][cc] -= (inv->data[r][cc] * factor) / 1000;
+                    aug[rr][cc] -= factor * aug[r][cc];
                 }
             }
         }
 
+        for (size_t r = 0; r < size; r++)
+        {
+            for (size_t c = 0; c < size; c++)
+            {
+                inv->data[r][c] = (int64_t)llround(aug[r][size + c]);
+            }
+            free(aug[r]);
+        }
+        free(aug);
         free_int_matrix(&a);
 
         if (current->cols != inv->rows)
@@ -235,6 +257,7 @@ struct int_matrix *div_int_matrices(const size_t n, ...)
         struct int_matrix *temp = mul_int_matrices(2, current, inv);
         free_int_matrix(&current);
         free_int_matrix(&inv);
+
         if (!temp)
         {
             va_end(args);
