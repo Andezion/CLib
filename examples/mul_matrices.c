@@ -7,7 +7,7 @@ int main()
     srand(time(NULL));
 
     printf("===== Matrix Int One =====\n");
-    struct int_matrix *matrix_int_one = create_int_matrix(5, 5);
+    struct int_matrix *matrix_int_one = create_int_matrix(3, 3);
     display_int_matrix(matrix_int_one);
 
     printf("\n");
@@ -19,7 +19,7 @@ int main()
     printf("\n");
 
     printf("===== Matrix Int Two =====\n");
-    struct int_matrix *matrix_int_two = create_int_matrix(5, 5);
+    struct int_matrix *matrix_int_two = create_int_matrix(3, 3);
     display_int_matrix(matrix_int_two);
 
     printf("\n");
@@ -42,7 +42,7 @@ int main()
     printf("\n\n\n");
 
     printf("===== Matrix Float One =====\n");
-    struct float_matrix *matrix_float_one = create_float_matrix(5, 5);
+    struct float_matrix *matrix_float_one = create_float_matrix(3, 3);
     display_float_matrix(matrix_float_one);
 
     printf("\n");
@@ -54,7 +54,7 @@ int main()
     printf("\n");
 
     printf("===== Matrix Float Two =====\n");
-    struct float_matrix *matrix_float_two = create_float_matrix(5, 5);
+    struct float_matrix *matrix_float_two = create_float_matrix(3, 3);
     display_float_matrix(matrix_float_two);
 
     printf("\n");
