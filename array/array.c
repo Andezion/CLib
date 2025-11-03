@@ -98,6 +98,36 @@ int initialization_float_array(const struct float_array *arr, const float64_t va
     }
     return 0;
 }
+
+int initialization_random_int_array(const struct int_array *arr, int64_t min, int64_t max)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = min + rand() % (max - min + 1);
+    }
+
+    return 1;
+}
+int initialization_random_float_array(const struct int_array *arr, float64_t min, float64_t max)
+{
+    if (arr == NULL || arr->data == NULL || arr->size <= 0)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] = min + (max - min) * ((double)rand() / RAND_MAX);
+    }
+
+    return 1;
+}
+
 int initialization_int_array(const struct int_array *arr, const int64_t value)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
