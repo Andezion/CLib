@@ -99,7 +99,7 @@ int initialization_float_array(const struct float_array *arr, const float64_t va
     return 0;
 }
 
-int initialization_random_int_array(const struct int_array *arr, int64_t min, int64_t max)
+int initialization_random_int_array(const struct int_array *arr, const int64_t min, const int64_t max)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
     {
@@ -113,7 +113,7 @@ int initialization_random_int_array(const struct int_array *arr, int64_t min, in
 
     return 1;
 }
-int initialization_random_float_array(const struct int_array *arr, float64_t min, float64_t max)
+int initialization_random_float_array(const struct float_array *arr, const float64_t min, const float64_t max)
 {
     if (arr == NULL || arr->data == NULL || arr->size <= 0)
     {

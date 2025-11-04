@@ -130,6 +130,16 @@ struct float_array *sub_float_arrays(const size_t n, const size_t size, ...)
     return array;
 }
 
+struct int_array * add_value_to_int_arrays(size_t n, size_t size, ...)
+{
+
+}
+
+struct int_array * sub_value_from_int_arrays(size_t n, size_t size, ...)
+{
+
+}
+
 int64_t sum_int_array(const int64_t *ptr, const size_t size)
 {
     if (ptr == NULL || size == 0)
