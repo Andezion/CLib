@@ -2,15 +2,20 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-void destroy_int_array(int64_t **ptr, const size_t size)
+void destroy_int_array(struct int_array **array)
 {
-    if (ptr == NULL || size == 0)
+    if (array == NULL || *array == NULL)
     {
         return;
     }
 
-    free(*ptr);
-    *ptr = NULL;
+    struct int_array *temp = *array;
+    if (temp->data != NULL)
+    {
+        free(temp->data);
+    }
+    free(temp);
+    *array = NULL;
 }
 void destroy_float_array(float64_t **ptr, const size_t size)
 {
@@ -23,15 +28,15 @@ void destroy_float_array(float64_t **ptr, const size_t size)
     *ptr = NULL;
 }
 
-void display_int_array(const int64_t *ptr, const size_t size)
+void display_int_array(const struct int_array *array)
 {
-    if (ptr == NULL || size == 0)
+    if (array->data == NULL || array->size == 0)
     {
         return;
     }
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < array->size; i++)
     {
-        printf("%" PRId64 " ", *(ptr + i));
+        printf("%" PRId64 " ", *(array->data + i));
     }
     printf("\n");
 }
