@@ -35,7 +35,7 @@ void destroy_float_array(struct float_array **array)
 
 void display_int_array(const struct int_array *array)
 {
-    if (array->data == NULL || array->size == 0)
+    if (array == NULL || array->data == NULL || array->size == 0)
     {
         return;
     }
@@ -47,7 +47,7 @@ void display_int_array(const struct int_array *array)
 }
 void display_float_array(const struct float_array *array)
 {
-    if (array->data == NULL || array->size == 0)
+    if (array == NULL || array->data == NULL || array->size == 0)
     {
         return;
     }
@@ -60,6 +60,11 @@ void display_float_array(const struct float_array *array)
 
 struct float_array *create_float_array(const size_t size)
 {
+    if (size == 0)
+    {
+        return NULL;
+    }
+
     struct float_array *arr = calloc(1, sizeof(struct float_array));
     if (arr == NULL)
     {
@@ -78,6 +83,11 @@ struct float_array *create_float_array(const size_t size)
 }
 struct int_array *create_int_array(const size_t size)
 {
+    if (size <= 0)
+    {
+        return NULL;
+    }
+
     struct int_array *arr = calloc(1, sizeof(struct int_array));
     if (arr == NULL)
     {
