@@ -27,4 +27,6 @@ int main(void)
     struct float_array *error_numbers_array_float = create_float_array(-1);
     display_float_array(error_numbers_array_float);
     destroy_float_array(&error_numbers_array_float);
+
+    return 0;
 }

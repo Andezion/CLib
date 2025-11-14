@@ -31,5 +31,6 @@ foreach(EXAMPLE_FILE ${EXAMPLES})
     add_executable(${EXAMPLE_NAME}
             ${EXAMPLE_FILE}
             ${LIB_SOURCES}
+            examples/copy_array.c
     )
 endforeach()

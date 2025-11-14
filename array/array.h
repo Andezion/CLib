@@ -35,5 +35,8 @@ void destroy_float_array(struct float_array **array);
 void display_int_array(const struct int_array *array);
 void display_float_array(const struct float_array *array);
 
+struct int_array *copy_int_array(const struct int_array *arr);
+struct float_array *copy_float_array(const struct float_array *arr);
+
 
 
