@@ -9,4 +9,13 @@ int main()
     printf("\n");
 
     printf("===== Copy Matrix Int =====\n");
+    struct int_array *array_copy = copy_int_array(array_int);
+    display_int_array(array_copy);
+
+    printf("\n");
+
+    destroy_int_array(&array_int);
+    destroy_int_array(&array_copy);
+
+    return 0;
 }
