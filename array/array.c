@@ -58,6 +58,43 @@ void display_float_array(const struct float_array *array)
     printf("\n");
 }
 
+struct float_array * copy_float_array(const struct float_array *arr)
+{
+    if (arr == NULL || arr->data == NULL || arr->size == 0)
+    {
+        return NULL;
+    }
+}
+
+struct int_array * copy_int_array(const struct int_array *arr)
+{
+    if (arr == NULL || arr->data == NULL || arr->size == 0)
+    {
+        return NULL;
+    }
+
+    struct int_array *temp = malloc(sizeof(struct int_array));
+    if (temp == NULL)
+    {
+        return NULL;
+    }
+
+    temp->size = arr->size;
+    temp->data = malloc(temp->size * sizeof(int));
+    if (temp->data == NULL)
+    {
+        free(temp);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < temp->size; i++)
+    {
+        temp->data[i] = *(arr->data + i);
+    }
+
+    return temp;
+}
+
 struct float_array *create_float_array(const size_t size)
 {
     if (size == 0)
