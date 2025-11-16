@@ -5,14 +5,14 @@ int main(void)
     printf("===== Array Int =====\n");
     struct int_array *array_int = create_int_array(5);
     display_int_array(array_int);
-    destroy_int_array(&array_int);
+    free_int_array(&array_int);
 
     printf("\n");
 
     printf("===== Error Array Int =====\n");
     struct int_array *error_numbers_array_int = create_int_array(-1);
     display_int_array(error_numbers_array_int);
-    destroy_int_array(&error_numbers_array_int);
+    free_int_array(&error_numbers_array_int);
 
     printf("\n\n\n");
 

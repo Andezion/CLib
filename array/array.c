@@ -2,7 +2,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-void destroy_int_array(struct int_array **array)
+void free_int_array(struct int_array **array)
 {
     if (array == NULL || *array == NULL)
     {
@@ -80,7 +80,7 @@ struct int_array * copy_int_array(const struct int_array *arr)
     }
 
     temp->size = arr->size;
-    temp->data = malloc(temp->size * sizeof(int));
+    temp->data = malloc(temp->size * sizeof(int64_t));
     if (temp->data == NULL)
     {
         free(temp);
@@ -179,7 +179,7 @@ int initialization_random_float_array(const struct float_array *arr, const float
 
     for (size_t i = 0; i < arr->size; i++)
     {
-        arr->data[i] = min + (max - min) * ((double)rand() / RAND_MAX);
+        arr->data[i] = min + (max - min) * ((double) rand() / RAND_MAX);
     }
 
     return 1;

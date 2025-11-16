@@ -14,8 +14,8 @@ int main()
 
     printf("\n");
 
-    destroy_int_array(&array_int);
-    destroy_int_array(&array_copy);
+    free_int_array(&array_int);
+    free_int_array(&array_copy);
 
     return 0;
 }
