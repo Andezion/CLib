@@ -19,14 +19,14 @@ int main(void)
     printf("===== Array Float =====\n");
     struct float_array *array_float = create_float_array(5);
     display_float_array(array_float);
-    destroy_float_array(&array_float);
+    free_float_array(&array_float);
 
     printf("\n");
 
     printf("===== Error Array Float =====\n");
     struct float_array *error_numbers_array_float = create_float_array(-1);
     display_float_array(error_numbers_array_float);
-    destroy_float_array(&error_numbers_array_float);
+    free_float_array(&error_numbers_array_float);
 
     return 0;
 }
