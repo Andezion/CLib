@@ -30,7 +30,7 @@ int initialization_random_int_array(const struct int_array *arr, int64_t min, in
 int initialization_random_float_array(const struct float_array *arr, float64_t min, float64_t max);
 
 void free_int_array(struct int_array **array);
-void destroy_float_array(struct float_array **array);
+void free_float_array(struct float_array **array);
 
 void display_int_array(const struct int_array *array);
 void display_float_array(const struct float_array *array);

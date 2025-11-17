@@ -17,7 +17,7 @@ void free_int_array(struct int_array **array)
     free(temp);
     *array = NULL;
 }
-void destroy_float_array(struct float_array **array)
+void free_float_array(struct float_array **array)
 {
     if (array == NULL || *array == NULL)
     {
@@ -64,6 +64,26 @@ struct float_array * copy_float_array(const struct float_array *arr)
     {
         return NULL;
     }
+
+    struct float_array *temp = malloc(sizeof(struct float_array));
+    if (temp == NULL)
+    {
+        return NULL;
+    }
+
+    temp->size = arr->size;
+    temp->data = malloc(temp->size * sizeof(float64_t));
+    if (temp->data == NULL)
+    {
+        free(temp);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < temp->size; i++)
+    {
+        temp->data[i] = *(arr->data + i);
+    }
+    return temp;
 }
 
 struct int_array * copy_int_array(const struct int_array *arr)
