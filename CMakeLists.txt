@@ -8,14 +8,13 @@ include_directories(. array matrix)
 set(LIB_SOURCES
         array/array.c
         array/array.h
+        array/array_math.c
+        array/array_math.h
 
         matrix/matrix.c
         matrix/matrix.h
         matrix/matrix_math.c
         matrix/matrix_math.h
-
-        array/array_math.c
-        array/array_math.h
 
         errors.h
 )
@@ -31,6 +30,5 @@ foreach(EXAMPLE_FILE ${EXAMPLES})
     add_executable(${EXAMPLE_NAME}
             ${EXAMPLE_FILE}
             ${LIB_SOURCES}
-            examples/copy_array.c
     )
 endforeach()
