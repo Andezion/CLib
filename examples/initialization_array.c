@@ -26,5 +26,32 @@ int main()
     display_int_array(array_int_error);
     free_int_array(&array_int_error);
 
+    printf("\n\n\n");
+
+    printf("===== Array Float =====\n");
+    struct float_array *array_float = create_float_array(5);
+    display_float_array(array_float);
+
+    printf("\n");
+
+    printf("===== Initialized Array Float =====\n");
+    initialization_float_array(array_float, 4.7);
+    display_float_array(array_float);
+    free_float_array(&array_float);
+
+    printf("\n");
+
+    printf("===== Error Array Float =====\n");
+    struct float_array *error_numbers_array_float = create_float_array(-1);
+    display_float_array(error_numbers_array_float);
+    free_float_array(&error_numbers_array_float);
+
+    printf("\n");
+
+    printf("===== Initialized Error Array Float =====\n");
+    initialization_float_array(error_numbers_array_float, 4.7);
+    display_float_array(error_numbers_array_float);
+    free_float_array(&error_numbers_array_float);
+
     return 0;
 }
