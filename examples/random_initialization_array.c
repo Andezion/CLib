@@ -30,31 +30,31 @@ int main()
     free_int_array(&error_numbers_array_int);
 
     printf("\n\n\n");
-    //
-    // printf("===== Matrix Float =====\n");
-    // struct float_matrix *matrix_float = create_float_matrix(5, 5);
-    // display_float_matrix(matrix_float);
-    //
-    // printf("\n");
-    //
-    // printf("===== Random Initialized Matrix Float =====\n");
-    // initialization_random_float_matrix(matrix_float, 0.0, 99.0);
-    // display_float_matrix(matrix_float);
-    // free_float_matrix(&matrix_float);
-    //
-    // printf("\n");
-    //
-    // printf("===== Error Matrix Float =====\n");
-    // struct float_matrix *error_numbers_matrix_float = create_float_matrix(-1, -3);
-    // display_float_matrix(error_numbers_matrix_float);
-    // free_float_matrix(&error_numbers_matrix_float);
-    //
-    // printf("\n");
-    //
-    // printf("===== Initialized Error Matrix Float =====\n");
-    // initialization_random_float_matrix(matrix_float, 0.0, 99.0);
-    // display_float_matrix(error_numbers_matrix_float);
-    // free_float_matrix(&error_numbers_matrix_float);
+
+    printf("===== Array Float =====\n");
+    struct float_array *array_float = create_float_array(5);
+    display_float_array(array_float);
+
+    printf("\n");
+
+    printf("===== Random Initialized Array Float =====\n");
+    initialization_random_float_array(array_float, 0.0, 99.0);
+    display_float_array(array_float);
+    free_float_array(&array_float);
+
+    printf("\n");
+
+    printf("===== Error Matrix Float =====\n");
+    struct float_array *error_numbers_array_float = create_float_array(-3);
+    display_float_array(error_numbers_array_float);
+    free_float_array(&error_numbers_array_float);
+
+    printf("\n");
+
+    printf("===== Initialized Error Matrix Float =====\n");
+    initialization_random_float_array(error_numbers_array_float, 0.0, 99.0);
+    display_float_array(error_numbers_array_float);
+    free_float_array(&error_numbers_array_float);
 
     return 0;
 }
