@@ -2,26 +2,26 @@
 
 int main()
 {
-    printf("===== Matrix Int =====\n");
+    printf("===== Array Int =====\n");
     struct int_array *array_int = create_int_array(5);
     display_int_array(array_int);
 
     printf("\n");
 
-    printf("===== Initialized Matrix Int =====\n");
+    printf("===== Initialized Array Int =====\n");
     initialization_int_array(array_int, 5);
     display_int_array(array_int);
     free_int_array(&array_int);
 
     printf("\n");
 
-    printf("===== Error Matrix Int =====\n");
+    printf("===== Error Array Int =====\n");
     struct int_array *array_int_error = create_int_array(-5);
     display_int_array(array_int_error);
 
     printf("\n");
 
-    printf("===== Error Initialized Matrix Int =====\n");
+    printf("===== Error Initialized Array Int =====\n");
     initialization_int_array(array_int_error, 5);
     display_int_array(array_int_error);
     free_int_array(&array_int_error);
