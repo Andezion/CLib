@@ -11,7 +11,7 @@ struct float_array *add_float_arrays(size_t n, size_t size, ...);
 struct float_array *sub_float_arrays(size_t n, size_t size, ...);
 
 int64_t sum_int_array(const struct int_array *arr);
-float64_t sum_float_array(const float64_t *ptr, size_t size);
+float64_t sum_float_array(const struct float_array *arr);
 
 int64_t dot_product_int_arrays(size_t n, size_t size, ...);
 struct int_array *hadamard_product_int_arrays(size_t n, size_t size, ...);

@@ -221,17 +221,17 @@ int64_t sum_int_array(const struct int_array *arr)
     return sum;
 }
 
-float64_t sum_float_array(const float64_t *ptr, const size_t size)
+float64_t sum_float_array(const struct float_array *arr)
 {
-    if (ptr == NULL || size == 0)
+    if (arr->data == NULL || arr->size == 0)
     {
         return 1;
     }
 
     float64_t sum = 0;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < arr->size; i++)
     {
-        sum += *(ptr + i);
+        sum += *(arr->data + i);
     }
     return sum;
 }
