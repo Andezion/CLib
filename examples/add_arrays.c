@@ -39,39 +39,40 @@ int main(void)
 
     printf("\n");
 
-    // printf("===== Error Array Int One =====\n");
-    // struct int_matrix *error_numbers_matrix_int_one = create_int_matrix(-1, -3);
-    // display_int_array(error_numbers_matrix_int_one);
-    //
-    // printf("\n");
-    //
-    // printf("===== Initialized Error Array Int One =====\n");
-    // initialization_int_matrix(error_numbers_matrix_int_one, 5);
-    // display_int_array(error_numbers_matrix_int_one);
-    //
-    // printf("\n");
-    //
-    // printf("===== Error Array Int Two =====\n");
-    // struct int_array *error_numbers_matrix_int_two = create_int_matrix(-1, -3);
-    // display_int_array(error_numbers_matrix_int_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Initialized Error Array Int Two =====\n");
-    // initialization_int_matrix(error_numbers_matrix_int_two, 5);
-    // display_int_array(error_numbers_matrix_int_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Result Array Int =====\n");
-    //
-    // struct int_array *matrix_result_int_error = add_int_matrices(2, 5, 5, error_numbers_matrix_int_one, error_numbers_matrix_int_two);
-    // display_int_array(matrix_result_int_error);
-    //
-    // free_int_matrix(&error_numbers_matrix_int_one);
-    // free_int_matrix(&error_numbers_matrix_int_two);
-    //
-    // printf("\n\n\n");
+    printf("===== Error Array Int One =====\n");
+    struct int_array *error_numbers_array_int_one = create_int_array(-3);
+    display_int_array(error_numbers_array_int_one);
+
+    printf("\n");
+
+    printf("===== Initialized Error Array Int One =====\n");
+    initialization_int_array(error_numbers_array_int_one, 5);
+    display_int_array(error_numbers_array_int_one);
+
+    printf("\n");
+
+    printf("===== Error Array Int Two =====\n");
+    struct int_array *error_numbers_array_int_two = create_int_array(-3);
+    display_int_array(error_numbers_array_int_two);
+
+    printf("\n");
+
+    printf("===== Initialized Error Array Int Two =====\n");
+    initialization_int_array(error_numbers_array_int_two, 5);
+    display_int_array(error_numbers_array_int_two);
+
+    printf("\n");
+
+    printf("===== Result Array Int =====\n");
+
+    struct int_array *array_result_int_error = add_int_arrays(2, 5, error_numbers_array_int_one, error_numbers_array_int_two);
+    display_int_array(array_result_int_error);
+
+    free_int_array(&array_result_int_error);
+    free_int_array(&error_numbers_array_int_one);
+    free_int_array(&error_numbers_array_int_two);
+
+    printf("\n\n\n");
     //
     // printf("===== Array Float One =====\n");
     // struct float_array *matrix_float_one = create_float_matrix(5, 5);
