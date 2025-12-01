@@ -73,39 +73,39 @@ int main(void)
     free_int_array(&error_numbers_array_int_two);
 
     printf("\n\n\n");
-    //
-    // printf("===== Array Float One =====\n");
-    // struct float_array *matrix_float_one = create_float_matrix(5, 5);
-    // display_float_array(matrix_float_one);
-    //
-    // printf("\n");
-    //
-    // printf("===== Random Initialized Array Float One =====\n");
-    // initialization_random_float_matrix(matrix_float_one, 0.0, 9.0);
-    // display_float_array(matrix_float_one);
-    //
-    // printf("\n");
-    //
-    // printf("===== Array Float Two =====\n");
-    // struct float_array *matrix_float_two = create_float_array(5, 5);
-    // display_float_array(matrix_float_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Random Initialized Array Float Two =====\n");
-    // initialization_random_float_array(matrix_float_two, 0.0, 9.0);
-    // display_float_array(matrix_float_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Result Array Float =====\n");
-    //
-    // struct float_array *array_result_float = add_float_arrays(2, 5, 5, array_float_one, array_float_two);
-    // display_float_array(array_result_float);
-    //
-    // free_float_array(&array_result_float);
-    // free_float_array(&array_float_one);
-    // free_float_array(&array_float_two);
+
+    printf("===== Array Float One =====\n");
+    struct float_array *array_float_one = create_float_array(5);
+    display_float_array(array_float_one);
+
+    printf("\n");
+
+    printf("===== Random Initialized Array Float One =====\n");
+    initialization_random_float_array(array_float_one, 0.0, 9.0);
+    display_float_array(array_float_one);
+
+    printf("\n");
+
+    printf("===== Array Float Two =====\n");
+    struct float_array *array_float_two = create_float_array(5);
+    display_float_array(array_float_two);
+
+    printf("\n");
+
+    printf("===== Random Initialized Array Float Two =====\n");
+    initialization_random_float_array(array_float_two, 0.0, 9.0);
+    display_float_array(array_float_two);
+
+    printf("\n");
+
+    printf("===== Result Array Float =====\n");
+
+    struct float_array *array_result_float = add_float_arrays(2, 5, array_float_one, array_float_two);
+    display_float_array(array_result_float);
+
+    free_float_array(&array_result_float);
+    free_float_array(&array_float_one);
+    free_float_array(&array_float_two);
 
     return 0;
 }
