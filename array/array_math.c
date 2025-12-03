@@ -37,14 +37,28 @@ struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
     va_list args;
     va_start(args, size);
 
-    struct int_array *array = create_int_array(size);
-    if (array == NULL)
+    // struct int_array *array = create_int_array(size);
+    // if (array == NULL)
+    // {
+    //     va_end(args);
+    //     return NULL;
+    // }
+
+    const struct int_array *array_input = va_arg(args, struct int_array *);
+    if (array_input == NULL || array_input->data == NULL || array_input->size != size)
     {
         va_end(args);
         return NULL;
     }
 
-    for (size_t k = 0; k < n; k++)
+    struct int_array *array = copy_int_array(array_input);
+    if (!array)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 1; k < n; k++)
     {
         const struct int_array *arr = va_arg(args, struct int_array *);
         if (arr == NULL || arr->data == NULL || arr->size != size)
