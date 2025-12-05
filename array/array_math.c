@@ -220,6 +220,49 @@ struct int_array * sub_value_from_int_arrays(const size_t n, const size_t size, 
     return array;
 }
 
+struct float_array * add_value_to_float_arrays(size_t n, size_t size, float64_t value, ...)
+{
+
+}
+
+struct float_array * sub_value_from_float_arrays(const size_t n, const size_t size, const float64_t value, ...)
+{
+    va_list args;
+    va_start(args, size);
+
+    struct float_array *array = create_float_array(size);
+    if (array == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    for (size_t k = 0; k < n; k++)
+    {
+        const struct float_array *arr = va_arg(args, struct float_array *);
+        if (arr == NULL || arr->data == NULL || arr->size != size)
+        {
+            free(array);
+
+            va_end(args);
+            return NULL;
+        }
+
+        for (size_t i = 0; i < size; i++)
+        {
+            array->data[i] = array->data[i] - arr->data[i];
+        }
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        array->data[i] -= value;
+    }
+
+    va_end(args);
+    return array;
+}
+
 int64_t sum_int_array(const struct int_array *arr)
 {
     if (arr->data == NULL || arr->size == 0)
