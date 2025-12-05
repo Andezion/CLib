@@ -7,6 +7,8 @@ struct int_array *sub_int_arrays(size_t n, size_t size, ...);
 struct int_array *add_value_to_int_arrays(size_t n, size_t size, int64_t value, ...);
 struct int_array *sub_value_from_int_arrays(size_t n, size_t size, int64_t value, ...);
 
+struct float_array *add_value_to_float_arrays(size_t n, size_t size, float64_t value, ...);
+
 struct float_array *add_float_arrays(size_t n, size_t size, ...);
 struct float_array *sub_float_arrays(size_t n, size_t size, ...);
 
