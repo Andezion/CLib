@@ -64,25 +64,25 @@ int main()
     printf("\n");
 
     printf("===== Add Value to Array Float =====\n");
-    struct float_array *result_float_array = add_value_float_array(1, 5, value_to_add_float, array_float_one);
+    struct float_array *result_float_array = add_value_to_float_arrays(1, 5, value_to_add_float, array_float_one);
     display_float_array(result_float_array);
 
     printf("\n");
 
     printf("===== Array Float Two =====\n");
-    struct float_matrix *matrix_float_two = create_float_matrix(5, 5);
-    display_float_matrix(matrix_float_two);
+    struct float_array *array_float_two = create_float_array(5);
+    display_float_array(array_float_two);
 
     printf("\n");
 
     printf("===== Random Initialized Array Float Two =====\n");
-    initialization_random_float_matrix(matrix_float_two, 0, 9);
-    display_float_matrix(matrix_float_two);
+    initialization_random_float_array(array_float_two, 0, 9);
+    display_float_array(array_float_two);
 
     printf("\n");
 
     printf("===== Add Value to Arrays Float =====\n");
-    struct float_matrix *result_float_matrices = add_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
+    struct float_array *result_float_matrices = add_value_to_float_arrays(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
     display_float_matrix(result_float_matrices);
 
     free_float_matrix(&matrix_float_one);
