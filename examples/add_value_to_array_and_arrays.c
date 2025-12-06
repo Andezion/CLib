@@ -6,19 +6,19 @@ int main()
     srand(time(NULL));
     const int64_t value_to_add_int = 5;
 
-    printf("===== Matrix Int One =====\n");
+    printf("===== Array Int One =====\n");
     struct int_array *array_int_one = create_int_array(5);
     display_int_array(array_int_one);
 
     printf("\n");
 
-    printf("===== Random Initialized Matrix Int One =====\n");
+    printf("===== Random Initialized Array Int One =====\n");
     initialization_random_int_array(array_int_one, 0, 9);
     display_int_array(array_int_one);
 
     printf("\n");
 
-    printf("===== Add Value to Matrix Int =====\n");
+    printf("===== Add Value to Array Int =====\n");
     struct int_array *result_int_array = add_value_to_int_arrays(1, 5, value_to_add_int, array_int_one);
     display_int_array(result_int_array);
 
@@ -81,14 +81,14 @@ int main()
 
     printf("\n");
 
-    // printf("===== Add Value to Matrices Float =====\n");
-    // struct float_matrix *result_float_matrices = add_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
-    // display_float_matrix(result_float_matrices);
-    //
-    // free_float_matrix(&matrix_float_one);
-    // free_float_matrix(&matrix_float_two);
-    // free_float_matrix(&result_float_matrix);
-    // free_float_matrix(&result_float_matrices);
+    printf("===== Add Value to Matrices Float =====\n");
+    struct float_matrix *result_float_matrices = add_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
+    display_float_matrix(result_float_matrices);
+
+    free_float_matrix(&matrix_float_one);
+    free_float_matrix(&matrix_float_two);
+    free_float_matrix(&result_float_matrix);
+    free_float_matrix(&result_float_matrices);
 
     return 0;
 }
