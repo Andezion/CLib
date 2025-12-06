@@ -82,13 +82,13 @@ int main()
     printf("\n");
 
     printf("===== Add Value to Arrays Float =====\n");
-    struct float_array *result_float_matrices = add_value_to_float_arrays(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
-    display_float_matrix(result_float_matrices);
+    struct float_array *result_float_arrays = add_value_to_float_arrays(2, 5, 5, value_to_add_float, array_float_one, array_float_two);
+    display_float_array(result_float_arrays);
 
-    free_float_matrix(&matrix_float_one);
-    free_float_matrix(&matrix_float_two);
-    free_float_matrix(&result_float_matrix);
-    free_float_matrix(&result_float_matrices);
+    free_float_array(&array_float_one);
+    free_float_array(&array_float_two);
+    free_float_array(&result_float_array);
+    free_float_array(&result_float_arrays);
 
     return 0;
 }
