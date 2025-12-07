@@ -37,7 +37,7 @@ int main()
     printf("\n");
 
     printf("===== Add Value to Arrays =====\n");
-    struct int_array *result_int_arrays = add_value_to_int_arrays(2, 5, 5, value_to_add_int, array_int_one, array_int_two);
+    struct int_array *result_int_arrays = add_value_to_int_arrays(2, 5, value_to_add_int, array_int_one, array_int_two);
     display_int_array(result_int_arrays);
 
     printf("\n");
@@ -82,7 +82,7 @@ int main()
     printf("\n");
 
     printf("===== Add Value to Arrays Float =====\n");
-    struct float_array *result_float_arrays = add_value_to_float_arrays(2, 5, 5, value_to_add_float, array_float_one, array_float_two);
+    struct float_array *result_float_arrays = add_value_to_float_arrays(2, 5, value_to_add_float, array_float_one, array_float_two);
     display_float_array(result_float_arrays);
 
     free_float_array(&array_float_one);
