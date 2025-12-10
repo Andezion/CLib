@@ -68,27 +68,27 @@ int main()
     display_float_array(result_float_array);
 
     printf("\n");
-    //
-    // printf("===== Matrix Float Two =====\n");
-    // struct float_matrix *matrix_float_two = create_float_matrix(5, 5);
-    // display_float_matrix(matrix_float_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Random Initialized Matrix Float Two =====\n");
-    // initialization_random_float_matrix(matrix_float_two, 0, 9);
-    // display_float_matrix(matrix_float_two);
-    //
-    // printf("\n");
-    //
-    // printf("===== Sub Value from Matrices Float =====\n");
-    // struct float_matrix *result_float_matrices = sub_value_float_matrices(2, 5, 5, value_to_add_float, matrix_float_one, matrix_float_two);
-    // display_float_matrix(result_float_matrices);
-    //
-    // free_float_matrix(&matrix_float_one);
-    // free_float_matrix(&matrix_float_two);
-    // free_float_matrix(&result_float_matrix);
-    // free_float_matrix(&result_float_matrices);
+
+    printf("===== Matrix Float Two =====\n");
+    struct float_array *array_float_two = create_float_array(5);
+    display_float_array(array_float_two);
+
+    printf("\n");
+
+    printf("===== Random Initialized Matrix Float Two =====\n");
+    initialization_random_float_array(array_float_two, 0, 9);
+    display_float_array(array_float_two);
+
+    printf("\n");
+
+    printf("===== Sub Value from Matrices Float =====\n");
+    struct float_array *result_float_arrays = sub_value_from_float_arrays(2, 5, 5, value_to_add_float, array_float_one, array_float_two);
+    display_float_array(result_float_arrays);
+
+    free_float_array(&array_float_one);
+    free_float_array(&array_float_two);
+    free_float_array(&result_float_array);
+    free_float_array(&result_float_arrays);
 
     return 0;
 }
