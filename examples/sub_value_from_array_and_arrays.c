@@ -82,7 +82,7 @@ int main()
     printf("\n");
 
     printf("===== Sub Value from Matrices Float =====\n");
-    struct float_array *result_float_arrays = sub_value_from_float_arrays(2, 5, 5, value_to_add_float, array_float_one, array_float_two);
+    struct float_array *result_float_arrays = sub_value_from_float_arrays(2, 5, value_to_add_float, array_float_one, array_float_two);
     display_float_array(result_float_arrays);
 
     free_float_array(&array_float_one);
