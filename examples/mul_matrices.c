@@ -1,4 +1,3 @@
-#include "array.h"
 #include "matrix_math.h"
 #include "matrix.h"
 
