@@ -28,5 +28,15 @@ int main()
     display_int_array(array_int_two);
 
     printf("\n");
+
+    printf("===== Result Matrix Int =====\n");
+
+    struct int_array *array_result_int = mul_int_arrays(2, 5, array_int_one, array_int_two);
+    display_int_array(array_result_int);
+
+    free_int_array(&array_result_int);
+    free_int_array(&array_int_one);
+    free_int_array(&array_int_two);
+
     return 0;
 }
