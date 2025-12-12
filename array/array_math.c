@@ -537,6 +537,8 @@ struct int_array * mul_int_arrays(const size_t n, const size_t size, ...)
         return NULL;
     }
 
+    initialization_int_array(array, 1);
+
     for (size_t k = 0; k < n; k++)
     {
         const struct int_array *arr = va_arg(args, struct int_array *);
