@@ -66,11 +66,11 @@ int main()
 
     printf("===== Result Matrix Float =====\n");
 
-    struct float_array *array_result_float = mul_float_arrays(2, matrix_float_one, array_float_two);
+    struct float_array *array_result_float = mul_float_arrays(2, 3, array_float_one, array_float_two);
     display_float_array(array_result_float);
 
     free_float_array(&array_result_float);
-    free_float_array(&matrix_float_one);
+    free_float_array(&array_float_one);
     free_float_array(&array_float_two);
 
     return 0;
