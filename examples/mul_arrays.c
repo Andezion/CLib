@@ -29,7 +29,7 @@ int main()
 
     printf("\n");
 
-    printf("===== Result Matrix Int =====\n");
+    printf("===== Result Array Int =====\n");
 
     struct int_array *array_result_int = mul_int_arrays(2, 5, array_int_one, array_int_two);
     display_int_array(array_result_int);
@@ -40,31 +40,31 @@ int main()
 
     printf("\n\n\n");
 
-    printf("===== Matrix Float One =====\n");
+    printf("===== Array Float One =====\n");
     struct float_array *array_float_one = create_float_array(3);
     display_float_array(array_float_one);
 
     printf("\n");
 
-    printf("===== Random Initialized Matrix Float One =====\n");
+    printf("===== Random Initialized Array Float One =====\n");
     initialization_random_float_array(array_float_one, 0.0, 9.0);
     display_float_array(array_float_one);
 
     printf("\n");
 
-    printf("===== Matrix Float Two =====\n");
+    printf("===== Array Float Two =====\n");
     struct float_array *array_float_two = create_float_array(3);
     display_float_array(array_float_two);
 
     printf("\n");
 
-    printf("===== Random Initialized Matrix Float Two =====\n");
+    printf("===== Random Initialized Array Float Two =====\n");
     initialization_random_float_array(array_float_two, 0.0, 9.0);
     display_float_array(array_float_two);
 
     printf("\n");
 
-    printf("===== Result Matrix Float =====\n");
+    printf("===== Result Array Float =====\n");
 
     struct float_array *array_result_float = mul_float_arrays(2, 3, array_float_one, array_float_two);
     display_float_array(array_result_float);
