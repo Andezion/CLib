@@ -504,6 +504,8 @@ struct float_array * mul_float_arrays(const size_t n, const size_t size, ...)
         return NULL;
     }
 
+    initialization_float_array(array, 1.0);
+
     for (size_t k = 0; k < n; k++)
     {
         const struct float_array *arr = va_arg(args, struct float_array *);
