@@ -19,12 +19,24 @@ set(LIB_SOURCES
         errors.h
 )
 
+file(GLOB NN_SOURCES "nn/*.c")
+list(APPEND LIB_SOURCES ${NN_SOURCES})
+
 add_executable(CLib
         main.c
         ${LIB_SOURCES}
 )
 
 file(GLOB EXAMPLES "examples/*.c")
+foreach(EXAMPLE_FILE ${EXAMPLES})
+    get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
+    add_executable(${EXAMPLE_NAME}
+            ${EXAMPLE_FILE}
+            ${LIB_SOURCES}
+    )
+endforeach()
+
+file(GLOB EXAMPLES "nn/*.c")
 foreach(EXAMPLE_FILE ${EXAMPLES})
     get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
     add_executable(${EXAMPLE_NAME}
