@@ -331,22 +331,66 @@ int axpy_float_array(const float64_t alpha, const struct float_array *x, struct 
 
 int scale_int_array_inplace(struct int_array *arr, int64_t alpha)
 {
-
+    if (!arr || !arr->data || arr->size == 0)
+    {
+        return -1;
+    }
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        arr->data[i] *= alpha;
+    }
+    return 0;
 }
 
 int add_int_array_inplace(struct int_array *dst, const struct int_array *src)
 {
-
+    if (!dst || !src || !dst->data || !src->data)
+    {
+        return -1;
+    }
+    if (dst->size != src->size)
+    {
+        return -1;
+    }
+    for (size_t i = 0; i < dst->size; i++)
+    {
+        dst->data[i] += src->data[i];
+    }
+    return 0;
 }
 
 int hadamard_int_array_inplace(struct int_array *dst, const struct int_array *src)
 {
-
+    if (!dst || !src || !dst->data || !src->data)
+    {
+        return -1;
+    }
+    if (dst->size != src->size)
+    {
+        return -1;
+    }
+    for (size_t i = 0; i < dst->size; i++)
+    {
+        dst->data[i] *= src->data[i];
+    }
+    return 0;
 }
 
-int axpy_int_array(float64_t alpha, const struct int_array *x, struct int_array *y)
+int axpy_int_array(const int64_t alpha, const struct int_array *x, struct int_array *y)
 {
-
+    if (!x || !y || !x->data || !y->data)
+    {
+        return -1;
+    }
+    if (x->size != y->size)
+    {
+        return -1;
+    }
+    for (size_t i = 0; i < x->size; i++)
+    {
+        y->data[i] += alpha * x->data[i];
+    }
+    return 0;
 }
 
 struct float_array * sub_value_from_float_arrays(const size_t n, const size_t size, const float64_t value, ...)
