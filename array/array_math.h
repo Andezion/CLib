@@ -30,5 +30,10 @@ int add_float_array_inplace(struct float_array *dst, const struct float_array *s
 int hadamard_float_array_inplace(struct float_array *dst, const struct float_array *src);
 int axpy_float_array(float64_t alpha, const struct float_array *x, struct float_array *y);
 
+int scale_int_array_inplace(struct int_array *arr, int64_t alpha);
+int add_int_array_inplace(struct int_array *dst, const struct int_array *src);
+int hadamard_int_array_inplace(struct int_array *dst, const struct int_array *src);
+int axpy_int_array(float64_t alpha, const struct int_array *x, struct int_array *y);
+
 struct int_array *mul_int_arrays(size_t n, size_t size, ...);
 struct float_array *mul_float_arrays(size_t n, size_t size, ...);
