@@ -11,6 +11,10 @@ struct float_matrix *sub_float_matrices(size_t n, size_t rows, size_t cols, ...)
 struct float_matrix *mul_float_matrices(size_t n, ...);
 struct float_matrix *div_float_matrices(size_t n, ...);
 
+/* Low-level helpers for NN */
+int matvec_float(const struct float_matrix *A, const struct float_array *x, struct float_array *out);
+int matvec_transpose_float(const struct float_matrix *A, const struct float_array *x, struct float_array *out);
+
 int64_t sum_int_matrix(const struct int_matrix *matrix);
 float64_t sum_float_matrix(const struct float_matrix *matrix);
 

@@ -1,7 +1,60 @@
 #include "matrix_math.h"
 #include "matrix.h"
-#include <stdarg.h>
-#include <tgmath.h>
+#include "array.h"
+
+int matvec_float(const struct float_matrix *A, const struct float_array *x, struct float_array *out)
+{
+    if (!A || !A->data || !x || !out)
+    {
+        return -1;
+    }
+    if (x->data == NULL || out->data == NULL)
+    {
+        return -1;
+    }
+    if (x->size != A->cols || out->size != A->rows)
+    {
+        return -1;
+    }
+
+    for (size_t r = 0; r < A->rows; r++)
+    {
+        float64_t sum = 0.0;
+        for (size_t c = 0; c < A->cols; c++)
+        {
+            sum += A->data[r][c] * x->data[c];
+        }
+        out->data[r] = sum;
+    }
+    return 0;
+}
+
+int matvec_transpose_float(const struct float_matrix *A, const struct float_array *x, struct float_array *out)
+{
+    if (!A || !A->data || !x || !out)
+    {
+        return -1;
+    }
+    if (x->data == NULL || out->data == NULL)
+    {
+        return -1;
+    }
+    if (x->size != A->rows || out->size != A->cols)
+    {
+        return -1;
+    }
+
+    for (size_t c = 0; c < A->cols; c++)
+    {
+        float64_t sum = 0.0;
+        for (size_t r = 0; r < A->rows; r++)
+        {
+            sum += A->data[r][c] * x->data[r];
+        }
+        out->data[c] = sum;
+    }
+    return 0;
+}
 
 struct int_matrix *mul_int_matrices(const size_t n, ...)
 {
