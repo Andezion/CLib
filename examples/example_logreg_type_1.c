@@ -6,6 +6,7 @@
 #include "../nn/activations.h"
 #include "../nn/loss.h"
 #include "../nn/optimizer.h"
+#include "matrix/matrix.h"
 
 int main(void)
 {
