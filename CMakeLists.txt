@@ -18,7 +18,6 @@ target_include_directories(matrix_lib PUBLIC ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_
 add_library(nn_lib STATIC ${NN_SOURCES})
 target_include_directories(nn_lib PUBLIC ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/nn)
 
-# nn depends on matrix and array
 target_link_libraries(nn_lib PUBLIC matrix_lib array_lib)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/main.c")
@@ -30,7 +29,7 @@ file(GLOB EXAMPLES "${CMAKE_SOURCE_DIR}/examples/*.c")
 foreach(EXAMPLE_FILE ${EXAMPLES})
         get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
         add_executable(${EXAMPLE_NAME} ${EXAMPLE_FILE})
-        # Link order: nn -> matrix -> array to satisfy static linker
+
         target_link_libraries(${EXAMPLE_NAME} PRIVATE nn_lib matrix_lib array_lib)
 endforeach()
 
