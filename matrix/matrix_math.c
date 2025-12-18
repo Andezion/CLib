@@ -1,6 +1,6 @@
 #include "matrix_math.h"
 #include "matrix.h"
-#include "array.h"
+#include "array/array.h"
 
 int matvec_float(const struct float_matrix *A, const struct float_array *x, struct float_array *out)
 {

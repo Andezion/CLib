@@ -1,6 +1,6 @@
 #pragma once
 #include "matrix.h"
-#include "array.h"
+#include "array/array.h"
 
 struct int_matrix *add_int_matrices(size_t n, size_t rows, size_t cols, ...);
 struct int_matrix *sub_int_matrices(size_t n, size_t rows, size_t cols, ...);
