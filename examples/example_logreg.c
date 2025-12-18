@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "dense.h"
-#include "activations.h"
-#include "loss.h"
-#include "optimizer.h"
+#include "../nn/dense.h"
+#include "../nn/activations.h"
+#include "../nn/loss.h"
+#include "../nn/optimizer.h"
 
 int main(void)
 {
