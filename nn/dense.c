@@ -1,6 +1,5 @@
 #include "dense.h"
 #include "matrix/matrix_math.h"
-#include "array/array_math.h"
 
 struct dense_layer *dense_create(const size_t in_dim, const size_t out_dim)
 {
