@@ -37,13 +37,6 @@ struct int_array *sub_int_arrays(const size_t n, const size_t size, ...)
     va_list args;
     va_start(args, size);
 
-    // struct int_array *array = create_int_array(size);
-    // if (array == NULL)
-    // {
-    //     va_end(args);
-    //     return NULL;
-    // }
-
     const struct int_array *array_input = va_arg(args, struct int_array *);
     if (array_input == NULL || array_input->data == NULL || array_input->size != size)
     {
@@ -280,8 +273,14 @@ int scale_float_array_inplace(struct float_array *arr, const float64_t alpha)
 
 int add_float_array_inplace(struct float_array *dst, const struct float_array *src)
 {
-    if (!dst || !src || !dst->data || !src->data) return -1;
-    if (dst->size != src->size) return -1;
+    if (!dst || !src || !dst->data || !src->data)
+    {
+        return -1;
+    }
+    if (dst->size != src->size)
+    {
+        return -1;
+    }
     for (size_t i = 0; i < dst->size; i++)
     {
         dst->data[i] += src->data[i];
@@ -291,8 +290,14 @@ int add_float_array_inplace(struct float_array *dst, const struct float_array *s
 
 int hadamard_float_array_inplace(struct float_array *dst, const struct float_array *src)
 {
-    if (!dst || !src || !dst->data || !src->data) return -1;
-    if (dst->size != src->size) return -1;
+    if (!dst || !src || !dst->data || !src->data)
+    {
+        return -1;
+    }
+    if (dst->size != src->size)
+    {
+        return -1;
+    }
     for (size_t i = 0; i < dst->size; i++)
     {
         dst->data[i] *= src->data[i];
