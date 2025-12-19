@@ -1,10 +1,6 @@
 #pragma once
 #include <stdlib.h>
 #include <inttypes.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <tgmath.h>
-#include <time.h>
 
 typedef double float64_t;
 

@@ -1,7 +1,7 @@
 #include "matrix.h"
 
 #include <ctype.h>
-#include <math.h>
+#include <stdio.h>
 
 void display_int_matrix(const struct int_matrix *matrix)
 {
