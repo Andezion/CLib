@@ -118,7 +118,7 @@ int main(void)
             struct float_array *db3 = NULL; 
 
             struct float_array *d_a2 = create_float_array(h2);
-            
+
             dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
             sgd_update_dense(l3, dW3, db3, lr);
             free_float_matrix(&dW3); free_float_array(&db3);
@@ -126,17 +126,28 @@ int main(void)
             struct float_array *d_a2_pre = create_float_array(h2);
             dropout_backward(drop, d_a2, d_a2_pre);
 
-            struct float_matrix *dW2 = NULL; struct float_array *db2 = NULL; struct float_array *d_a1 = create_float_array(h1);
+            struct float_matrix *dW2 = NULL; 
+            struct float_array *db2 = NULL; 
+
+            struct float_array *d_a1 = create_float_array(h1);
+
             dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
             sgd_update_dense(l2, dW2, db2, lr);
-            free_float_matrix(&dW2); free_float_array(&db2);
 
-            free_float_array(&d_a2); free_float_array(&d_a2_pre);
+            free_float_matrix(&dW2); 
+            free_float_array(&db2);
+
+            free_float_array(&d_a2); 
+            free_float_array(&d_a2_pre);
 
             struct float_array *d_a1_pre = create_float_array(h1);
             dropout_backward(drop, d_a1, d_a1_pre);
 
-            struct float_matrix *dW1 = NULL; struct float_array *db1 = NULL; struct float_array *d_x = create_float_array(in_dim);
+            struct float_matrix *dW1 = NULL; 
+            struct float_array *db1 = NULL; 
+
+            struct float_array *d_x = create_float_array(in_dim);
+            
             dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
             sgd_update_dense(l1, dW1, db1, lr);
             free_float_matrix(&dW1); free_float_array(&db1);
