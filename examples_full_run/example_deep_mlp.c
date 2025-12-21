@@ -87,7 +87,10 @@ int main(void)
         double epoch_loss = 0.0;
         for (size_t s = 0; s < N; s++)
         {
-            for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+            for (size_t j = 0; j < in_dim; j++) 
+            {
+                x->data[j] = data[s][j];
+            }
 
             dense_forward(l1, x, a1);
             relu_inplace(a1);
@@ -98,7 +101,12 @@ int main(void)
             dropout_forward(drop, a2, a2_drop, 1);
 
             dense_forward(l3, a2_drop, logits);
-            for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+
+            for (size_t i = 0; i < out_dim; i++) 
+            {
+                probs->data[i] = logits->data[i];
+            }
+
             softmax_inplace(probs);
 
             const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
@@ -106,7 +114,11 @@ int main(void)
 
             cross_entropy_grad_from_probs(probs, labels[s], grad_out);
 
-            struct float_matrix *dW3 = NULL; struct float_array *db3 = NULL; struct float_array *d_a2 = create_float_array(h2);
+            struct float_matrix *dW3 = NULL; 
+            struct float_array *db3 = NULL; 
+
+            struct float_array *d_a2 = create_float_array(h2);
+            
             dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
             sgd_update_dense(l3, dW3, db3, lr);
             free_float_matrix(&dW3); free_float_array(&db3);
