@@ -147,12 +147,16 @@ int main(void)
             struct float_array *db1 = NULL; 
 
             struct float_array *d_x = create_float_array(in_dim);
-            
+
             dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
             sgd_update_dense(l1, dW1, db1, lr);
-            free_float_matrix(&dW1); free_float_array(&db1);
 
-            free_float_array(&d_a1); free_float_array(&d_a1_pre); free_float_array(&d_x);
+            free_float_matrix(&dW1); 
+            free_float_array(&db1);
+
+            free_float_array(&d_a1); 
+            free_float_array(&d_a1_pre); 
+            free_float_array(&d_x);
         }
 
         if (epoch % 20 == 0)
@@ -161,10 +165,20 @@ int main(void)
         }
     }
 
-    dense_free(&l1); dense_free(&l2); dense_free(&l3);
+    dense_free(&l1); 
+    dense_free(&l2); 
+    dense_free(&l3);
+
     dropout_free(&drop);
-    free_float_array(&x); free_float_array(&a1); free_float_array(&a1_drop); free_float_array(&a2); free_float_array(&a2_drop);
-    free_float_array(&logits); free_float_array(&probs); free_float_array(&grad_out);
+
+    free_float_array(&x); 
+    free_float_array(&a1); 
+    free_float_array(&a1_drop); 
+    free_float_array(&a2); 
+    free_float_array(&a2_drop);
+    free_float_array(&logits); 
+    free_float_array(&probs); 
+    free_float_array(&grad_out);
 
     return 0;
 }
