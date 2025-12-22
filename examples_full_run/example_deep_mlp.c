@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <tgmath.h>
 #include <time.h>
 
 #include "../nn/dense.h"
@@ -28,11 +29,15 @@ int main(void)
         return 1;
     }
 
+    const double xav_l1 = sqrt(6.0 / (l1->in_dim + l1->out_dim));
+    const double xav_l2 = sqrt(6.0 / (l2->in_dim + l2->out_dim));
+    const double xav_l3 = sqrt(6.0 / (l3->in_dim + l3->out_dim));
+
     for (size_t i = 0; i < l1->W->rows; i++) 
     {
         for (size_t j = 0; j < l1->W->cols; j++) 
         {
-            l1->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
+            l1->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l1;
         }
     }
 
@@ -40,7 +45,7 @@ int main(void)
     {
         for (size_t j = 0; j < l2->W->cols; j++) 
         {
-            l2->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
+            l2->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l2;
         }
     }
     
@@ -48,7 +53,7 @@ int main(void)
     {
         for (size_t j = 0; j < l3->W->cols; j++) 
         {
-            l3->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
+            l3->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l3;
         }
     }
 
@@ -69,24 +74,46 @@ int main(void)
         return 1;
     }
 
-    const size_t N = 6;
+    const size_t N = 600;
     double data[N][in_dim];
     size_t labels[N];
-    for (size_t i = 0; i < N; i++)
+
+    double centers[out_dim][in_dim];
+    for (size_t k = 0; k < out_dim; k++)
     {
         for (size_t j = 0; j < in_dim; j++)
         {
-            data[i][j] = (double) rand() / RAND_MAX;
+            centers[k][j] = 0.2 + 0.6 * ((double) k / (double) (out_dim - 1));
         }
-        labels[i] = i % out_dim;
     }
 
-    for (int epoch = 0; epoch < 200; epoch++)
+    for (size_t i = 0; i < N; i++)
+    {
+        const size_t y = rand() % out_dim;
+        labels[i] = y;
+        for (size_t j = 0; j < in_dim; j++)
+        {
+            data[i][j] = centers[y][j] + (((double) rand() / RAND_MAX) - 0.5) * 0.2;
+        }
+    }
+
+    for (int epoch = 0; epoch < 1000; epoch++)
     {
         double epoch_loss = 0.0;
-        for (size_t s = 0; s < N; s++)
+
+        size_t indices[N];
+        for (size_t i = 0; i < N; i++) indices[i] = i;
+        for (size_t i = 0; i < N; i++)
         {
-            const double lr = 0.5;
+            size_t j = rand() % N;
+            size_t tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+        }
+
+        for (size_t si = 0; si < N; si++)
+        {
+            const double lr = 0.01;
+
+            const size_t s = indices[si];
             for (size_t j = 0; j < in_dim; j++) 
             {
                 x->data[j] = data[s][j];
@@ -159,9 +186,79 @@ int main(void)
             free_float_array(&d_x);
         }
 
+        double eval_loss = 0.0;
+        size_t correct = 0;
+        for (size_t s = 0; s < N; s++)
+        {
+            for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+
+            dense_forward(l1, x, a1);
+            relu_inplace(a1);
+            dropout_forward(drop, a1, a1_drop, 0);
+
+            dense_forward(l2, a1_drop, a2);
+            relu_inplace(a2);
+            dropout_forward(drop, a2, a2_drop, 0);
+
+            dense_forward(l3, a2_drop, logits);
+
+            for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+            softmax_inplace(probs);
+            eval_loss += cross_entropy_loss_from_probs(probs, labels[s]);
+
+            size_t pred = 0;
+            double best = probs->data[0];
+            for (size_t i = 1; i < out_dim; i++)
+            {
+                if (probs->data[i] > best)
+                {
+                    best = probs->data[i];
+                    pred = i;
+                }
+            }
+
+            if (pred == labels[s])
+            {
+                correct++;
+            }
+        }
+
         if (epoch % 20 == 0)
         {
-            printf("epoch %d avg_loss=%.6f\n", epoch, epoch_loss / N);
+            printf("epoch %d avg_train_loss=%.6f eval_loss=%.6f accuracy=%.2f%%\n",
+                   epoch, epoch_loss / (double) N, eval_loss / (double) N, (double)correct * 100.0 / (double) N);
+            for (size_t t = 0; t < 3 && t < N; t++)
+            {
+                for (size_t j = 0; j < in_dim; j++)
+                {
+                    x->data[j] = data[t][j];
+                }
+
+                dense_forward(l1, x, a1);
+                relu_inplace(a1);
+                dropout_forward(drop, a1, a1_drop, 0);
+
+                dense_forward(l2, a1_drop, a2);
+                relu_inplace(a2);
+                dropout_forward(drop, a2, a2_drop, 0);
+
+                dense_forward(l3, a2_drop, logits);
+
+                for (size_t i = 0; i < out_dim; i++)
+                {
+                    probs->data[i] = logits->data[i];
+                }
+                softmax_inplace(probs);
+
+                printf(" sample %zu probs:", t);
+
+                for (size_t i = 0; i < out_dim; i++)
+                {
+                    printf(" %.3f", probs->data[i]);
+                }
+
+                printf(" label=%zu\n", labels[t]);
+            }
         }
     }
 
