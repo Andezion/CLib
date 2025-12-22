@@ -191,13 +191,26 @@ int main(void)
                 struct float_matrix *dW2 = NULL;
                 struct float_array *db2 = NULL;
                 struct float_array *d_a1 = create_float_array(h1);
+
                 dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
 
-                for (size_t i = 0; i < dW2->rows; i++) for (size_t j = 0; j < dW2->cols; j++) acc_dW2->data[i][j] += dW2->data[i][j];
-                for (size_t i = 0; i < db2->size; i++) acc_db2->data[i] += db2->data[i];
+                for (size_t i = 0; i < dW2->rows; i++)
+                {
+                    for (size_t j = 0; j < dW2->cols; j++)
+                    {
+                        acc_dW2->data[i][j] += dW2->data[i][j];
+                    }
+                }
 
-                free_float_matrix(&dW2); free_float_array(&db2);
-                free_float_array(&d_a2); free_float_array(&d_a2_pre);
+                for (size_t i = 0; i < db2->size; i++)
+                {
+                    acc_db2->data[i] += db2->data[i];
+                }
+
+                free_float_matrix(&dW2);
+                free_float_array(&db2);
+                free_float_array(&d_a2);
+                free_float_array(&d_a2_pre);
 
                 struct float_array *d_a1_pre = create_float_array(h1);
                 dropout_backward(drop, d_a1, d_a1_pre);
@@ -207,18 +220,49 @@ int main(void)
                 struct float_array *d_x = create_float_array(in_dim);
                 dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
 
-                for (size_t i = 0; i < dW1->rows; i++) for (size_t j = 0; j < dW1->cols; j++) acc_dW1->data[i][j] += dW1->data[i][j];
-                for (size_t i = 0; i < db1->size; i++) acc_db1->data[i] += db1->data[i];
+                for (size_t i = 0; i < dW1->rows; i++)
+                {
+                    for (size_t j = 0; j < dW1->cols; j++)
+                    {
+                        acc_dW1->data[i][j] += dW1->data[i][j];
+                    }
+                }
 
-                free_float_matrix(&dW1); free_float_array(&db1);
-                free_float_array(&d_a1); free_float_array(&d_a1_pre); free_float_array(&d_x);
+                for (size_t i = 0; i < db1->size; i++)
+                {
+                    acc_db1->data[i] += db1->data[i];
+                }
+
+                free_float_matrix(&dW1);
+                free_float_array(&db1);
+                free_float_array(&d_a1);
+                free_float_array(&d_a1_pre);
+                free_float_array(&d_x);
             }
 
             const double inv_bs = 1.0 / (double) cur_batch;
-            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) acc_dW3->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db3->size; i++) acc_db3->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) acc_dW2->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db2->size; i++) acc_db2->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW3->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW3->cols; j++)
+                {
+                    acc_dW3->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db3->size; i++)
+            {
+                acc_db3->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dW2->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW2->cols; j++)
+                {
+                    acc_dW2->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db2->size; i++)
+            {
+                acc_db2->data[i] *= inv_bs;
+            }
             for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
             for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
 
