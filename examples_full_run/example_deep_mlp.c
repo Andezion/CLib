@@ -303,8 +303,21 @@ int main(void)
                 double v = acc_db2->data[i];
                 gnorm += v * v;
             }
-            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) { double v = acc_dW1->data[i][j]; gnorm += v*v; }
-            for (size_t i = 0; i < acc_db1->size; i++) { double v = acc_db1->data[i]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_dW1->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW1->cols; j++)
+                {
+                    double v = acc_dW1->data[i][j];
+                    gnorm += v * v;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db1->size; i++)
+            {
+                double v = acc_db1->data[i];
+                gnorm += v * v;
+            }
+
             gnorm = sqrt(gnorm);
             epoch_grad_norm += gnorm;
 
@@ -321,7 +334,10 @@ int main(void)
         size_t correct = 0;
         for (size_t s = 0; s < N; s++)
         {
-            for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+            for (size_t j = 0; j < in_dim; j++)
+            {
+                x->data[j] = data[s][j];
+            }
 
             dense_forward(l1, x, a1);
             relu_inplace(a1);
@@ -333,7 +349,11 @@ int main(void)
 
             dense_forward(l3, a2_drop, logits);
 
-            for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+            for (size_t i = 0; i < out_dim; i++)
+            {
+                probs->data[i] = logits->data[i];
+            }
+
             softmax_inplace(probs);
             eval_loss += cross_entropy_loss_from_probs(probs, labels[s]);
 
