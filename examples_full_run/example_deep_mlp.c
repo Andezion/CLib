@@ -12,7 +12,8 @@
 
 int main(void)
 {
-    srand(time(NULL));
+    /* deterministic seed for reproducibility during experiments */
+    srand(0);
 
     const size_t in_dim = 4;
     const size_t h1 = 16;
@@ -97,6 +98,12 @@ int main(void)
         }
     }
 
+    const size_t batch_size = 32;
+    const double lr = 0.01; /* base learning rate */
+    const double beta1 = 0.9;
+    const double beta2 = 0.999;
+    const double eps = 1e-8;
+
     for (int epoch = 0; epoch < 1000; epoch++)
     {
         double epoch_loss = 0.0;
@@ -109,81 +116,98 @@ int main(void)
             size_t tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
         }
 
-        for (size_t si = 0; si < N; si++)
+        for (size_t bstart = 0; bstart < N; bstart += batch_size)
         {
-            const double lr = 0.01;
+            const size_t bend = (bstart + batch_size <= N) ? (bstart + batch_size) : N;
+            const size_t cur_batch = bend - bstart;
 
-            const size_t s = indices[si];
-            for (size_t j = 0; j < in_dim; j++) 
+            /* accumulators for gradients (sum) */
+            struct float_matrix *acc_dW3 = create_float_matrix(l3->out_dim, l3->in_dim);
+            struct float_array *acc_db3 = create_float_array(l3->out_dim);
+            struct float_matrix *acc_dW2 = create_float_matrix(l2->out_dim, l2->in_dim);
+            struct float_array *acc_db2 = create_float_array(l2->out_dim);
+            struct float_matrix *acc_dW1 = create_float_matrix(l1->out_dim, l1->in_dim);
+            struct float_array *acc_db1 = create_float_array(l1->out_dim);
+
+            for (size_t si = bstart; si < bend; si++)
             {
-                x->data[j] = data[s][j];
+                const size_t s = indices[si];
+                for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+
+                dense_forward(l1, x, a1);
+                relu_inplace(a1);
+                dropout_forward(drop, a1, a1_drop, 1);
+
+                dense_forward(l2, a1_drop, a2);
+                relu_inplace(a2);
+                dropout_forward(drop, a2, a2_drop, 1);
+
+                dense_forward(l3, a2_drop, logits);
+                for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+                softmax_inplace(probs);
+
+                const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
+                epoch_loss += loss;
+
+                cross_entropy_grad_from_probs(probs, labels[s], grad_out);
+
+                struct float_matrix *dW3 = NULL;
+                struct float_array *db3 = NULL;
+                struct float_array *d_a2 = create_float_array(h2);
+                dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
+
+                /* accumulate */
+                for (size_t i = 0; i < dW3->rows; i++) for (size_t j = 0; j < dW3->cols; j++) acc_dW3->data[i][j] += dW3->data[i][j];
+                for (size_t i = 0; i < db3->size; i++) acc_db3->data[i] += db3->data[i];
+
+                free_float_matrix(&dW3); free_float_array(&db3);
+
+                struct float_array *d_a2_pre = create_float_array(h2);
+                dropout_backward(drop, d_a2, d_a2_pre);
+
+                struct float_matrix *dW2 = NULL;
+                struct float_array *db2 = NULL;
+                struct float_array *d_a1 = create_float_array(h1);
+                dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
+
+                for (size_t i = 0; i < dW2->rows; i++) for (size_t j = 0; j < dW2->cols; j++) acc_dW2->data[i][j] += dW2->data[i][j];
+                for (size_t i = 0; i < db2->size; i++) acc_db2->data[i] += db2->data[i];
+
+                free_float_matrix(&dW2); free_float_array(&db2);
+                free_float_array(&d_a2); free_float_array(&d_a2_pre);
+
+                struct float_array *d_a1_pre = create_float_array(h1);
+                dropout_backward(drop, d_a1, d_a1_pre);
+
+                struct float_matrix *dW1 = NULL;
+                struct float_array *db1 = NULL;
+                struct float_array *d_x = create_float_array(in_dim);
+                dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
+
+                for (size_t i = 0; i < dW1->rows; i++) for (size_t j = 0; j < dW1->cols; j++) acc_dW1->data[i][j] += dW1->data[i][j];
+                for (size_t i = 0; i < db1->size; i++) acc_db1->data[i] += db1->data[i];
+
+                free_float_matrix(&dW1); free_float_array(&db1);
+                free_float_array(&d_a1); free_float_array(&d_a1_pre); free_float_array(&d_x);
             }
 
-            dense_forward(l1, x, a1);
-            relu_inplace(a1);
-            dropout_forward(drop, a1, a1_drop, 1);
+            /* average gradients over batch */
+            const double inv_bs = 1.0 / (double) cur_batch;
+            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) acc_dW3->data[i][j] *= inv_bs;
+            for (size_t i = 0; i < acc_db3->size; i++) acc_db3->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) acc_dW2->data[i][j] *= inv_bs;
+            for (size_t i = 0; i < acc_db2->size; i++) acc_db2->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
+            for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
 
-            dense_forward(l2, a1_drop, a2);
-            relu_inplace(a2);
-            dropout_forward(drop, a2, a2_drop, 1);
+            /* apply Adam updates */
+            adam_update_dense(l3, acc_dW3, acc_db3, lr, beta1, beta2, eps);
+            adam_update_dense(l2, acc_dW2, acc_db2, lr, beta1, beta2, eps);
+            adam_update_dense(l1, acc_dW1, acc_db1, lr, beta1, beta2, eps);
 
-            dense_forward(l3, a2_drop, logits);
-
-            for (size_t i = 0; i < out_dim; i++) 
-            {
-                probs->data[i] = logits->data[i];
-            }
-
-            softmax_inplace(probs);
-
-            const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
-            epoch_loss += loss;
-
-            cross_entropy_grad_from_probs(probs, labels[s], grad_out);
-
-            struct float_matrix *dW3 = NULL; 
-            struct float_array *db3 = NULL; 
-
-            struct float_array *d_a2 = create_float_array(h2);
-
-            dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
-            sgd_update_dense(l3, dW3, db3, lr);
-            free_float_matrix(&dW3); free_float_array(&db3);
-
-            struct float_array *d_a2_pre = create_float_array(h2);
-            dropout_backward(drop, d_a2, d_a2_pre);
-
-            struct float_matrix *dW2 = NULL; 
-            struct float_array *db2 = NULL; 
-
-            struct float_array *d_a1 = create_float_array(h1);
-
-            dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
-            sgd_update_dense(l2, dW2, db2, lr);
-
-            free_float_matrix(&dW2); 
-            free_float_array(&db2);
-
-            free_float_array(&d_a2); 
-            free_float_array(&d_a2_pre);
-
-            struct float_array *d_a1_pre = create_float_array(h1);
-            dropout_backward(drop, d_a1, d_a1_pre);
-
-            struct float_matrix *dW1 = NULL; 
-            struct float_array *db1 = NULL; 
-
-            struct float_array *d_x = create_float_array(in_dim);
-
-            dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
-            sgd_update_dense(l1, dW1, db1, lr);
-
-            free_float_matrix(&dW1); 
-            free_float_array(&db1);
-
-            free_float_array(&d_a1); 
-            free_float_array(&d_a1_pre); 
-            free_float_array(&d_x);
+            free_float_matrix(&acc_dW3); free_float_array(&acc_db3);
+            free_float_matrix(&acc_dW2); free_float_array(&acc_db2);
+            free_float_matrix(&acc_dW1); free_float_array(&acc_db1);
         }
 
         double eval_loss = 0.0;
