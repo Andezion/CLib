@@ -11,7 +11,7 @@
 
 int main(void)
 {
-    srand((unsigned)time(NULL));
+    srand(time(NULL));
 
     const size_t in_dim = 4;
     const size_t h1 = 16;
@@ -32,7 +32,7 @@ int main(void)
     {
         for (size_t j = 0; j < l1->W->cols; j++) 
         {
-            l1->W->data[i][j] = ((double)rand()/RAND_MAX - 0.5) * 0.2;
+            l1->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
         }
     }
 
@@ -40,7 +40,7 @@ int main(void)
     {
         for (size_t j = 0; j < l2->W->cols; j++) 
         {
-            l2->W->data[i][j] = ((double)rand()/RAND_MAX - 0.5) * 0.2;
+            l2->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
         }
     }
     
@@ -48,7 +48,7 @@ int main(void)
     {
         for (size_t j = 0; j < l3->W->cols; j++) 
         {
-            l3->W->data[i][j] = ((double)rand()/RAND_MAX - 0.5) * 0.2;
+            l3->W->data[i][j] = ((double) rand()/RAND_MAX - 0.5) * 0.2;
         }
     }
 
@@ -76,17 +76,17 @@ int main(void)
     {
         for (size_t j = 0; j < in_dim; j++)
         {
-            data[i][j] = (double)rand() / RAND_MAX;
+            data[i][j] = (double) rand() / RAND_MAX;
         }
         labels[i] = i % out_dim;
     }
 
-    const double lr = 0.5;
     for (int epoch = 0; epoch < 200; epoch++)
     {
         double epoch_loss = 0.0;
         for (size_t s = 0; s < N; s++)
         {
+            const double lr = 0.5;
             for (size_t j = 0; j < in_dim; j++) 
             {
                 x->data[j] = data[s][j];
