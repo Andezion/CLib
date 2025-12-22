@@ -9,6 +9,12 @@ struct dense_layer
     struct float_array *b;
     size_t in_dim;
     size_t out_dim;
+    /* Adam moments */
+    struct float_matrix *mW;
+    struct float_matrix *vW;
+    struct float_array *mb;
+    struct float_array *vb;
+    size_t adam_t;
 };
 
 struct dense_layer *dense_create(size_t in_dim, size_t out_dim);
@@ -24,3 +30,5 @@ int dense_backward(const struct dense_layer *layer,
                    struct float_array *d_input);
 
 int dense_apply_sgd_update(struct dense_layer *layer, const struct float_matrix *dW, const struct float_array *db, double lr);
+int dense_apply_adam_update(struct dense_layer *layer, const struct float_matrix *dW, const struct float_array *db,
+                           double lr, double beta1, double beta2, double eps);

@@ -28,6 +28,24 @@ struct dense_layer *dense_create(const size_t in_dim, const size_t out_dim)
         return NULL;
     }
 
+    /* Adam buffers */
+    l->mW = create_float_matrix(out_dim, in_dim);
+    l->vW = create_float_matrix(out_dim, in_dim);
+    l->mb = create_float_array(out_dim);
+    l->vb = create_float_array(out_dim);
+    if (!l->mW || !l->vW || !l->mb || !l->vb)
+    {
+        free_float_matrix(&l->W);
+        free_float_array(&l->b);
+        free_float_matrix(&l->mW);
+        free_float_matrix(&l->vW);
+        free_float_array(&l->mb);
+        free_float_array(&l->vb);
+        free(l);
+        return NULL;
+    }
+    l->adam_t = 0;
+
     return l;
 }
 
@@ -42,6 +60,10 @@ void dense_free(struct dense_layer **layer)
 
     free_float_matrix(&l->W);
     free_float_array(&l->b);
+    free_float_matrix(&l->mW);
+    free_float_matrix(&l->vW);
+    free_float_array(&l->mb);
+    free_float_array(&l->vb);
 
     free(l);
     *layer = NULL;
@@ -159,6 +181,50 @@ int dense_apply_sgd_update(struct dense_layer *layer, const struct float_matrix 
             layer->W->data[i][j] -= lr * dW->data[i][j];
         }
         layer->b->data[i] -= lr * db->data[i];
+    }
+    return 0;
+}
+
+int dense_apply_adam_update(struct dense_layer *layer, const struct float_matrix *dW, const struct float_array *db,
+                           double lr, double beta1, double beta2, double eps)
+{
+    if (!layer || !dW || !db)
+    {
+        return -1;
+    }
+    if (dW->rows != layer->out_dim || dW->cols != layer->in_dim)
+    {
+        return -1;
+    }
+    if (db->size != layer->out_dim)
+    {
+        return -1;
+    }
+
+    layer->adam_t += 1;
+    const double bias_correction1 = 1.0 - pow(beta1, (double)layer->adam_t);
+    const double bias_correction2 = 1.0 - pow(beta2, (double)layer->adam_t);
+
+    for (size_t i = 0; i < layer->out_dim; i++)
+    {
+        for (size_t j = 0; j < layer->in_dim; j++)
+        {
+            const double g = dW->data[i][j];
+            layer->mW->data[i][j] = beta1 * layer->mW->data[i][j] + (1.0 - beta1) * g;
+            layer->vW->data[i][j] = beta2 * layer->vW->data[i][j] + (1.0 - beta2) * g * g;
+
+            const double m_hat = layer->mW->data[i][j] / bias_correction1;
+            const double v_hat = layer->vW->data[i][j] / bias_correction2;
+
+            layer->W->data[i][j] -= lr * m_hat / (sqrt(v_hat) + eps);
+        }
+        /* bias */
+        const double gb = db->data[i];
+        layer->mb->data[i] = beta1 * layer->mb->data[i] + (1.0 - beta1) * gb;
+        layer->vb->data[i] = beta2 * layer->vb->data[i] + (1.0 - beta2) * gb * gb;
+        const double m_hat_b = layer->mb->data[i] / bias_correction1;
+        const double v_hat_b = layer->vb->data[i] / bias_correction2;
+        layer->b->data[i] -= lr * m_hat_b / (sqrt(v_hat_b) + eps);
     }
     return 0;
 }
