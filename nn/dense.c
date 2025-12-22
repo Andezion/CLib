@@ -1,4 +1,5 @@
 #include "dense.h"
+#include <tgmath.h>
 #include "matrix/matrix_math.h"
 
 struct dense_layer *dense_create(const size_t in_dim, const size_t out_dim)
@@ -28,11 +29,12 @@ struct dense_layer *dense_create(const size_t in_dim, const size_t out_dim)
         return NULL;
     }
 
-    /* Adam buffers */
     l->mW = create_float_matrix(out_dim, in_dim);
     l->vW = create_float_matrix(out_dim, in_dim);
+
     l->mb = create_float_array(out_dim);
     l->vb = create_float_array(out_dim);
+
     if (!l->mW || !l->vW || !l->mb || !l->vb)
     {
         free_float_matrix(&l->W);
@@ -42,6 +44,7 @@ struct dense_layer *dense_create(const size_t in_dim, const size_t out_dim)
         free_float_array(&l->mb);
         free_float_array(&l->vb);
         free(l);
+
         return NULL;
     }
     l->adam_t = 0;
@@ -144,12 +147,14 @@ int dense_backward(const struct dense_layer *layer,
         {
             free_float_matrix(&dW);
             free_float_array(&db);
+
             return -1;
         }
         if (matvec_transpose_float(layer->W, d_output, d_input) != 0)
         {
             free_float_matrix(&dW);
             free_float_array(&db);
+
             return -1;
         }
     }
@@ -159,7 +164,8 @@ int dense_backward(const struct dense_layer *layer,
     return 0;
 }
 
-int dense_apply_sgd_update(struct dense_layer *layer, const struct float_matrix *dW, const struct float_array *db, const double lr)
+int dense_apply_sgd_update(struct dense_layer *layer, const struct float_matrix *dW,
+    const struct float_array *db, const double lr)
 {
     if (!layer || !dW || !db)
     {
@@ -186,7 +192,7 @@ int dense_apply_sgd_update(struct dense_layer *layer, const struct float_matrix 
 }
 
 int dense_apply_adam_update(struct dense_layer *layer, const struct float_matrix *dW, const struct float_array *db,
-                           double lr, double beta1, double beta2, double eps)
+                            const double lr, double beta1, double beta2, double eps)
 {
     if (!layer || !dW || !db)
     {
@@ -202,6 +208,7 @@ int dense_apply_adam_update(struct dense_layer *layer, const struct float_matrix
     }
 
     layer->adam_t += 1;
+
     const double bias_correction1 = 1.0 - pow(beta1, (double)layer->adam_t);
     const double bias_correction2 = 1.0 - pow(beta2, (double)layer->adam_t);
 
@@ -218,12 +225,15 @@ int dense_apply_adam_update(struct dense_layer *layer, const struct float_matrix
 
             layer->W->data[i][j] -= lr * m_hat / (sqrt(v_hat) + eps);
         }
-        /* bias */
+
         const double gb = db->data[i];
+
         layer->mb->data[i] = beta1 * layer->mb->data[i] + (1.0 - beta1) * gb;
         layer->vb->data[i] = beta2 * layer->vb->data[i] + (1.0 - beta2) * gb * gb;
+
         const double m_hat_b = layer->mb->data[i] / bias_correction1;
         const double v_hat_b = layer->vb->data[i] / bias_correction2;
+
         layer->b->data[i] -= lr * m_hat_b / (sqrt(v_hat_b) + eps);
     }
     return 0;

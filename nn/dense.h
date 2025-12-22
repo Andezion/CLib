@@ -9,11 +9,12 @@ struct dense_layer
     struct float_array *b;
     size_t in_dim;
     size_t out_dim;
-    /* Adam moments */
+
     struct float_matrix *mW;
     struct float_matrix *vW;
     struct float_array *mb;
     struct float_array *vb;
+
     size_t adam_t;
 };
 
