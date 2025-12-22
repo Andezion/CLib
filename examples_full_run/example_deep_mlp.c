@@ -12,7 +12,6 @@
 
 int main(void)
 {
-    /* deterministic seed for reproducibility during experiments */
     srand(0);
 
     const size_t in_dim = 4;
@@ -46,7 +45,7 @@ int main(void)
     {
         for (size_t j = 0; j < l2->W->cols; j++) 
         {
-            l2->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l2;
+            l2->W->data[i][j] = ((double) rand() / RAND_MAX * 2.0 - 1.0) * xav_l2;
         }
     }
     
@@ -58,7 +57,7 @@ int main(void)
         }
     }
 
-    struct dropout_layer *drop = dropout_create(0.3);
+    struct dropout_layer *drop = dropout_create(0.0);
 
     struct float_array *x = create_float_array(in_dim);
     struct float_array *a1 = create_float_array(h1);
@@ -94,19 +93,15 @@ int main(void)
         labels[i] = y;
         for (size_t j = 0; j < in_dim; j++)
         {
-            data[i][j] = centers[y][j] + (((double) rand() / RAND_MAX) - 0.5) * 0.2;
+            data[i][j] = centers[y][j] + ((double) rand() / RAND_MAX - 0.5) * 0.2;
         }
     }
 
-    const size_t batch_size = 32;
-    const double lr = 0.01; /* base learning rate */
-    const double beta1 = 0.9;
-    const double beta2 = 0.999;
-    const double eps = 1e-8;
-
     for (int epoch = 0; epoch < 1000; epoch++)
     {
+        const size_t batch_size = 32;
         double epoch_loss = 0.0;
+        double epoch_grad_norm = 0.0;
 
         size_t indices[N];
         for (size_t i = 0; i < N; i++) indices[i] = i;
@@ -118,10 +113,13 @@ int main(void)
 
         for (size_t bstart = 0; bstart < N; bstart += batch_size)
         {
+            const double eps = 1e-8;
+            const double beta2 = 0.999;
+            const double beta1 = 0.9;
+            const double lr = 0.01;
             const size_t bend = (bstart + batch_size <= N) ? (bstart + batch_size) : N;
             const size_t cur_batch = bend - bstart;
 
-            /* accumulators for gradients (sum) */
             struct float_matrix *acc_dW3 = create_float_matrix(l3->out_dim, l3->in_dim);
             struct float_array *acc_db3 = create_float_array(l3->out_dim);
             struct float_matrix *acc_dW2 = create_float_matrix(l2->out_dim, l2->in_dim);
@@ -156,7 +154,6 @@ int main(void)
                 struct float_array *d_a2 = create_float_array(h2);
                 dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
 
-                /* accumulate */
                 for (size_t i = 0; i < dW3->rows; i++) for (size_t j = 0; j < dW3->cols; j++) acc_dW3->data[i][j] += dW3->data[i][j];
                 for (size_t i = 0; i < db3->size; i++) acc_db3->data[i] += db3->data[i];
 
@@ -191,7 +188,6 @@ int main(void)
                 free_float_array(&d_a1); free_float_array(&d_a1_pre); free_float_array(&d_x);
             }
 
-            /* average gradients over batch */
             const double inv_bs = 1.0 / (double) cur_batch;
             for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) acc_dW3->data[i][j] *= inv_bs;
             for (size_t i = 0; i < acc_db3->size; i++) acc_db3->data[i] *= inv_bs;
@@ -200,7 +196,16 @@ int main(void)
             for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
             for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
 
-            /* apply Adam updates */
+            double gnorm = 0.0;
+            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) { double v = acc_dW3->data[i][j]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_db3->size; i++) { double v = acc_db3->data[i]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) { double v = acc_dW2->data[i][j]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_db2->size; i++) { double v = acc_db2->data[i]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) { double v = acc_dW1->data[i][j]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_db1->size; i++) { double v = acc_db1->data[i]; gnorm += v*v; }
+            gnorm = sqrt(gnorm);
+            epoch_grad_norm += gnorm;
+
             adam_update_dense(l3, acc_dW3, acc_db3, lr, beta1, beta2, eps);
             adam_update_dense(l2, acc_dW2, acc_db2, lr, beta1, beta2, eps);
             adam_update_dense(l1, acc_dW1, acc_db1, lr, beta1, beta2, eps);
