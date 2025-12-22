@@ -263,14 +263,46 @@ int main(void)
             {
                 acc_db2->data[i] *= inv_bs;
             }
-            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW1->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW1->cols; j++)
+                {
+                    acc_dW1->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db1->size; i++)
+            {
+                acc_db1->data[i] *= inv_bs;
+            }
 
             double gnorm = 0.0;
-            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) { double v = acc_dW3->data[i][j]; gnorm += v*v; }
-            for (size_t i = 0; i < acc_db3->size; i++) { double v = acc_db3->data[i]; gnorm += v*v; }
-            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) { double v = acc_dW2->data[i][j]; gnorm += v*v; }
-            for (size_t i = 0; i < acc_db2->size; i++) { double v = acc_db2->data[i]; gnorm += v*v; }
+            for (size_t i = 0; i < acc_dW3->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW3->cols; j++)
+                {
+                    double v = acc_dW3->data[i][j];
+                    gnorm += v * v;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db3->size; i++)
+            {
+                double v = acc_db3->data[i];
+                gnorm += v * v;
+            }
+            for (size_t i = 0; i < acc_dW2->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW2->cols; j++)
+                {
+                    double v = acc_dW2->data[i][j]; gnorm += v * v;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db2->size; i++)
+            {
+                double v = acc_db2->data[i];
+                gnorm += v * v;
+            }
             for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) { double v = acc_dW1->data[i][j]; gnorm += v*v; }
             for (size_t i = 0; i < acc_db1->size; i++) { double v = acc_db1->data[i]; gnorm += v*v; }
             gnorm = sqrt(gnorm);
