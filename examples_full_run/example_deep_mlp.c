@@ -37,7 +37,7 @@ int main(void)
     {
         for (size_t j = 0; j < l1->W->cols; j++) 
         {
-            l1->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l1;
+            l1->W->data[i][j] = ((double) rand() / RAND_MAX * 2.0 - 1.0) * xav_l1;
         }
     }
 
@@ -53,7 +53,7 @@ int main(void)
     {
         for (size_t j = 0; j < l3->W->cols; j++) 
         {
-            l3->W->data[i][j] = (((double) rand() / RAND_MAX) * 2.0 - 1.0) * xav_l3;
+            l3->W->data[i][j] = ((double) rand() / RAND_MAX * 2.0 - 1.0) * xav_l3;
         }
     }
 
@@ -104,11 +104,18 @@ int main(void)
         double epoch_grad_norm = 0.0;
 
         size_t indices[N];
-        for (size_t i = 0; i < N; i++) indices[i] = i;
+
+        for (size_t i = 0; i < N; i++)
+        {
+            indices[i] = i;
+        }
         for (size_t i = 0; i < N; i++)
         {
             size_t j = rand() % N;
-            size_t tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+
+            size_t tmp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = tmp;
         }
 
         for (size_t bstart = 0; bstart < N; bstart += batch_size)
@@ -117,7 +124,8 @@ int main(void)
             const double beta2 = 0.999;
             const double beta1 = 0.9;
             const double lr = 0.01;
-            const size_t bend = (bstart + batch_size <= N) ? (bstart + batch_size) : N;
+
+            const size_t bend = bstart + batch_size <= N ? bstart + batch_size : N;
             const size_t cur_batch = bend - bstart;
 
             struct float_matrix *acc_dW3 = create_float_matrix(l3->out_dim, l3->in_dim);
@@ -130,7 +138,10 @@ int main(void)
             for (size_t si = bstart; si < bend; si++)
             {
                 const size_t s = indices[si];
-                for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+                for (size_t j = 0; j < in_dim; j++)
+                {
+                    x->data[j] = data[s][j];
+                }
 
                 dense_forward(l1, x, a1);
                 relu_inplace(a1);
@@ -141,7 +152,10 @@ int main(void)
                 dropout_forward(drop, a2, a2_drop, 1);
 
                 dense_forward(l3, a2_drop, logits);
-                for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+                for (size_t i = 0; i < out_dim; i++)
+                {
+                    probs->data[i] = logits->data[i];
+                }
                 softmax_inplace(probs);
 
                 const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
@@ -152,12 +166,24 @@ int main(void)
                 struct float_matrix *dW3 = NULL;
                 struct float_array *db3 = NULL;
                 struct float_array *d_a2 = create_float_array(h2);
+
                 dense_backward(l3, a2_drop, grad_out, &dW3, &db3, d_a2);
 
-                for (size_t i = 0; i < dW3->rows; i++) for (size_t j = 0; j < dW3->cols; j++) acc_dW3->data[i][j] += dW3->data[i][j];
-                for (size_t i = 0; i < db3->size; i++) acc_db3->data[i] += db3->data[i];
+                for (size_t i = 0; i < dW3->rows; i++)
+                {
+                    for (size_t j = 0; j < dW3->cols; j++)
+                    {
+                        acc_dW3->data[i][j] += dW3->data[i][j];
+                    }
+                }
 
-                free_float_matrix(&dW3); free_float_array(&db3);
+                for (size_t i = 0; i < db3->size; i++)
+                {
+                    acc_db3->data[i] += db3->data[i];
+                }
+
+                free_float_matrix(&dW3);
+                free_float_array(&db3);
 
                 struct float_array *d_a2_pre = create_float_array(h2);
                 dropout_backward(drop, d_a2, d_a2_pre);
