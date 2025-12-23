@@ -18,17 +18,28 @@ int main(void)
 
     struct dense_layer *l1 = dense_create(in_dim, hid);
     struct dense_layer *l2 = dense_create(hid, out_dim);
-    if (!l1 || !l2) { printf("alloc fail\n"); return 1; }
+
+    if (!l1 || !l2)
+    {
+        printf("alloc fail\n");
+        return 1;
+    }
 
     struct float_array *x = create_float_array(in_dim);
     struct float_array *h = create_float_array(hid);
     struct float_array *y = create_float_array(out_dim);
+
     struct float_array *target = create_float_array(out_dim);
     struct float_array *grad_out = create_float_array(out_dim);
-    if (!x || !h || !y || !target || !grad_out) { printf("alloc fail\n"); return 1; }
 
-    double inputs[4][2] = {{0,0},{0,1},{1,0},{1,1}};
-    double targets[4] = {0,1,1,0};
+    if (!x || !h || !y || !target || !grad_out)
+    {
+        printf("alloc fail\n");
+        return 1;
+    }
+
+    const float64_t inputs[4][2] = {{0, 0},{0, 1},{1, 0},{1, 1}};
+    const float64_t targets[4] = {0, 1, 1, 0};
 
     const double lr = 0.8;
     for (int epoch = 0; epoch < 5000; epoch++)
