@@ -72,7 +72,9 @@ int main(void)
             loss += cross_entropy_loss_from_probs(probs, labels[i]);
             cross_entropy_grad_from_probs(probs, labels[i], grad_out);
 
-            struct float_matrix *dW2 = NULL; struct float_array *db2 = NULL;
+            struct float_matrix *dW2 = NULL;
+            struct float_array *db2 = NULL;
+
             struct float_array *d_a = create_float_array(h);
 
             dense_backward(l2, a, grad_out, &dW2, &db2, d_a);
@@ -81,7 +83,9 @@ int main(void)
             free_float_matrix(&dW2);
             free_float_array(&db2);
 
-            struct float_matrix *dW1 = NULL; struct float_array *db1 = NULL;
+            struct float_matrix *dW1 = NULL;
+            struct float_array *db1 = NULL;
+
             struct float_array *d_x = create_float_array(in_dim);
 
             dense_backward(l1, x, d_a, &dW1, &db1, d_x);
