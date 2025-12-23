@@ -73,13 +73,20 @@ int main(void)
     printf("Learned mapping samples:\n");
     for (int i = 0; i < 10; i++)
     {
-        float64_t vx = -1.0 + 2.0 * i / 9.0;
+        const float64_t vx = -1.0 + 2.0 * i / 9.0;
+
         x->data[0] = vx;
         dense_forward(lin, x, y);
-        printf("x=%.3f -> y=%.3f (true=%.3f)\n", vx, y->data[0], 2.0*vx + 1.0);
+
+        printf("x=%.3f -> y=%.3f (true=%.3f)\n", vx, y->data[0], 2.0 * vx + 1.0);
     }
 
     dense_free(&lin);
-    free_float_array(&x); free_float_array(&y); free_float_array(&t); free_float_array(&grad_out);
+
+    free_float_array(&x);
+    free_float_array(&y);
+    free_float_array(&t);
+    free_float_array(&grad_out);
+
     return 0;
 }
