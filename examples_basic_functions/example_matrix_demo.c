@@ -49,19 +49,29 @@ int main(void)
     struct float_matrix *invA = div_float_matrices(2, I, A);
     if (invA)
     {
-        printf("inv(A) =\n"); display_float_matrix(invA);
+        printf("inv(A) =\n");
+        display_float_matrix(invA);
 
         struct float_matrix *bmat = create_float_matrix(3,1);
-        bmat->data[0][0] = 1; bmat->data[1][0] = 2; bmat->data[2][0] = 3;
+
+        bmat->data[0][0] = 1;
+        bmat->data[1][0] = 2;
+        bmat->data[2][0] = 3;
 
         struct float_matrix *x = mul_float_matrices(2, invA, bmat);
-        printf("Solution x (inv(A)*b) =\n"); display_float_matrix(x);
+
+        printf("Solution x (inv(A)*b) =\n");
+        display_float_matrix(x);
 
         free_float_matrix(&bmat);
         free_float_matrix(&x);
     }
 
-    free_float_matrix(&A); free_float_matrix(&B); free_float_matrix(&C); free_float_matrix(&I); free_float_matrix(&invA);
+    free_float_matrix(&A);
+    free_float_matrix(&B);
+    free_float_matrix(&C);
+    free_float_matrix(&I);
+    free_float_matrix(&invA);
 
     return 0;
 }
