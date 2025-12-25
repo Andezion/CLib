@@ -65,22 +65,30 @@ int main(void)
                 sgd_update_dense(l2, dW2, db2, 0.05);
                 free_float_matrix(&dW2); free_float_array(&db2);
 
-                struct float_matrix *dW1 = NULL; struct float_array *db1 = NULL;
+                struct float_matrix *dW1 = NULL;
+                struct float_array *db1 = NULL;
                 struct float_array *d_x = create_float_array(in_dim);
                 dense_backward(l1, x, d_h, &dW1, &db1, d_x);
+
                 sgd_update_dense(l1, dW1, db1, 0.05);
 
-                free_float_matrix(&dW1); free_float_array(&db1);
-                free_float_array(&d_h); free_float_array(&d_x);
+                free_float_matrix(&dW1);
+                free_float_array(&db1);
+                free_float_array(&d_h);
+                free_float_array(&d_x);
             }
         }
-        if (epoch % 200 == 0) printf("epoch %d loss=%.6f\n", epoch, loss_sum / (double)N);
+        if (epoch % 200 == 0)
+        {
+            printf("epoch %d loss=%.6f\n", epoch, loss_sum / (float64_t) N);
+        }
+
     }
 
     for (int s = 0; s < 8; s++)
     {
-        double r = (double)s / 8.0 * 1.8;
-        double t = 1.75 * r;
+        float64_t r = (double)s / 8.0 * 1.8;
+        float64_t t = 1.75 * r;
         x->data[0] = r * cos(t);
         x->data[1] = r * sin(t);
         dense_forward(l1, x, h); tanh_inplace(h);
