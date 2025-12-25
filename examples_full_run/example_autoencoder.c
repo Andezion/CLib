@@ -122,12 +122,25 @@ int main(void)
             printf(" %.3f", x->data[d]);
         }
 
-        printf("\nrecon:"); for (size_t d = 0; d < in_dim; d++) printf(" %.3f", y->data[d]);
+        printf("\nrecon:");
+        for (size_t d = 0; d < in_dim; d++)
+        {
+            printf(" %.3f", y->data[d]);
+        }
         printf("\n");
     }
 
-    dense_free(&e1); dense_free(&e2); dense_free(&d1); dense_free(&d2);
-    free_float_array(&x); free_float_array(&h1); free_float_array(&code); free_float_array(&h2); free_float_array(&y); free_float_array(&grad_out);
+    dense_free(&e1);
+    dense_free(&e2);
+    dense_free(&d1);
+    dense_free(&d2);
+
+    free_float_array(&x);
+    free_float_array(&h1);
+    free_float_array(&code);
+    free_float_array(&h2);
+    free_float_array(&y);
+    free_float_array(&grad_out);
 
     return 0;
 }
