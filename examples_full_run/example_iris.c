@@ -17,7 +17,9 @@ int main(void)
     const size_t N = n_classes * per_class;
     const size_t in_dim = 4;
 
-    const double centers[3][4] = {{5.1,3.5,1.4,0.2},{5.9,3.0,4.2,1.5},{6.3,3.3,6.0,2.5}};
+    const float64_t centers[3][4] = {{5.1, 3.5, 1.4, 0.2},
+                                 {5.9, 3.0, 4.2, 1.5},
+                                {6.3, 3.3, 6.0, 2.5}};
 
     struct float_array *x = create_float_array(in_dim);
     struct float_array *h = create_float_array(16);
@@ -35,7 +37,7 @@ int main(void)
 
     for (int epoch = 0; epoch < 500; epoch++)
     {
-        double loss_sum = 0.0;
+        float64_t loss_sum = 0.0;
         for (size_t cls = 0; cls < n_classes; cls++)
         {
             for (size_t i = 0; i < per_class; i++)
@@ -43,7 +45,7 @@ int main(void)
 
                 for (size_t d = 0; d < in_dim; d++)
                 {
-                    const double noise = ((double)rand() / RAND_MAX - 0.5) * 0.6;
+                    const float64_t noise = ((float64_t) rand() / RAND_MAX - 0.5) * 0.6;
                     x->data[d] = centers[cls][d] + noise;
                 }
 
@@ -91,7 +93,7 @@ int main(void)
         {
             for (size_t d = 0; d < in_dim; d++)
             {
-                const double noise = ((double) rand() / RAND_MAX - 0.5) * 0.6;
+                const float64_t noise = ((float64_t) rand() / RAND_MAX - 0.5) * 0.6;
                 x->data[d] = centers[cls][d] + noise;
             }
 
@@ -101,7 +103,9 @@ int main(void)
             dense_forward(l2, h, y);
             softmax_inplace(y);
 
-            size_t pred = 0; double best = y->data[0];
+            size_t pred = 0;
+            float64_t best = y->data[0];
+
             for (size_t k = 1; k < n_classes; k++)
             {
                 if (y->data[k] > best)
