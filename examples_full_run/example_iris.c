@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 
 #include "../nn/dense.h"
 #include "../nn/activations.h"
@@ -18,7 +17,7 @@ int main(void)
     const size_t N = n_classes * per_class;
     const size_t in_dim = 4;
 
-    double centers[3][4] = {{5.1,3.5,1.4,0.2},{5.9,3.0,4.2,1.5},{6.3,3.3,6.0,2.5}};
+    const double centers[3][4] = {{5.1,3.5,1.4,0.2},{5.9,3.0,4.2,1.5},{6.3,3.3,6.0,2.5}};
 
     struct float_array *x = create_float_array(in_dim);
     struct float_array *h = create_float_array(16);
@@ -44,7 +43,7 @@ int main(void)
 
                 for (size_t d = 0; d < in_dim; d++)
                 {
-                    double noise = ((double)rand() / RAND_MAX - 0.5) * 0.6;
+                    const double noise = ((double)rand() / RAND_MAX - 0.5) * 0.6;
                     x->data[d] = centers[cls][d] + noise;
                 }
 
