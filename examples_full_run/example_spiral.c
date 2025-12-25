@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
 
 #include "../nn/dense.h"
 #include "../nn/activations.h"
@@ -12,6 +11,7 @@
 int main(void)
 {
     srand(2);
+
     const size_t per_class = 200;
     const size_t N = per_class * 2;
     const size_t in_dim = 2;
@@ -19,6 +19,7 @@ int main(void)
     struct float_array *x = create_float_array(in_dim);
     struct float_array *h = create_float_array(32);
     struct float_array *y = create_float_array(1);
+
     struct float_array *target = create_float_array(1);
     struct float_array *grad_out = create_float_array(1);
 
@@ -33,27 +34,33 @@ int main(void)
 
     for (int epoch = 0; epoch < 800; epoch++)
     {
-        double loss_sum = 0.0;
+        float64_t loss_sum = 0.0;
         for (size_t cls = 0; cls < 2; cls++)
         {
             for (size_t i = 0; i < per_class; i++)
             {
-                double r = (double)i / (double)per_class * 1.8;
-                double t = 1.75 * r + (cls == 0 ? 0.0 : M_PI);
-                double noise = ((double)rand() / RAND_MAX - 0.5) * 0.2;
+                const float64_t r = (float64_t) i / (float64_t) per_class * 1.8;
+                const float64_t t = 1.75 * r + (cls == 0 ? 0.0 : M_PI);
+                const float64_t noise = ((float64_t)rand() / RAND_MAX - 0.5) * 0.2;
+
                 x->data[0] = r * cos(t) + noise;
                 x->data[1] = r * sin(t) + noise;
 
-                dense_forward(l1, x, h); tanh_inplace(h);
-                dense_forward(l2, h, y); sigmoid_inplace(y);
+                dense_forward(l1, x, h);
+                tanh_inplace(h);
 
-                target->data[0] = cls;
+                dense_forward(l2, h, y);
+                sigmoid_inplace(y);
+
+                target->data[0] = (float64_t) cls;
                 loss_sum += mse_loss(y, target);
 
                 mse_grad(y, target, grad_out);
 
-                struct float_matrix *dW2 = NULL; struct float_array *db2 = NULL;
+                struct float_matrix *dW2 = NULL;
+                struct float_array *db2 = NULL;
                 struct float_array *d_h = create_float_array(32);
+
                 dense_backward(l2, h, grad_out, &dW2, &db2, d_h);
                 sgd_update_dense(l2, dW2, db2, 0.05);
                 free_float_matrix(&dW2); free_float_array(&db2);
