@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "../nn/dense.h"
 #include "../nn/activations.h"
