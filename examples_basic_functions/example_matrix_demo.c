@@ -14,18 +14,37 @@ int main(void)
         return 1;
     }
 
-    double avals[3][3] = {{4,2,1},{0,1,5},{2,3,3}};
-    double bvals[3][3] = {{1,0,2},{-1,3,1},{0,2,4}};
-    for (size_t i = 0; i < 3; i++) for (size_t j = 0; j < 3; j++) { A->data[i][j] = avals[i][j]; B->data[i][j] = bvals[i][j]; }
+    const float64_t avals[3][3] = {{4, 2, 1},{0, 1, 5},{2, 3, 3}};
+    const float64_t bvals[3][3] = {{1, 0, 2},{-1, 3, 1},{0, 2, 4}};
 
-    printf("Matrix A:\n"); display_float_matrix(A);
-    printf("Matrix B:\n"); display_float_matrix(B);
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            A->data[i][j] = avals[i][j]; B->data[i][j] = bvals[i][j];
+        }
+    }
+
+    printf("Matrix A:\n");
+    display_float_matrix(A);
+
+    printf("Matrix B:\n");
+    display_float_matrix(B);
 
     struct float_matrix *C = mul_float_matrices(2, A, B);
-    printf("A * B =\n"); display_float_matrix(C);
+
+    printf("A * B =\n");
+    display_float_matrix(C);
 
     struct float_matrix *I = create_float_matrix(3, 3);
-    for (size_t i = 0; i < 3; i++) for (size_t j = 0; j < 3; j++) I->data[i][j] = (i==j) ? 1.0 : 0.0;
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            I->data[i][j] = i == j ? 1.0 : 0.0;
+        }
+    }
+
 
     struct float_matrix *invA = div_float_matrices(2, I, A);
     if (invA)
