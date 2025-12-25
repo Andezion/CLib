@@ -9,7 +9,10 @@ int main(void)
     struct float_matrix *A = create_float_matrix(3, 3);
     struct float_matrix *B = create_float_matrix(3, 3);
 
-    if (!A || !B) return 1;
+    if (!A || !B)
+    {
+        return 1;
+    }
 
     double avals[3][3] = {{4,2,1},{0,1,5},{2,3,3}};
     double bvals[3][3] = {{1,0,2},{-1,3,1},{0,2,4}};
