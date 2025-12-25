@@ -87,18 +87,29 @@ int main(void)
 
     for (int s = 0; s < 8; s++)
     {
-        float64_t r = (double)s / 8.0 * 1.8;
-        float64_t t = 1.75 * r;
+        const float64_t r = (float64_t) s / 8.0 * 1.8;
+        const float64_t t = 1.75 * r;
+
         x->data[0] = r * cos(t);
         x->data[1] = r * sin(t);
-        dense_forward(l1, x, h); tanh_inplace(h);
-        dense_forward(l2, h, y); sigmoid_inplace(y);
+
+        dense_forward(l1, x, h);
+        tanh_inplace(h);
+
+        dense_forward(l2, h, y);
+        sigmoid_inplace(y);
+
         printf("pt (%.3f, %.3f) -> %.3f\n", x->data[0], x->data[1], y->data[0]);
     }
 
-    dense_free(&l1); dense_free(&l2);
-    free_float_array(&x); free_float_array(&h); free_float_array(&y);
-    free_float_array(&target); free_float_array(&grad_out);
+    dense_free(&l1);
+    dense_free(&l2);
+
+    free_float_array(&x);
+    free_float_array(&h);
+    free_float_array(&y);
+    free_float_array(&target);
+    free_float_array(&grad_out);
 
     return 0;
 }
