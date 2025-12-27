@@ -145,55 +145,71 @@ int batchnorm_backward(const struct batchnorm_layer *layer, const struct float_a
             return -1;
         }
 
-        double var = layer->last_var;
-        double denom = sqrt(var + layer->eps);
+        const float64_t var = layer->last_var;
+        const float64_t denom = sqrt(var + layer->eps);
 
-        double mean_dout = 0.0;
-        double mean_dout_xhat = 0.0;
+        float64_t mean_dout = 0.0;
+        float64_t mean_dout_xhat = 0.0;
+
         for (size_t i = 0; i < dim; i++)
         {
             mean_dout += d_out->data[i] * layer->gamma->data[i] / denom;
             mean_dout_xhat += d_out->data[i] * layer->gamma->data[i] * layer->last_xhat->data[i] / denom;
         }
-        mean_dout /= (double)dim;
-        mean_dout_xhat /= (double)dim;
+        mean_dout /= (float64_t)dim;
+        mean_dout_xhat /= (float64_t)dim;
 
         for (size_t i = 0; i < dim; i++)
         {
-            double term = (d_out->data[i] * layer->gamma->data[i] / denom) - mean_dout - layer->last_xhat->data[i] * mean_dout_xhat;
+            const float64_t term = d_out->data[i] * layer->gamma->data[i] / denom - mean_dout -
+                                    layer->last_xhat->data[i] * mean_dout_xhat;
             d_input->data[i] = term;
         }
     }
 
     *d_gamma_out = d_gamma;
     *d_beta_out = d_beta;
+
     return 0;
 }
 
 int batchnorm_apply_adam_update(struct batchnorm_layer *layer, const struct float_array *d_gamma, const struct float_array *d_beta,
-                                double lr, double beta1, double beta2, double eps)
+                                const double lr, const double beta1, const double beta2, const double eps)
 {
-    if (!layer || !d_gamma || !d_beta) return -1;
-    if (d_gamma->size != layer->dim || d_beta->size != layer->dim) return -1;
+    if (!layer || !d_gamma || !d_beta)
+    {
+        return -1;
+    }
+
+    if (d_gamma->size != layer->dim || d_beta->size != layer->dim)
+    {
+        return -1;
+    }
 
     layer->adam_t += 1;
-    double bc1 = 1.0 - pow(beta1, (double)layer->adam_t);
-    double bc2 = 1.0 - pow(beta2, (double)layer->adam_t);
+    const float64_t bc1 = 1.0 - pow(beta1, (float64_t)layer->adam_t);
+    const float64_t bc2 = 1.0 - pow(beta2, (float64_t)layer->adam_t);
 
     for (size_t i = 0; i < layer->dim; i++)
     {
-        double g = d_gamma->data[i];
+        const float64_t g = d_gamma->data[i];
+
         layer->mg->data[i] = beta1 * layer->mg->data[i] + (1.0 - beta1) * g;
         layer->vg->data[i] = beta2 * layer->vg->data[i] + (1.0 - beta2) * g * g;
-        double mhat = layer->mg->data[i] / bc1;
-        double vhat = layer->vg->data[i] / bc2;
+
+        const float64_t mhat = layer->mg->data[i] / bc1;
+        const float64_t vhat = layer->vg->data[i] / bc2;
+
         layer->gamma->data[i] -= lr * mhat / (sqrt(vhat) + eps);
 
-        double gb = d_beta->data[i];
+        const float64_t gb = d_beta->data[i];
+
         layer->mb->data[i] = beta1 * layer->mb->data[i] + (1.0 - beta1) * gb;
         layer->vb->data[i] = beta2 * layer->vb->data[i] + (1.0 - beta2) * gb * gb;
-        double mhatb = layer->mb->data[i] / bc1;
-        double vhatb = layer->vb->data[i] / bc2;
+
+        const float64_t mhatb = layer->mb->data[i] / bc1;
+        const float64_t vhatb = layer->vb->data[i] / bc2;
+
         layer->beta->data[i] -= lr * mhatb / (sqrt(vhatb) + eps);
     }
     return 0;
