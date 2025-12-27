@@ -25,7 +25,7 @@ void batchnorm_free(struct batchnorm_layer **layer);
 
 int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_array *input, struct float_array *output);
 int batchnorm_backward(const struct batchnorm_layer *layer, const struct float_array *d_out,
-                       struct float_array *d_input, struct float_array **d_gamma_out, struct float_array **d_beta_out);
+                       const struct float_array *d_input, struct float_array **d_gamma_out, struct float_array **d_beta_out);
 
 int batchnorm_apply_adam_update(struct batchnorm_layer *layer, const struct float_array *d_gamma, const struct float_array *d_beta,
                                 double lr, double beta1, double beta2, double eps);
