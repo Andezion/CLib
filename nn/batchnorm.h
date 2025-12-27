@@ -23,7 +23,7 @@ struct batchnorm_layer
 struct batchnorm_layer *batchnorm_create(size_t dim);
 void batchnorm_free(struct batchnorm_layer **layer);
 
-int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_array *input, struct float_array *output, int training);
+int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_array *input, struct float_array *output);
 int batchnorm_backward(const struct batchnorm_layer *layer, const struct float_array *d_out,
                        struct float_array *d_input, struct float_array **d_gamma_out, struct float_array **d_beta_out);
 
