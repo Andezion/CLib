@@ -2,11 +2,16 @@
 #include <stdlib.h>
 #include <math.h>
 
-struct batchnorm_layer *batchnorm_create(size_t dim)
+struct batchnorm_layer *batchnorm_create(const size_t dim)
 {
     struct batchnorm_layer *l = malloc(sizeof(*l));
-    if (!l) return NULL;
+    if (!l)
+    {
+        return NULL;
+    }
+
     l->dim = dim;
+
     l->gamma = create_float_array(dim);
     l->beta = create_float_array(dim);
     l->mg = create_float_array(dim);
@@ -14,6 +19,7 @@ struct batchnorm_layer *batchnorm_create(size_t dim)
     l->mb = create_float_array(dim);
     l->vb = create_float_array(dim);
     l->last_xhat = create_float_array(dim);
+
     l->adam_t = 0;
     l->eps = 1e-5;
 
@@ -40,8 +46,13 @@ struct batchnorm_layer *batchnorm_create(size_t dim)
 
 void batchnorm_free(struct batchnorm_layer **layer)
 {
-    if (!layer || !*layer) return;
+    if (!layer || !*layer)
+    {
+        return;
+    }
+
     struct batchnorm_layer *l = *layer;
+
     free_float_array(&l->gamma);
     free_float_array(&l->beta);
     free_float_array(&l->mg);
@@ -49,24 +60,35 @@ void batchnorm_free(struct batchnorm_layer **layer)
     free_float_array(&l->mb);
     free_float_array(&l->vb);
     free_float_array(&l->last_xhat);
+
     free(l);
     *layer = NULL;
 }
 
 
-int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_array *input, struct float_array *output, int training)
+int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_array *input, struct float_array *output)
 {
-    if (!layer || !input || !output) return -1;
-    if (input->size != layer->dim || output->size != layer->dim) return -1;
+    if (!layer || !input || !output)
+    {
+        return -1;
+    }
+
+    if (input->size != layer->dim || output->size != layer->dim)
+    {
+        return -1;
+    }
 
     double mean = 0.0;
-    for (size_t i = 0; i < layer->dim; i++) mean += input->data[i];
+    for (size_t i = 0; i < layer->dim; i++)
+    {
+        mean += input->data[i];
+    }
     mean /= (double)layer->dim;
 
     double var = 0.0;
     for (size_t i = 0; i < layer->dim; i++)
     {
-        double d = input->data[i] - mean;
+        const double d = input->data[i] - mean;
         var += d * d;
     }
     var /= (double)layer->dim;
@@ -79,7 +101,7 @@ int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_ar
         layer->last_xhat->data[i] = xhat;
         output->data[i] = layer->gamma->data[i] * xhat + layer->beta->data[i];
     }
-    /* store var for backward */
+
     ((struct batchnorm_layer *)layer)->last_var = var;
 
     return 0;
