@@ -107,15 +107,28 @@ int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_ar
 }
 
 int batchnorm_backward(const struct batchnorm_layer *layer, const struct float_array *d_out,
-                       struct float_array *d_input, struct float_array **d_gamma_out, struct float_array **d_beta_out)
+                       const struct float_array *d_input, struct float_array **d_gamma_out, struct float_array **d_beta_out)
 {
-    if (!layer || !d_out) return -1;
-    size_t dim = layer->dim;
-    if (d_out->size != dim) return -1;
+    if (!layer || !d_out)
+    {
+        return -1;
+    }
+
+    const size_t dim = layer->dim;
+    if (d_out->size != dim)
+    {
+        return -1;
+    }
 
     struct float_array *d_gamma = create_float_array(dim);
     struct float_array *d_beta = create_float_array(dim);
-    if (!d_gamma || !d_beta) { free_float_array(&d_gamma); free_float_array(&d_beta); return -1; }
+
+    if (!d_gamma || !d_beta)
+    {
+        free_float_array(&d_gamma);
+        free_float_array(&d_beta);
+        return -1;
+    }
 
     for (size_t i = 0; i < dim; i++)
     {
@@ -125,7 +138,12 @@ int batchnorm_backward(const struct batchnorm_layer *layer, const struct float_a
 
     if (d_input)
     {
-        if (d_input->size != dim) { free_float_array(&d_gamma); free_float_array(&d_beta); return -1; }
+        if (d_input->size != dim)
+        {
+            free_float_array(&d_gamma);
+            free_float_array(&d_beta);
+            return -1;
+        }
 
         double var = layer->last_var;
         double denom = sqrt(var + layer->eps);
