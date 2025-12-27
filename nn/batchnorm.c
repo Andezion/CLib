@@ -78,26 +78,25 @@ int batchnorm_forward(const struct batchnorm_layer *layer, const struct float_ar
         return -1;
     }
 
-    double mean = 0.0;
+    float64_t mean = 0.0;
     for (size_t i = 0; i < layer->dim; i++)
     {
         mean += input->data[i];
     }
-    mean /= (double)layer->dim;
+    mean /= (float64_t)layer->dim;
 
-    double var = 0.0;
+    float64_t var = 0.0;
     for (size_t i = 0; i < layer->dim; i++)
     {
-        const double d = input->data[i] - mean;
+        const float64_t d = input->data[i] - mean;
         var += d * d;
     }
-    var /= (double)layer->dim;
+    var /= (float64_t)layer->dim;
 
-    double denom = sqrt(var + layer->eps);
-
+    const float64_t denom = sqrt(var + layer->eps);
     for (size_t i = 0; i < layer->dim; i++)
     {
-        double xhat = (input->data[i] - mean) / denom;
+        const float64_t xhat = (input->data[i] - mean) / denom;
         layer->last_xhat->data[i] = xhat;
         output->data[i] = layer->gamma->data[i] * xhat + layer->beta->data[i];
     }
