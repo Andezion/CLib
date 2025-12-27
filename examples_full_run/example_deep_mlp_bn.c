@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <tgmath.h>
-#include <time.h>
 
 #include "../nn/dense.h"
 #include "../nn/activations.h"
@@ -22,8 +20,10 @@ int main(void)
 
     struct dense_layer *l1 = dense_create(in_dim, h1);
     struct batchnorm_layer *bn1 = batchnorm_create(h1);
+
     struct dense_layer *l2 = dense_create(h1, h2);
     struct batchnorm_layer *bn2 = batchnorm_create(h2);
+
     struct dense_layer *l3 = dense_create(h2, out_dim);
 
     if (!l1 || !bn1 || !l2 || !bn2 || !l3)
@@ -53,11 +53,11 @@ int main(void)
     const size_t per_class = 50;
     const size_t N = n_classes * per_class;
 
-    double centers[3][4] = {{5.1, 3.5, 1.4, 0.2},
+    float64_t centers[3][4] = {{5.1, 3.5, 1.4, 0.2},
                              {5.9, 3.0, 4.2, 1.5},
                              {6.3, 3.3, 6.0, 2.5}};
 
-    double data[N][in_dim];
+    float64_t data[N][in_dim];
     size_t labels[N];
 
     for (size_t cls = 0; cls < n_classes; cls++)
@@ -66,53 +66,83 @@ int main(void)
         {
             size_t idx = cls * per_class + i;
             labels[idx] = cls;
+
             for (size_t d = 0; d < in_dim; d++)
             {
-                double noise = ((double) rand() / RAND_MAX - 0.5) * 0.6;
+                float64_t noise = ((float64_t) rand() / RAND_MAX - 0.5) * 0.6;
                 data[idx][d] = centers[cls][d] + noise;
             }
         }
     }
 
     size_t indices[N];
-    for (size_t i = 0; i < N; i++) indices[i] = i;
-    for (size_t i = 0; i < N; i++) { size_t j = rand() % N; size_t t = indices[i]; indices[i] = indices[j]; indices[j] = t; }
+    for (size_t i = 0; i < N; i++)
+    {
+        indices[i] = i;
+    }
 
-    const size_t train_N = (size_t)(N * 0.8);
+    for (size_t i = 0; i < N; i++)
+    {
+        size_t j = rand() % N;
+        size_t t = indices[i];
+
+        indices[i] = indices[j];
+        indices[j] = t;
+    }
+
+    const size_t train_N = (size_t)((float64_t)N * 0.8);
     const size_t val_N = N - train_N;
 
     size_t train_idx[train_N];
     size_t val_idx[val_N];
-    for (size_t i = 0; i < train_N; i++) train_idx[i] = indices[i];
-    for (size_t i = 0; i < val_N; i++) val_idx[i] = indices[train_N + i];
 
-    const size_t batch_size = 16;
+    for (size_t i = 0; i < train_N; i++)
+    {
+        train_idx[i] = indices[i];
+    }
 
-    double lr = 0.01;
-    const double beta1 = 0.9;
-    const double beta2 = 0.999;
-    const double eps = 1e-8;
+    for (size_t i = 0; i < val_N; i++)
+    {
+        val_idx[i] = indices[train_N + i];
+    }
+
+    float64_t lr = 0.01;
+    float64_t best_val = 1e308;
 
     int best_epoch = -1;
-    double best_val = 1e308;
-    int patience = 20;
     int wait = 0;
 
     for (int epoch = 0; epoch < 500; epoch++)
     {
-        for (size_t i = 0; i < train_N; i++) { size_t j = rand() % train_N; size_t t = train_idx[i]; train_idx[i] = train_idx[j]; train_idx[j] = t; }
+        int patience = 20;
+        const size_t batch_size = 16;
 
-        double train_loss = 0.0;
+        for (size_t i = 0; i < train_N; i++)
+        {
+            size_t j = rand() % train_N;
+            size_t t = train_idx[i];
+
+            train_idx[i] = train_idx[j];
+            train_idx[j] = t;
+        }
+
+        float64_t train_loss = 0.0;
 
         for (size_t bstart = 0; bstart < train_N; bstart += batch_size)
         {
+            const float64_t eps = 1e-8;
+            const float64_t beta2 = 0.999;
+            const float64_t beta1 = 0.9;
+
             size_t bend = bstart + batch_size <= train_N ? bstart + batch_size : train_N;
             size_t cur_bs = bend - bstart;
 
             struct float_matrix *acc_dW3 = create_float_matrix(l3->out_dim, l3->in_dim);
             struct float_array *acc_db3 = create_float_array(l3->out_dim);
+
             struct float_matrix *acc_dW2 = create_float_matrix(l2->out_dim, l2->in_dim);
             struct float_array *acc_db2 = create_float_array(l2->out_dim);
+
             struct float_matrix *acc_dW1 = create_float_matrix(l1->out_dim, l1->in_dim);
             struct float_array *acc_db1 = create_float_array(l1->out_dim);
 
@@ -124,14 +154,17 @@ int main(void)
             for (size_t si = bstart; si < bend; si++)
             {
                 size_t s = train_idx[si];
-                for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+                for (size_t j = 0; j < in_dim; j++)
+                {
+                    x->data[j] = data[s][j];
+                }
 
                 dense_forward(l1, x, a1);
-                batchnorm_forward(bn1, a1, a1_bn, 1);
+                batchnorm_forward(bn1, a1, a1_bn);
                 relu_inplace(a1_bn);
 
                 dense_forward(l2, a1_bn, a2);
-                batchnorm_forward(bn2, a2, a2_bn, 1);
+                batchnorm_forward(bn2, a2, a2_bn);
                 relu_inplace(a2_bn);
 
                 dense_forward(l3, a2_bn, logits);
@@ -222,11 +255,11 @@ int main(void)
             for (size_t d = 0; d < in_dim; d++) x->data[d] = data[s][d];
 
             dense_forward(l1, x, a1);
-            batchnorm_forward(bn1, a1, a1_bn, 0);
+            batchnorm_forward(bn1, a1, a1_bn);
             relu_inplace(a1_bn);
 
             dense_forward(l2, a1_bn, a2);
-            batchnorm_forward(bn2, a2, a2_bn, 0);
+            batchnorm_forward(bn2, a2, a2_bn);
             relu_inplace(a2_bn);
 
             dense_forward(l3, a2_bn, logits);
