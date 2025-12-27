@@ -297,17 +297,67 @@ int main(void)
                 free_float_array(&d_x);
             }
 
-            double inv_bs = 1.0 / (double)cur_bs;
-            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) acc_dW3->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db3->size; i++) acc_db3->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) acc_dW2->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db2->size; i++) acc_db2->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dgamma2->size; i++) acc_dgamma2->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dbeta2->size; i++) acc_dbeta2->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dgamma1->size; i++) acc_dgamma1->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dbeta1->size; i++) acc_dbeta1->data[i] *= inv_bs;
+            float64_t inv_bs = 1.0 / (float64_t)cur_bs;
+
+            for (size_t i = 0; i < acc_dW3->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW3->cols; j++)
+                {
+                    acc_dW3->data[i][j] *= inv_bs;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db3->size; i++)
+            {
+                acc_db3->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dW2->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW2->cols; j++)
+                {
+                    acc_dW2->data[i][j] *= inv_bs;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db2->size; i++)
+            {
+                acc_db2->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dW1->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW1->cols; j++)
+                {
+                    acc_dW1->data[i][j] *= inv_bs;
+                }
+            }
+
+            for (size_t i = 0; i < acc_db1->size; i++)
+            {
+                acc_db1->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dgamma2->size; i++)
+            {
+                acc_dgamma2->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dbeta2->size; i++)
+            {
+                acc_dbeta2->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dgamma1->size; i++)
+            {
+                acc_dgamma1->data[i] *= inv_bs;
+            }
+
+            for (size_t i = 0; i < acc_dbeta1->size; i++)
+            {
+                acc_dbeta1->data[i] *= inv_bs;
+            }
+
 
             adam_update_dense(l3, acc_dW3, acc_db3, lr, beta1, beta2, eps);
             adam_update_dense(l2, acc_dW2, acc_db2, lr, beta1, beta2, eps);
@@ -316,19 +366,27 @@ int main(void)
             batchnorm_apply_adam_update(bn2, acc_dgamma2, acc_dbeta2, lr, beta1, beta2, eps);
             batchnorm_apply_adam_update(bn1, acc_dgamma1, acc_dbeta1, lr, beta1, beta2, eps);
 
-            free_float_matrix(&acc_dW3); free_float_array(&acc_db3);
-            free_float_matrix(&acc_dW2); free_float_array(&acc_db2);
-            free_float_matrix(&acc_dW1); free_float_array(&acc_db1);
+            free_float_matrix(&acc_dW3);
+            free_float_array(&acc_db3);
+            free_float_matrix(&acc_dW2);
+            free_float_array(&acc_db2);
+            free_float_matrix(&acc_dW1);
+            free_float_array(&acc_db1);
 
-            free_float_array(&acc_dgamma2); free_float_array(&acc_dbeta2);
-            free_float_array(&acc_dgamma1); free_float_array(&acc_dbeta1);
+            free_float_array(&acc_dgamma2);
+            free_float_array(&acc_dbeta2);
+            free_float_array(&acc_dgamma1);
+            free_float_array(&acc_dbeta1);
         }
 
-        double val_loss = 0.0; size_t val_correct = 0;
+        float64_t val_loss = 0.0; size_t val_correct = 0;
         for (size_t i = 0; i < val_N; i++)
         {
             size_t s = val_idx[i];
-            for (size_t d = 0; d < in_dim; d++) x->data[d] = data[s][d];
+            for (size_t d = 0; d < in_dim; d++)
+            {
+                x->data[d] = data[s][d];
+            }
 
             dense_forward(l1, x, a1);
             batchnorm_forward(bn1, a1, a1_bn);
@@ -339,16 +397,34 @@ int main(void)
             relu_inplace(a2_bn);
 
             dense_forward(l3, a2_bn, logits);
-            for (size_t k = 0; k < out_dim; k++) probs->data[k] = logits->data[k];
+
+            for (size_t k = 0; k < out_dim; k++)
+            {
+                probs->data[k] = logits->data[k];
+            }
+
             softmax_inplace(probs);
 
             val_loss += cross_entropy_loss_from_probs(probs, labels[s]);
-            size_t pred = 0; double best = probs->data[0];
-            for (size_t k = 1; k < out_dim; k++) if (probs->data[k] > best) { best = probs->data[k]; pred = k; }
-            if (pred == labels[s]) val_correct++;
+
+            size_t pred = 0;
+            float64_t best = probs->data[0];
+
+            for (size_t k = 1; k < out_dim; k++)
+            {
+                if (probs->data[k] > best)
+                {
+                    best = probs->data[k]; pred = k;
+                }
+            }
+
+            if (pred == labels[s])
+            {
+                val_correct++;
+            }
         }
 
-        double avg_val = val_loss / (double)val_N;
+        float64_t avg_val = val_loss / (float64_t)val_N;
         if (avg_val < best_val)
         {
             best_val = avg_val; best_epoch = epoch; wait = 0;
@@ -358,23 +434,40 @@ int main(void)
             wait++;
         }
 
-        if (epoch > 0 && epoch % 50 == 0) lr *= 0.5;
+        if (epoch > 0 && epoch % 50 == 0)
+        {
+            lr *= 0.5;
+        }
 
         if (epoch % 10 == 0)
         {
-            printf("epoch %d val_loss=%.6f val_acc=%.2f%% lr=%.5f\n", epoch, avg_val, (double)val_correct*100.0/(double)val_N, lr);
+            printf("epoch %d val_loss=%.6f val_acc=%.2f%% lr=%.5f\n",
+                epoch, avg_val, (float64_t)val_correct * 100.0 / (float64_t)val_N, lr);
         }
 
-        if (wait >= patience) { printf("early stopping at epoch %d (best epoch %d val_loss=%.6f)\n", epoch, best_epoch, best_val); break; }
+        if (wait >= patience)
+        {
+            printf("early stopping at epoch %d (best epoch %d val_loss=%.6f)\n", epoch, best_epoch, best_val);
+            break;
+        }
     }
 
-    dense_free(&l1); dense_free(&l2); dense_free(&l3);
-    batchnorm_free(&bn1); batchnorm_free(&bn2);
+    dense_free(&l1);
+    dense_free(&l2);
+    dense_free(&l3);
+
+    batchnorm_free(&bn1);
+    batchnorm_free(&bn2);
     dropout_free(&drop);
 
-    free_float_array(&x); free_float_array(&a1); free_float_array(&a1_bn);
-    free_float_array(&a2); free_float_array(&a2_bn); free_float_array(&logits);
-    free_float_array(&probs); free_float_array(&grad_out);
+    free_float_array(&x);
+    free_float_array(&a1);
+    free_float_array(&a1_bn);
+    free_float_array(&a2);
+    free_float_array(&a2_bn);
+    free_float_array(&logits);
+    free_float_array(&probs);
+    free_float_array(&grad_out);
 
     return 0;
 }
