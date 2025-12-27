@@ -220,30 +220,74 @@ int main(void)
                     }
                 }
 
-                for (size_t i = 0; i < db2->size; i++) acc_db2->data[i] += db2->data[i];
-                free_float_matrix(&dW2); free_float_array(&db2);
+                for (size_t i = 0; i < db2->size; i++)
+                {
+                    acc_db2->data[i] += db2->data[i];
+                }
+
+                free_float_matrix(&dW2);
+                free_float_array(&db2);
 
                 struct float_array *d_a2_bn_pre = create_float_array(h2);
-                struct float_array *d_gamma2 = NULL; struct float_array *d_beta2 = NULL;
+                struct float_array *d_gamma2 = NULL;
+                struct float_array *d_beta2 = NULL;
+
                 batchnorm_backward(bn2, d_a2_pre, d_a2_bn_pre, &d_gamma2, &d_beta2);
-                for (size_t i = 0; i < d_gamma2->size; i++) acc_dgamma2->data[i] += d_gamma2->data[i];
-                for (size_t i = 0; i < d_beta2->size; i++) acc_dbeta2->data[i] += d_beta2->data[i];
-                free_float_array(&d_gamma2); free_float_array(&d_beta2);
+
+                for (size_t i = 0; i < d_gamma2->size; i++)
+                {
+                    acc_dgamma2->data[i] += d_gamma2->data[i];
+                }
+
+                for (size_t i = 0; i < d_beta2->size; i++)
+                {
+                    acc_dbeta2->data[i] += d_beta2->data[i];
+                }
+
+                free_float_array(&d_gamma2);
+                free_float_array(&d_beta2);
 
                 struct float_array *d_a1_pre = create_float_array(h1);
                 dropout_backward(drop, d_a1, d_a1_pre);
 
-                struct float_matrix *dW1 = NULL; struct float_array *db1 = NULL; struct float_array *d_x = create_float_array(in_dim);
-                dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
-                for (size_t i = 0; i < dW1->rows; i++) for (size_t j = 0; j < dW1->cols; j++) acc_dW1->data[i][j] += dW1->data[i][j];
-                for (size_t i = 0; i < db1->size; i++) acc_db1->data[i] += db1->data[i];
-                free_float_matrix(&dW1); free_float_array(&db1);
+                struct float_matrix *dW1 = NULL;
+                struct float_array *db1 = NULL;
+                struct float_array *d_x = create_float_array(in_dim);
 
-                struct float_array *d_gamma1 = NULL; struct float_array *d_beta1 = NULL;
+                dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
+
+                for (size_t i = 0; i < dW1->rows; i++)
+                {
+                    for (size_t j = 0; j < dW1->cols; j++)
+                    {
+                        acc_dW1->data[i][j] += dW1->data[i][j];
+                    }
+                }
+
+                for (size_t i = 0; i < db1->size; i++)
+                {
+                    acc_db1->data[i] += db1->data[i];
+                }
+
+                free_float_matrix(&dW1);
+                free_float_array(&db1);
+
+                struct float_array *d_gamma1 = NULL;
+                struct float_array *d_beta1 = NULL;
+
                 batchnorm_backward(bn1, d_a1_pre, NULL, &d_gamma1, &d_beta1);
-                for (size_t i = 0; i < d_gamma1->size; i++) acc_dgamma1->data[i] += d_gamma1->data[i];
-                for (size_t i = 0; i < d_beta1->size; i++) acc_dbeta1->data[i] += d_beta1->data[i];
-                free_float_array(&d_gamma1); free_float_array(&d_beta1);
+
+                for (size_t i = 0; i < d_gamma1->size; i++)
+                {
+                    acc_dgamma1->data[i] += d_gamma1->data[i];
+                }
+                for (size_t i = 0; i < d_beta1->size; i++)
+                {
+                    acc_dbeta1->data[i] += d_beta1->data[i];
+                }
+
+                free_float_array(&d_gamma1);
+                free_float_array(&d_beta1);
 
                 free_float_array(&d_a2);
                 free_float_array(&d_a2_pre);
