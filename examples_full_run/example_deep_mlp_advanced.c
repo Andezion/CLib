@@ -274,27 +274,63 @@ int main(void)
 
                 dense_backward(l4, a3_drop, d_a4_pre, &dW4, &db4, d_a3);
 
-                for (size_t i = 0; i < dW4->rows; i++) for (size_t j = 0; j < dW4->cols; j++) acc_dW4->data[i][j] += dW4->data[i][j];
-                for (size_t i = 0; i < db4->size; i++) acc_db4->data[i] += db4->data[i];
+                for (size_t i = 0; i < dW4->rows; i++)
+                {
+                    for (size_t j = 0; j < dW4->cols; j++)
+                    {
+                        acc_dW4->data[i][j] += dW4->data[i][j];
+                    }
+                }
 
-                for (size_t i = 0; i < dg4->size; i++) { acc_dg4->data[i] += dg4->data[i]; acc_dbeta4->data[i] += dbt4->data[i]; }
+                for (size_t i = 0; i < db4->size; i++)
+                {
+                    acc_db4->data[i] += db4->data[i];
+                }
 
-                free_float_matrix(&dW4); free_float_array(&db4);
-                free_float_array(&dg4); free_float_array(&dbt4);
+                for (size_t i = 0; i < dg4->size; i++)
+                {
+                    acc_dg4->data[i] += dg4->data[i];
+                    acc_dbeta4->data[i] += dbt4->data[i];
+                }
+
+                free_float_matrix(&dW4);
+                free_float_array(&db4);
+                free_float_array(&dg4);
+                free_float_array(&dbt4);
+
                 free_float_array(&d_bn4_in);
 
                 struct float_array *d_a3_pre = create_float_array(h3);
                 dropout_backward(drop, d_a3, d_a3_pre);
 
-                struct float_array *dg3 = NULL; struct float_array *dbt3 = NULL;
-                struct float_matrix *dW3 = NULL; struct float_array *db3 = NULL; struct float_array *d_a2 = create_float_array(h2);
+                struct float_array *dg3 = NULL;
+                struct float_array *dbt3 = NULL;
+                struct float_matrix *dW3 = NULL;
+                struct float_array *db3 = NULL;
+                struct float_array *d_a2 = create_float_array(h2);
+
                 dense_backward(l3, a2_drop, d_a3_pre, &dW3, &db3, d_a2);
 
-                for (size_t i = 0; i < dW3->rows; i++) for (size_t j = 0; j < dW3->cols; j++) acc_dW3->data[i][j] += dW3->data[i][j];
-                for (size_t i = 0; i < db3->size; i++) acc_db3->data[i] += db3->data[i];
+                for (size_t i = 0; i < dW3->rows; i++)
+                {
+                    for (size_t j = 0; j < dW3->cols; j++)
+                    {
+                        acc_dW3->data[i][j] += dW3->data[i][j];
+                    }
+                }
+
+                for (size_t i = 0; i < db3->size; i++)
+                {
+                    acc_db3->data[i] += db3->data[i];
+                }
 
                 batchnorm_backward(bn3, d_a2, d_a3_pre, &dg3, &dbt3);
-                for (size_t i = 0; i < dg3->size; i++) { acc_dg3->data[i] += dg3->data[i]; acc_dbeta3->data[i] += dbt3->data[i]; }
+
+                for (size_t i = 0; i < dg3->size; i++)
+                {
+                    acc_dg3->data[i] += dg3->data[i];
+                    acc_dbeta3->data[i] += dbt3->data[i];
+                }
 
                 free_float_matrix(&dW3); free_float_array(&db3); free_float_array(&dg3); free_float_array(&dbt3);
 
