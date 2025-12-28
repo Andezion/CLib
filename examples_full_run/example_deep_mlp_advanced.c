@@ -462,27 +462,63 @@ int main(void)
 
         if (epoch % 20 == 0)
         {
-            // evaluation
-            double eval_loss = 0.0; size_t correct = 0;
+            float64_t eval_loss = 0.0; size_t correct = 0;
             for (size_t s = 0; s < N; s++)
             {
-                for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+                for (size_t j = 0; j < in_dim; j++)
+                {
+                    x->data[j] = data[s][j];
+                }
 
-                dense_forward(l1, x, a1); batchnorm_forward(bn1, a1, a1_bn); relu_inplace(a1_bn); dropout_forward(drop, a1_bn, a1_drop, 0);
-                dense_forward(l2, a1_drop, a2); batchnorm_forward(bn2, a2, a2_bn); relu_inplace(a2_bn); dropout_forward(drop, a2_bn, a2_drop, 0);
-                dense_forward(l3, a2_drop, a3); batchnorm_forward(bn3, a3, a3_bn); relu_inplace(a3_bn); dropout_forward(drop, a3_bn, a3_drop, 0);
-                dense_forward(l4, a3_drop, a4); batchnorm_forward(bn4, a4, a4_bn); relu_inplace(a4_bn); dropout_forward(drop, a4_bn, a4_drop, 0);
+                dense_forward(l1, x, a1);
+                batchnorm_forward(bn1, a1, a1_bn);
+                relu_inplace(a1_bn);
+                dropout_forward(drop, a1_bn, a1_drop, 0);
+
+                dense_forward(l2, a1_drop, a2);
+                batchnorm_forward(bn2, a2, a2_bn);
+                relu_inplace(a2_bn);
+                dropout_forward(drop, a2_bn, a2_drop, 0);
+
+                dense_forward(l3, a2_drop, a3);
+                batchnorm_forward(bn3, a3, a3_bn);
+                relu_inplace(a3_bn);
+                dropout_forward(drop, a3_bn, a3_drop, 0);
+
+                dense_forward(l4, a3_drop, a4);
+                batchnorm_forward(bn4, a4, a4_bn);
+                relu_inplace(a4_bn);
+                dropout_forward(drop, a4_bn, a4_drop, 0);
+
                 dense_forward(l5, a4_drop, logits);
-                for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+
+                for (size_t i = 0; i < out_dim; i++)
+                {
+                    probs->data[i] = logits->data[i];
+                }
+
                 softmax_inplace(probs);
                 eval_loss += cross_entropy_loss_from_probs(probs, labels[s]);
 
-                size_t pred = 0; double best = probs->data[0];
-                for (size_t i = 1; i < out_dim; i++) if (probs->data[i] > best) { best = probs->data[i]; pred = i; }
-                if (pred == labels[s]) correct++;
+                size_t pred = 0;
+                float64_t best = probs->data[0];
+
+                for (size_t i = 1; i < out_dim; i++)
+                {
+                    if (probs->data[i] > best)
+                    {
+                        best = probs->data[i]; pred = i;
+                    }
+                }
+
+                if (pred == labels[s])
+                {
+                    correct++;
+                }
             }
 
-            printf("epoch %d eval_loss=%.6f accuracy=%.2f%%\n", epoch, eval_loss / (double)N, (double)correct * 100.0 / (double)N);
+            printf("epoch %d eval_loss=%.6f accuracy=%.2f%%\n",
+                epoch, eval_loss / (float64_t)N, (float64_t)correct * 100.0 / (float64_t)N);
         }
     }
 
