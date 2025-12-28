@@ -420,10 +420,28 @@ int main(void)
 
             const float64_t inv_bs = 1.0 / (float64_t)cur_batch;
 
-            for (size_t i = 0; i < acc_dW5->rows; i++) for (size_t j = 0; j < acc_dW5->cols; j++) acc_dW5->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db5->size; i++) acc_db5->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW4->rows; i++) for (size_t j = 0; j < acc_dW4->cols; j++) acc_dW4->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db4->size; i++) acc_db4->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW5->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW5->cols; j++)
+                {
+                    acc_dW5->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db5->size; i++)
+            {
+                acc_db5->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dW4->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW4->cols; j++)
+                {
+                    acc_dW4->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db4->size; i++)
+            {
+                acc_db4->data[i] *= inv_bs;
+            }
             for (size_t i = 0; i < acc_dW3->rows; i++)
             {
                 for (size_t j = 0; j < acc_dW3->cols; j++)
