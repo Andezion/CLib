@@ -142,34 +142,45 @@ int main(void)
     for (int epoch = 0; epoch < 600; epoch++)
     {
         const size_t batch_size = 64;
-        double epoch_loss = 0.0;
+        float64_t epoch_loss = 0.0;
 
         size_t indices[N];
-        for (size_t i = 0; i < N; i++) indices[i] = i;
+        for (size_t i = 0; i < N; i++)
+        {
+            indices[i] = i;
+        }
+
         for (size_t i = 0; i < N; i++)
         {
             size_t j = rand() % N;
-            size_t tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+
+            size_t tmp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = tmp;
         }
 
         for (size_t bstart = 0; bstart < N; bstart += batch_size)
         {
-            const double eps = 1e-8;
-            const double beta2 = 0.999;
-            const double beta1 = 0.9;
-            const double lr = 0.005;
+            const float64_t eps = 1e-8;
+            const float64_t beta2 = 0.999;
+            const float64_t beta1 = 0.9;
+            const float64_t lr = 0.005;
 
             const size_t bend = bstart + batch_size <= N ? bstart + batch_size : N;
             const size_t cur_batch = bend - bstart;
 
             struct float_matrix *acc_dW5 = create_float_matrix(l5->out_dim, l5->in_dim);
             struct float_array *acc_db5 = create_float_array(l5->out_dim);
+
             struct float_matrix *acc_dW4 = create_float_matrix(l4->out_dim, l4->in_dim);
             struct float_array *acc_db4 = create_float_array(l4->out_dim);
+
             struct float_matrix *acc_dW3 = create_float_matrix(l3->out_dim, l3->in_dim);
             struct float_array *acc_db3 = create_float_array(l3->out_dim);
+
             struct float_matrix *acc_dW2 = create_float_matrix(l2->out_dim, l2->in_dim);
             struct float_array *acc_db2 = create_float_array(l2->out_dim);
+
             struct float_matrix *acc_dW1 = create_float_matrix(l1->out_dim, l1->in_dim);
             struct float_array *acc_db1 = create_float_array(l1->out_dim);
 
@@ -185,7 +196,11 @@ int main(void)
             for (size_t si = bstart; si < bend; si++)
             {
                 const size_t s = indices[si];
-                for (size_t j = 0; j < in_dim; j++) x->data[j] = data[s][j];
+
+                for (size_t j = 0; j < in_dim; j++)
+                {
+                    x->data[j] = data[s][j];
+                }
 
                 dense_forward(l1, x, a1);
                 batchnorm_forward(bn1, a1, a1_bn);
@@ -208,7 +223,12 @@ int main(void)
                 dropout_forward(drop, a4_bn, a4_drop, 1);
 
                 dense_forward(l5, a4_drop, logits);
-                for (size_t i = 0; i < out_dim; i++) probs->data[i] = logits->data[i];
+
+                for (size_t i = 0; i < out_dim; i++)
+                {
+                    probs->data[i] = logits->data[i];
+                }
+
                 softmax_inplace(probs);
 
                 const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
