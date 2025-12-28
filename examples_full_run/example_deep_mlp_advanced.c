@@ -254,9 +254,10 @@ int main(void)
                 fprintf(stderr, "   calling dense_backward l5 (out=%zu in=%zu)\n", l5->out_dim, l5->in_dim);
                 if (dense_backward(l5, a4_drop, grad_out, &dW5, &db5, d_a4) != 0)
                 {
-                    fprintf(stderr, "dense_backward failed for l5\n");
+                    fprintf(stderr, "dense_backward failed for l5\n"); fflush(stderr);
                     return 1;
                 }
+                fprintf(stderr, "   dense_backward l5 done\n"); fflush(stderr);
 
                 for (size_t i = 0; i < dW5->rows; i++)
                 {
@@ -276,12 +277,14 @@ int main(void)
 
                 struct float_array *d_a4_pre = create_float_array(h4);
                 dropout_backward(drop, d_a4, d_a4_pre);
+                fprintf(stderr, "   dropout_backward d_a4 done\n"); fflush(stderr);
 
                 struct float_array *d_bn4_in = create_float_array(h4);
                 struct float_array *dg4 = NULL;
                 struct float_array *dbt4 = NULL;
 
                 batchnorm_backward(bn4, d_a4_pre, d_bn4_in, &dg4, &dbt4);
+                fprintf(stderr, "   batchnorm_backward bn4 done\n"); fflush(stderr);
 
                 struct float_matrix *dW4 = NULL;
                 struct float_array *db4 = NULL;
@@ -289,9 +292,10 @@ int main(void)
 
                 if (dense_backward(l4, a3_drop, d_bn4_in, &dW4, &db4, d_a3) != 0)
                 {
-                    fprintf(stderr, "dense_backward failed for l4\n");
+                    fprintf(stderr, "dense_backward failed for l4\n"); fflush(stderr);
                     return 1;
                 }
+                fprintf(stderr, "   dense_backward l4 done\n"); fflush(stderr);
 
                 for (size_t i = 0; i < dW4->rows; i++)
                 {
@@ -321,6 +325,7 @@ int main(void)
 
                 struct float_array *d_a3_pre = create_float_array(h3);
                 dropout_backward(drop, d_a3, d_a3_pre);
+                fprintf(stderr, "   dropout_backward d_a3 done\n"); fflush(stderr);
 
                 struct float_array *d_bn3_in = create_float_array(h3);
                 struct float_array *dg3 = NULL;
@@ -328,9 +333,10 @@ int main(void)
 
                 if (batchnorm_backward(bn3, d_a3_pre, d_bn3_in, &dg3, &dbt3) != 0)
                 {
-                    fprintf(stderr, "batchnorm_backward failed for bn3\n");
+                    fprintf(stderr, "batchnorm_backward failed for bn3\n"); fflush(stderr);
                     return 1;
                 }
+                fprintf(stderr, "   batchnorm_backward bn3 done\n"); fflush(stderr);
 
                 struct float_matrix *dW3 = NULL;
                 struct float_array *db3 = NULL;
