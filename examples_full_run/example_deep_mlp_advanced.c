@@ -424,19 +424,60 @@ int main(void)
             for (size_t i = 0; i < acc_db5->size; i++) acc_db5->data[i] *= inv_bs;
             for (size_t i = 0; i < acc_dW4->rows; i++) for (size_t j = 0; j < acc_dW4->cols; j++) acc_dW4->data[i][j] *= inv_bs;
             for (size_t i = 0; i < acc_db4->size; i++) acc_db4->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW3->rows; i++) for (size_t j = 0; j < acc_dW3->cols; j++) acc_dW3->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db3->size; i++) acc_db3->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW2->rows; i++) for (size_t j = 0; j < acc_dW2->cols; j++) acc_dW2->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db2->size; i++) acc_db2->data[i] *= inv_bs;
-            for (size_t i = 0; i < acc_dW1->rows; i++) for (size_t j = 0; j < acc_dW1->cols; j++) acc_dW1->data[i][j] *= inv_bs;
-            for (size_t i = 0; i < acc_db1->size; i++) acc_db1->data[i] *= inv_bs;
+            for (size_t i = 0; i < acc_dW3->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW3->cols; j++)
+                {
+                    acc_dW3->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db3->size; i++)
+            {
+                acc_db3->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dW2->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW2->cols; j++)
+                {
+                    acc_dW2->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db2->size; i++)
+            {
+                acc_db2->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dW1->rows; i++)
+            {
+                for (size_t j = 0; j < acc_dW1->cols; j++)
+                {
+                    acc_dW1->data[i][j] *= inv_bs;
+                }
+            }
+            for (size_t i = 0; i < acc_db1->size; i++)
+            {
+                acc_db1->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dg1->size; i++)
+            {
+                acc_dg1->data[i] *= inv_bs;
+                acc_dbeta1->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dg2->size; i++)
+            {
+                acc_dg2->data[i] *= inv_bs;
+                acc_dbeta2->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dg3->size; i++)
+            {
+                acc_dg3->data[i] *= inv_bs;
+                acc_dbeta3->data[i] *= inv_bs;
+            }
+            for (size_t i = 0; i < acc_dg4->size; i++)
+            {
+                acc_dg4->data[i] *= inv_bs;
+                acc_dbeta4->data[i] *= inv_bs;
+            }
 
-            for (size_t i = 0; i < acc_dg1->size; i++) { acc_dg1->data[i] *= inv_bs; acc_dbeta1->data[i] *= inv_bs; }
-            for (size_t i = 0; i < acc_dg2->size; i++) { acc_dg2->data[i] *= inv_bs; acc_dbeta2->data[i] *= inv_bs; }
-            for (size_t i = 0; i < acc_dg3->size; i++) { acc_dg3->data[i] *= inv_bs; acc_dbeta3->data[i] *= inv_bs; }
-            for (size_t i = 0; i < acc_dg4->size; i++) { acc_dg4->data[i] *= inv_bs; acc_dbeta4->data[i] *= inv_bs; }
-
-            // apply updates
             adam_update_dense(l5, acc_dW5, acc_db5, lr, beta1, beta2, eps);
             adam_update_dense(l4, acc_dW4, acc_db4, lr, beta1, beta2, eps);
             adam_update_dense(l3, acc_dW3, acc_db3, lr, beta1, beta2, eps);
