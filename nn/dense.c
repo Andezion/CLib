@@ -1,4 +1,6 @@
 #include "dense.h"
+
+#include <stdio.h>
 #include <tgmath.h>
 #include "matrix/matrix_math.h"
 
@@ -121,42 +123,62 @@ int dense_backward(const struct dense_layer *layer,
 {
     if (!layer || !input || !d_output)
     {
+        fprintf(stderr, "dense_backward: NULL argument layer=%p input=%p d_output=%p\n", (void*)layer, (void*)input, (void*)d_output);
         return -1;
     }
+
+    fprintf(stderr, "dense_backward: enter layer=%p in_dim=%zu out_dim=%zu input=%p d_output=%p\n",
+            (void*)layer, layer->in_dim, layer->out_dim, (void*)input, (void*)d_output);
     if (input->size != layer->in_dim || d_output->size != layer->out_dim)
     {
+        fprintf(stderr, "dense_backward: size mismatch input->size=%zu layer->in_dim=%zu d_output->size=%zu layer->out_dim=%zu\n",
+                input->size, layer->in_dim, d_output->size, layer->out_dim);
+        return -1;
+    }
+
+    if (!layer->W || !layer->W->data)
+    {
+        fprintf(stderr, "dense_backward: layer->W is NULL\n");
         return -1;
     }
 
     struct float_matrix *dW = outer_product(d_output, input);
     if (!dW)
     {
+        fprintf(stderr, "dense_backward: outer_product failed (dW NULL)\n");
         return -1;
     }
+    fprintf(stderr, "dense_backward: dW allocated rows=%zu cols=%zu\n", dW->rows, dW->cols);
 
     struct float_array *db = copy_float_array(d_output);
     if (!db)
     {
         free_float_matrix(&dW);
+        fprintf(stderr, "dense_backward: copy_float_array failed (db NULL)\n");
         return -1;
     }
+    fprintf(stderr, "dense_backward: db allocated size=%zu\n", db->size);
 
     if (d_input)
     {
         if (d_input->size != layer->in_dim)
         {
+            fprintf(stderr, "dense_backward: d_input size mismatch %zu vs %zu\n", d_input->size, layer->in_dim);
             free_float_matrix(&dW);
             free_float_array(&db);
 
             return -1;
         }
+        fprintf(stderr, "dense_backward: calling matvec_transpose_float\n");
         if (matvec_transpose_float(layer->W, d_output, d_input) != 0)
         {
+            fprintf(stderr, "dense_backward: matvec_transpose_float failed\n");
             free_float_matrix(&dW);
             free_float_array(&db);
 
             return -1;
         }
+        fprintf(stderr, "dense_backward: matvec_transpose_float ok\n");
     }
 
     *dW_out = dW;
