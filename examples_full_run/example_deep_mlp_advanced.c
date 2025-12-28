@@ -332,37 +332,81 @@ int main(void)
                     acc_dbeta3->data[i] += dbt3->data[i];
                 }
 
-                free_float_matrix(&dW3); free_float_array(&db3); free_float_array(&dg3); free_float_array(&dbt3);
+                free_float_matrix(&dW3);
+                free_float_array(&db3);
+                free_float_array(&dg3);
+                free_float_array(&dbt3);
 
                 struct float_array *d_a2_pre = create_float_array(h2);
                 dropout_backward(drop, d_a2, d_a2_pre);
 
-                struct float_array *dg2 = NULL; struct float_array *dbt2 = NULL;
-                struct float_matrix *dW2 = NULL; struct float_array *db2 = NULL; struct float_array *d_a1 = create_float_array(h1);
+                struct float_array *dg2 = NULL;
+                struct float_array *dbt2 = NULL;
+                struct float_matrix *dW2 = NULL;
+                struct float_array *db2 = NULL;
+
+                struct float_array *d_a1 = create_float_array(h1);
                 dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
 
-                for (size_t i = 0; i < dW2->rows; i++) for (size_t j = 0; j < dW2->cols; j++) acc_dW2->data[i][j] += dW2->data[i][j];
-                for (size_t i = 0; i < db2->size; i++) acc_db2->data[i] += db2->data[i];
+                for (size_t i = 0; i < dW2->rows; i++)
+                {
+                    for (size_t j = 0; j < dW2->cols; j++)
+                    {
+                        acc_dW2->data[i][j] += dW2->data[i][j];
+                    }
+                }
+
+                for (size_t i = 0; i < db2->size; i++)
+                {
+                    acc_db2->data[i] += db2->data[i];
+                }
 
                 batchnorm_backward(bn2, d_a1, d_a2_pre, &dg2, &dbt2);
-                for (size_t i = 0; i < dg2->size; i++) { acc_dg2->data[i] += dg2->data[i]; acc_dbeta2->data[i] += dbt2->data[i]; }
+                for (size_t i = 0; i < dg2->size; i++)
+                {
+                    acc_dg2->data[i] += dg2->data[i];
+                    acc_dbeta2->data[i] += dbt2->data[i];
+                }
 
-                free_float_matrix(&dW2); free_float_array(&db2); free_float_array(&dg2); free_float_array(&dbt2);
+                free_float_matrix(&dW2);
+                free_float_array(&db2);
+                free_float_array(&dg2);
+                free_float_array(&dbt2);
 
                 struct float_array *d_a1_pre = create_float_array(h1);
                 dropout_backward(drop, d_a1, d_a1_pre);
 
-                struct float_array *dg1 = NULL; struct float_array *dbt1 = NULL;
-                struct float_matrix *dW1 = NULL; struct float_array *db1 = NULL; struct float_array *d_x = create_float_array(in_dim);
+                struct float_array *dg1 = NULL;
+                struct float_array *dbt1 = NULL;
+                struct float_matrix *dW1 = NULL;
+                struct float_array *db1 = NULL;
+                struct float_array *d_x = create_float_array(in_dim);
                 dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
 
-                for (size_t i = 0; i < dW1->rows; i++) for (size_t j = 0; j < dW1->cols; j++) acc_dW1->data[i][j] += dW1->data[i][j];
-                for (size_t i = 0; i < db1->size; i++) acc_db1->data[i] += db1->data[i];
+                for (size_t i = 0; i < dW1->rows; i++)
+                {
+                    for (size_t j = 0; j < dW1->cols; j++)
+                    {
+                        acc_dW1->data[i][j] += dW1->data[i][j];
+                    }
+                }
+                for (size_t i = 0; i < db1->size; i++)
+                {
+                    acc_db1->data[i] += db1->data[i];
+                }
 
                 batchnorm_backward(bn1, d_x, d_a1_pre, &dg1, &dbt1);
-                for (size_t i = 0; i < dg1->size; i++) { acc_dg1->data[i] += dg1->data[i]; acc_dbeta1->data[i] += dbt1->data[i]; }
 
-                free_float_matrix(&dW1); free_float_array(&db1); free_float_array(&dg1); free_float_array(&dbt1);
+                for (size_t i = 0; i < dg1->size; i++)
+                {
+                    acc_dg1->data[i] += dg1->data[i];
+                    acc_dbeta1->data[i] += dbt1->data[i];
+                }
+
+                free_float_matrix(&dW1);
+                free_float_array(&db1);
+                free_float_array(&dg1);
+                free_float_array(&dbt1);
                 free_float_array(&d_x);
                 free_float_array(&d_a1);
                 free_float_array(&d_a1_pre);
@@ -374,8 +418,8 @@ int main(void)
                 free_float_array(&d_a4);
             }
 
-            const double inv_bs = 1.0 / (double)cur_batch;
-            // average accumulated gradients
+            const float64_t inv_bs = 1.0 / (float64_t)cur_batch;
+
             for (size_t i = 0; i < acc_dW5->rows; i++) for (size_t j = 0; j < acc_dW5->cols; j++) acc_dW5->data[i][j] *= inv_bs;
             for (size_t i = 0; i < acc_db5->size; i++) acc_db5->data[i] *= inv_bs;
             for (size_t i = 0; i < acc_dW4->rows; i++) for (size_t j = 0; j < acc_dW4->cols; j++) acc_dW4->data[i][j] *= inv_bs;
@@ -447,11 +491,21 @@ int main(void)
     dropout_free(&drop);
 
     free_float_array(&x);
-    free_float_array(&a1); free_float_array(&a1_bn); free_float_array(&a1_drop);
-    free_float_array(&a2); free_float_array(&a2_bn); free_float_array(&a2_drop);
-    free_float_array(&a3); free_float_array(&a3_bn); free_float_array(&a3_drop);
-    free_float_array(&a4); free_float_array(&a4_bn); free_float_array(&a4_drop);
-    free_float_array(&logits); free_float_array(&probs); free_float_array(&grad_out);
+    free_float_array(&a1);
+    free_float_array(&a1_bn);
+    free_float_array(&a1_drop);
+    free_float_array(&a2);
+    free_float_array(&a2_bn);
+    free_float_array(&a2_drop);
+    free_float_array(&a3);
+    free_float_array(&a3_bn);
+    free_float_array(&a3_drop);
+    free_float_array(&a4);
+    free_float_array(&a4_bn);
+    free_float_array(&a4_drop);
+    free_float_array(&logits);
+    free_float_array(&probs);
+    free_float_array(&grad_out);
 
     return 0;
 }
