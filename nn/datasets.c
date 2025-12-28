@@ -41,22 +41,31 @@ int generate_spiral(size_t N, double *data, size_t *labels, size_t classes, doub
     return 0;
 }
 
-int generate_moons(size_t N, double *data, size_t *labels, double noise)
+int generate_moons(const size_t N, float64_t *data, size_t *labels, const double noise)
 {
-    if (!data || !labels || N < 2) return -1;
-    size_t n1 = N / 2;
-    size_t n2 = N - n1;
+    if (!data || !labels || N < 2)
+    {
+        return -1;
+    }
+
+    const size_t n1 = N / 2;
+    const size_t n2 = N - n1;
+
     size_t idx = 0;
 
     for (size_t i = 0; i < n1; i++)
     {
-        double t = M_PI * (double)i / (double)n1;
+        double t = M_PI * (float64_t)i / (float64_t)n1;
+
         double x = cos(t);
         double y = sin(t);
+
         x += (rnd_unit() - 0.5) * noise;
         y += (rnd_unit() - 0.5) * noise;
+
         data[2 * idx + 0] = x;
         data[2 * idx + 1] = y;
+
         labels[idx] = 0;
         idx++;
     }
@@ -66,10 +75,13 @@ int generate_moons(size_t N, double *data, size_t *labels, double noise)
         double t = M_PI * (double)i / (double)n2;
         double x = 1.0 - cos(t);
         double y = -sin(t) - 0.5;
+
         x += (rnd_unit() - 0.5) * noise;
         y += (rnd_unit() - 0.5) * noise;
+
         data[2 * idx + 0] = x;
         data[2 * idx + 1] = y;
+
         labels[idx] = 1;
         idx++;
     }
