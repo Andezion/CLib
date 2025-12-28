@@ -41,7 +41,7 @@ int generate_spiral(size_t N, double *data, size_t *labels, size_t classes, doub
     return 0;
 }
 
-int generate_moons(const size_t N, float64_t *data, size_t *labels, const double noise)
+int generate_moons(const size_t N, float64_t *data, size_t *labels, const float64_t noise)
 {
     if (!data || !labels || N < 2)
     {
@@ -55,10 +55,10 @@ int generate_moons(const size_t N, float64_t *data, size_t *labels, const double
 
     for (size_t i = 0; i < n1; i++)
     {
-        double t = M_PI * (float64_t)i / (float64_t)n1;
+        const float64_t t = M_PI * (float64_t)i / (float64_t)n1;
 
-        double x = cos(t);
-        double y = sin(t);
+        float64_t x = cos(t);
+        float64_t y = sin(t);
 
         x += (rnd_unit() - 0.5) * noise;
         y += (rnd_unit() - 0.5) * noise;
