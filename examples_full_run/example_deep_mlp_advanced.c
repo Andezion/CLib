@@ -231,27 +231,47 @@ int main(void)
 
                 softmax_inplace(probs);
 
-                const double loss = cross_entropy_loss_from_probs(probs, labels[s]);
+                const float64_t loss = cross_entropy_loss_from_probs(probs, labels[s]);
                 epoch_loss += loss;
 
                 cross_entropy_grad_from_probs(probs, labels[s], grad_out);
 
-                struct float_matrix *dW5 = NULL; struct float_array *db5 = NULL; struct float_array *d_a4 = create_float_array(h4);
+                struct float_matrix *dW5 = NULL;
+                struct float_array *db5 = NULL;
+                struct float_array *d_a4 = create_float_array(h4);
+
                 dense_backward(l5, a4_drop, grad_out, &dW5, &db5, d_a4);
 
-                for (size_t i = 0; i < dW5->rows; i++) for (size_t j = 0; j < dW5->cols; j++) acc_dW5->data[i][j] += dW5->data[i][j];
-                for (size_t i = 0; i < db5->size; i++) acc_db5->data[i] += db5->data[i];
-                free_float_matrix(&dW5); free_float_array(&db5);
+                for (size_t i = 0; i < dW5->rows; i++)
+                {
+                    for (size_t j = 0; j < dW5->cols; j++)
+                    {
+                        acc_dW5->data[i][j] += dW5->data[i][j];
+                    }
+                }
+
+                for (size_t i = 0; i < db5->size; i++)
+                {
+                    acc_db5->data[i] += db5->data[i];
+                }
+
+                free_float_matrix(&dW5);
+                free_float_array(&db5);
 
                 struct float_array *d_a4_pre = create_float_array(h4);
                 dropout_backward(drop, d_a4, d_a4_pre);
 
                 struct float_array *d_bn4_in = create_float_array(h4);
-                struct float_array *dg4 = NULL; struct float_array *dbt4 = NULL;
+                struct float_array *dg4 = NULL;
+                struct float_array *dbt4 = NULL;
+
                 dense_backward(l4, a3_drop, d_a4_pre, NULL, NULL, d_bn4_in);
                 batchnorm_backward(bn4, d_bn4_in, d_a4_pre, &dg4, &dbt4);
 
-                struct float_matrix *dW4 = NULL; struct float_array *db4 = NULL; struct float_array *d_a3 = create_float_array(h3);
+                struct float_matrix *dW4 = NULL;
+                struct float_array *db4 = NULL;
+                struct float_array *d_a3 = create_float_array(h3);
+
                 dense_backward(l4, a3_drop, d_a4_pre, &dW4, &db4, d_a3);
 
                 for (size_t i = 0; i < dW4->rows; i++) for (size_t j = 0; j < dW4->cols; j++) acc_dW4->data[i][j] += dW4->data[i][j];
