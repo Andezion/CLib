@@ -486,8 +486,15 @@ int main(void)
         }
     }
 
-    dense_free(&l1); dense_free(&l2); dense_free(&l3); dense_free(&l4); dense_free(&l5);
-    batchnorm_free(&bn1); batchnorm_free(&bn2); batchnorm_free(&bn3); batchnorm_free(&bn4);
+    dense_free(&l1);
+    dense_free(&l2);
+    dense_free(&l3);
+    dense_free(&l4);
+    dense_free(&l5);
+    batchnorm_free(&bn1);
+    batchnorm_free(&bn2);
+    batchnorm_free(&bn3);
+    batchnorm_free(&bn4);
     dropout_free(&drop);
 
     free_float_array(&x);
