@@ -141,6 +141,7 @@ int main(void)
 
     for (int epoch = 0; epoch < 600; epoch++)
     {
+        fprintf(stderr, "== epoch %d start ==\n", epoch);
         const size_t batch_size = 64;
         float64_t epoch_loss = 0.0;
 
@@ -161,6 +162,7 @@ int main(void)
 
         for (size_t bstart = 0; bstart < N; bstart += batch_size)
         {
+            fprintf(stderr, " epoch=%d bstart=%zu\n", epoch, bstart);
             const float64_t eps = 1e-8;
             const float64_t beta2 = 0.999;
             const float64_t beta1 = 0.9;
@@ -193,9 +195,18 @@ int main(void)
             struct float_array *acc_dg4 = create_float_array(bn4->dim);
             struct float_array *acc_dbeta4 = create_float_array(bn4->dim);
 
+            if (!acc_dW5 || !acc_db5 || !acc_dW4 || !acc_db4 || !acc_dW3 || !acc_db3 || !acc_dW2 || !acc_db2 ||
+                !acc_dW1 || !acc_db1 || !acc_dg1 || !acc_dbeta1 || !acc_dg2 || !acc_dbeta2 || !acc_dg3 || !acc_dbeta3 ||
+                !acc_dg4 || !acc_dbeta4)
+            {
+                fprintf(stderr, "failed to allocate gradient accumulators\n");
+                return 1;
+            }
+
             for (size_t si = bstart; si < bend; si++)
             {
                 const size_t s = indices[si];
+                if (si == bstart) fprintf(stderr, "  processing sample s=%zu (si=%zu)\n", s, si);
 
                 for (size_t j = 0; j < in_dim; j++)
                 {
@@ -240,7 +251,12 @@ int main(void)
                 struct float_array *db5 = NULL;
                 struct float_array *d_a4 = create_float_array(h4);
 
-                dense_backward(l5, a4_drop, grad_out, &dW5, &db5, d_a4);
+                fprintf(stderr, "   calling dense_backward l5 (out=%zu in=%zu)\n", l5->out_dim, l5->in_dim);
+                if (dense_backward(l5, a4_drop, grad_out, &dW5, &db5, d_a4) != 0)
+                {
+                    fprintf(stderr, "dense_backward failed for l5\n");
+                    return 1;
+                }
 
                 for (size_t i = 0; i < dW5->rows; i++)
                 {
@@ -265,14 +281,17 @@ int main(void)
                 struct float_array *dg4 = NULL;
                 struct float_array *dbt4 = NULL;
 
-                dense_backward(l4, a3_drop, d_a4_pre, NULL, NULL, d_bn4_in);
-                batchnorm_backward(bn4, d_bn4_in, d_a4_pre, &dg4, &dbt4);
+                batchnorm_backward(bn4, d_a4_pre, d_bn4_in, &dg4, &dbt4);
 
                 struct float_matrix *dW4 = NULL;
                 struct float_array *db4 = NULL;
                 struct float_array *d_a3 = create_float_array(h3);
 
-                dense_backward(l4, a3_drop, d_a4_pre, &dW4, &db4, d_a3);
+                if (dense_backward(l4, a3_drop, d_bn4_in, &dW4, &db4, d_a3) != 0)
+                {
+                    fprintf(stderr, "dense_backward failed for l4\n");
+                    return 1;
+                }
 
                 for (size_t i = 0; i < dW4->rows; i++)
                 {
@@ -303,13 +322,25 @@ int main(void)
                 struct float_array *d_a3_pre = create_float_array(h3);
                 dropout_backward(drop, d_a3, d_a3_pre);
 
+                struct float_array *d_bn3_in = create_float_array(h3);
                 struct float_array *dg3 = NULL;
                 struct float_array *dbt3 = NULL;
+
+                if (batchnorm_backward(bn3, d_a3_pre, d_bn3_in, &dg3, &dbt3) != 0)
+                {
+                    fprintf(stderr, "batchnorm_backward failed for bn3\n");
+                    return 1;
+                }
+
                 struct float_matrix *dW3 = NULL;
                 struct float_array *db3 = NULL;
                 struct float_array *d_a2 = create_float_array(h2);
 
-                dense_backward(l3, a2_drop, d_a3_pre, &dW3, &db3, d_a2);
+                if (dense_backward(l3, a2_drop, d_bn3_in, &dW3, &db3, d_a2) != 0)
+                {
+                    fprintf(stderr, "dense_backward failed for l3\n");
+                    return 1;
+                }
 
                 for (size_t i = 0; i < dW3->rows; i++)
                 {
@@ -324,8 +355,6 @@ int main(void)
                     acc_db3->data[i] += db3->data[i];
                 }
 
-                batchnorm_backward(bn3, d_a2, d_a3_pre, &dg3, &dbt3);
-
                 for (size_t i = 0; i < dg3->size; i++)
                 {
                     acc_dg3->data[i] += dg3->data[i];
@@ -336,17 +365,29 @@ int main(void)
                 free_float_array(&db3);
                 free_float_array(&dg3);
                 free_float_array(&dbt3);
+                free_float_array(&d_bn3_in);
 
                 struct float_array *d_a2_pre = create_float_array(h2);
                 dropout_backward(drop, d_a2, d_a2_pre);
 
+                struct float_array *d_bn2_in = create_float_array(h2);
                 struct float_array *dg2 = NULL;
                 struct float_array *dbt2 = NULL;
+
+                if (batchnorm_backward(bn2, d_a2_pre, d_bn2_in, &dg2, &dbt2) != 0)
+                {
+                    fprintf(stderr, "batchnorm_backward failed for bn2\n");
+                    return 1;
+                }
+
                 struct float_matrix *dW2 = NULL;
                 struct float_array *db2 = NULL;
-
                 struct float_array *d_a1 = create_float_array(h1);
-                dense_backward(l2, a1_drop, d_a2_pre, &dW2, &db2, d_a1);
+                if (dense_backward(l2, a1_drop, d_bn2_in, &dW2, &db2, d_a1) != 0)
+                {
+                    fprintf(stderr, "dense_backward failed for l2\n");
+                    return 1;
+                }
 
                 for (size_t i = 0; i < dW2->rows; i++)
                 {
@@ -361,7 +402,6 @@ int main(void)
                     acc_db2->data[i] += db2->data[i];
                 }
 
-                batchnorm_backward(bn2, d_a1, d_a2_pre, &dg2, &dbt2);
                 for (size_t i = 0; i < dg2->size; i++)
                 {
                     acc_dg2->data[i] += dg2->data[i];
@@ -372,16 +412,29 @@ int main(void)
                 free_float_array(&db2);
                 free_float_array(&dg2);
                 free_float_array(&dbt2);
+                free_float_array(&d_bn2_in);
 
                 struct float_array *d_a1_pre = create_float_array(h1);
                 dropout_backward(drop, d_a1, d_a1_pre);
 
+                struct float_array *d_bn1_in = create_float_array(h1);
                 struct float_array *dg1 = NULL;
                 struct float_array *dbt1 = NULL;
+
+                if (batchnorm_backward(bn1, d_a1_pre, d_bn1_in, &dg1, &dbt1) != 0)
+                {
+                    fprintf(stderr, "batchnorm_backward failed for bn1\n");
+                    return 1;
+                }
+
                 struct float_matrix *dW1 = NULL;
                 struct float_array *db1 = NULL;
                 struct float_array *d_x = create_float_array(in_dim);
-                dense_backward(l1, x, d_a1_pre, &dW1, &db1, d_x);
+                if (dense_backward(l1, x, d_bn1_in, &dW1, &db1, d_x) != 0)
+                {
+                    fprintf(stderr, "dense_backward failed for l1\n");
+                    return 1;
+                }
 
                 for (size_t i = 0; i < dW1->rows; i++)
                 {
@@ -395,8 +448,6 @@ int main(void)
                     acc_db1->data[i] += db1->data[i];
                 }
 
-                batchnorm_backward(bn1, d_x, d_a1_pre, &dg1, &dbt1);
-
                 for (size_t i = 0; i < dg1->size; i++)
                 {
                     acc_dg1->data[i] += dg1->data[i];
@@ -408,6 +459,7 @@ int main(void)
                 free_float_array(&dg1);
                 free_float_array(&dbt1);
                 free_float_array(&d_x);
+                free_float_array(&d_bn1_in);
                 free_float_array(&d_a1);
                 free_float_array(&d_a1_pre);
                 free_float_array(&d_a2_pre);
